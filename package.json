@@ -9,13 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cloudflare/vite-plugin": "^1.15.0",
     "@vitejs/plugin-react": "^5.0.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "vite": "^7.1.7"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.15.0",
     "wrangler": "^4.38.0"
   }
 }
