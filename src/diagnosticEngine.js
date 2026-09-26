@@ -321,22 +321,135 @@ function applyCorroboration(findings) {
 // PRIORITY SELECTION
 // --------------------------------------------------
 
+const findingDomains = {
+  // Opportunity creation
+  unknown_source_contribution: "sources",
+  partial_source_objectives: "sources",
+  undefined_source_objectives: "sources",
+  partial_source_evidence: "sources",
+  source_assumption: "sources",
+  unknown_source_effectiveness: "sources",
+  defined_but_unverified_sources: "sources",
+
+  // Process architecture and advancement
+  unmapped_process: "process",
+  unknown_process: "process",
+  variable_process: "process",
+  no_step_objectives: "process",
+  informal_step_objectives: "process",
+  partial_step_objectives: "process",
+  subjective_step_evidence: "process",
+  continuation_assumption: "process",
+  no_step_evidence: "process",
+  clear_process_contradiction: "process",
+
+  // Buyer progression
+  buyer_requirements_undefined: "buyer",
+  buyer_progression_individual: "buyer",
+  preference_undefined: "buyer",
+  preference_unverified: "buyer",
+  preference_unknown: "buyer",
+  value_assumed: "buyer",
+  value_undefined: "buyer",
+  value_unknown: "buyer",
+  value_communication_verification_gap: "buyer",
+  benefit_incomplete: "buyer",
+  resolution_incomplete: "buyer",
+  resolution_unknown: "buyer",
+  readiness_unverified: "buyer",
+
+  // Performance diagnosis and improvement
+  stall_unknown: "performance",
+  stall_cause_unverified: "performance",
+  stall_cause_unknown: "performance",
+  cause_assumption: "improvement",
+  activity_response: "improvement",
+  testing_incomplete: "improvement",
+  testing_unknown: "improvement",
+  testing_claim_contradiction: "improvement",
+
+  // Execution
+  execution_variation: "execution",
+  execution_unknown: "execution",
+  system_execution_gap: "execution",
+
+  // System definition takes precedence when execution
+  // cannot yet be evaluated independently.
+  undefined_system_execution: "process"
+};
+
+const structuralPriority = {
+  process: 4,
+  sources: 3,
+  buyer: 2,
+  performance: 1,
+  improvement: 1,
+  execution: 1
+};
+
 function selectPriorityFindings(findings) {
-  const actionable = findings.filter(
-    (item) => item.type !== findingTypes.SOLID
-  );
+  const actionable = findings
+    .filter((item) => item.type !== findingTypes.SOLID)
+    .map((item) => {
+      const domain = findingDomains[item.id] || "other";
+
+      return {
+        ...item,
+        domain,
+        selectionPriority:
+          (item.effectivePriority || item.priority || 0) +
+          (structuralPriority[domain] || 0)
+      };
+    });
 
   const sorted = [...actionable].sort((a, b) => {
-    if (b.effectivePriority !== a.effectivePriority) {
-      return b.effectivePriority - a.effectivePriority;
+    if (b.selectionPriority !== a.selectionPriority) {
+      return b.selectionPriority - a.selectionPriority;
     }
 
-    return (b.priority || 0) - (a.priority || 0);
+    return (b.effectivePriority || 0) - (a.effectivePriority || 0);
   });
 
   if (sorted.length <= 3) return sorted;
 
-  return sorted.slice(0, Math.min(5, sorted.length));
+  const selected = [];
+  const domainCounts = {};
+
+  // First pass:
+  // Represent materially different diagnostic domains before
+  // allowing several findings from the same area to dominate.
+  for (const item of sorted) {
+    const count = domainCounts[item.domain] || 0;
+
+    if (count === 0) {
+      selected.push(item);
+      domainCounts[item.domain] = 1;
+    }
+
+    if (selected.length === 5) break;
+  }
+
+  // Second pass:
+  // Fill any remaining positions with the strongest remaining
+  // findings. Allow up to two findings from the same domain.
+  if (selected.length < 5) {
+    for (const item of sorted) {
+      if (selected.some((chosen) => chosen.id === item.id)) {
+        continue;
+      }
+
+      const count = domainCounts[item.domain] || 0;
+
+      if (count < 2) {
+        selected.push(item);
+        domainCounts[item.domain] = count + 1;
+      }
+
+      if (selected.length === 5) break;
+    }
+  }
+
+  return selected;
 }
 
 // --------------------------------------------------
