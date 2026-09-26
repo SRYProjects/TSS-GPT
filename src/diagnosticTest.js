@@ -97,6 +97,40 @@ const testAnswers = {
 const result = buildDiagnostic(testAnswers);
 
 console.log("SAGE DIAGNOSTIC TEST");
-console.log(JSON.stringify(result, null, 2));
+
+console.log(
+  "STRENGTHS:",
+  result.strengths.map((item) => ({
+    id: item.id,
+    type: item.type,
+    title: item.title
+  }))
+);
+
+console.log(
+  "ALL ATTENTION FINDINGS:",
+  result.attentionFindings.map((item) => ({
+    id: item.id,
+    type: item.type,
+    priority: item.priority,
+    corroboration: item.corroboration,
+    effectivePriority: item.effectivePriority,
+    title: item.title
+  }))
+);
+
+console.log(
+  "PRIORITY FINDINGS:",
+  result.priorityFindings.map((item) => ({
+    id: item.id,
+    type: item.type,
+    effectivePriority: item.effectivePriority,
+    title: item.title,
+    support: item.support,
+    direction: item.direction
+  }))
+);
+
+console.log("BUILD PATH:", result.buildPath);
 
 export default result;
