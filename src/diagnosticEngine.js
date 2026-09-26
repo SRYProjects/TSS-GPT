@@ -222,6 +222,59 @@ function removeSupersededFindings(findings) {
 }
 
 // --------------------------------------------------
+// RELATED-FINDING CONSOLIDATION
+// --------------------------------------------------
+
+function consolidateRelatedFindings(findings) {
+  let result = [...findings];
+
+  const hasFinding = (id) =>
+    result.some((item) => item.id === id);
+
+  const getFinding = (id) =>
+    result.find((item) => item.id === id);
+
+  if (
+    hasFinding("stall_cause_unverified") &&
+    hasFinding("cause_assumption")
+  ) {
+    const primary = getFinding("stall_cause_unverified");
+    const supporting = getFinding("cause_assumption");
+
+    result = result.map((item) => {
+      if (item.id !== "stall_cause_unverified") {
+        return item;
+      }
+
+      return {
+        ...primary,
+        title:
+          "Suspected causes of sales breakdowns are being treated as more established than the evidence supports.",
+        support:
+          `${primary.support} You also indicated that when results are weak, the business usually acts on the most likely explanation before the cause has been fully established.`,
+        why:
+          "The business may correctly recognize where an opportunity is breaking down while still misidentifying why. Acting on a plausible explanation before verifying the cause can lead to changes that do not address the actual barrier.",
+        direction:
+          "Treat suspected causes as hypotheses. Investigate and establish evidence before deciding what should change.",
+        improvementEvidence:
+          "Important explanations for sales breakdowns are supported by buyer feedback, records, testing, or another reliable pattern before corrective action is selected.",
+        priority:
+          Math.max(
+            primary.priority || 0,
+            supporting.priority || 0
+          ) + 1
+      };
+    });
+
+    result = result.filter(
+      (item) => item.id !== "cause_assumption"
+    );
+  }
+
+  return result;
+}
+
+// --------------------------------------------------
 // CORROBORATION
 // --------------------------------------------------
 
@@ -312,7 +365,8 @@ function applyCorroboration(findings) {
     return {
       ...item,
       corroboration,
-      effectivePriority: (item.priority || 0) + corroboration
+      effectivePriority:
+        (item.priority || 0) + corroboration
     };
   });
 }
@@ -322,7 +376,6 @@ function applyCorroboration(findings) {
 // --------------------------------------------------
 
 const findingDomains = {
-  // Opportunity creation
   unknown_source_contribution: "sources",
   partial_source_objectives: "sources",
   undefined_source_objectives: "sources",
@@ -331,7 +384,6 @@ const findingDomains = {
   unknown_source_effectiveness: "sources",
   defined_but_unverified_sources: "sources",
 
-  // Process architecture and advancement
   unmapped_process: "process",
   unknown_process: "process",
   variable_process: "process",
@@ -343,7 +395,6 @@ const findingDomains = {
   no_step_evidence: "process",
   clear_process_contradiction: "process",
 
-  // Buyer progression
   buyer_requirements_undefined: "buyer",
   buyer_progression_individual: "buyer",
   preference_undefined: "buyer",
@@ -358,23 +409,20 @@ const findingDomains = {
   resolution_unknown: "buyer",
   readiness_unverified: "buyer",
 
-  // Performance diagnosis and improvement
   stall_unknown: "performance",
   stall_cause_unverified: "performance",
   stall_cause_unknown: "performance",
+
   cause_assumption: "improvement",
   activity_response: "improvement",
   testing_incomplete: "improvement",
   testing_unknown: "improvement",
   testing_claim_contradiction: "improvement",
 
-  // Execution
   execution_variation: "execution",
   execution_unknown: "execution",
   system_execution_gap: "execution",
 
-  // System definition takes precedence when execution
-  // cannot yet be evaluated independently.
   undefined_system_execution: "process"
 };
 
@@ -391,35 +439,49 @@ function selectPriorityFindings(findings) {
   const actionable = findings
     .filter((item) => item.type !== findingTypes.SOLID)
     .map((item) => {
-      const domain = findingDomains[item.id] || "other";
+      const domain =
+        findingDomains[item.id] || "other";
 
       return {
         ...item,
         domain,
         selectionPriority:
-          (item.effectivePriority || item.priority || 0) +
+          (item.effectivePriority ||
+            item.priority ||
+            0) +
           (structuralPriority[domain] || 0)
       };
     });
 
   const sorted = [...actionable].sort((a, b) => {
-    if (b.selectionPriority !== a.selectionPriority) {
-      return b.selectionPriority - a.selectionPriority;
+    if (
+      b.selectionPriority !==
+      a.selectionPriority
+    ) {
+      return (
+        b.selectionPriority -
+        a.selectionPriority
+      );
     }
 
-    return (b.effectivePriority || 0) - (a.effectivePriority || 0);
+    return (
+      (b.effectivePriority || 0) -
+      (a.effectivePriority || 0)
+    );
   });
 
-  if (sorted.length <= 3) return sorted;
+  if (sorted.length <= 3) {
+    return sorted;
+  }
 
   const selected = [];
   const domainCounts = {};
 
   // First pass:
-  // Represent materially different diagnostic domains before
-  // allowing several findings from the same area to dominate.
+  // Represent materially different diagnostic domains.
   for (const item of sorted) {
-    const count = domainCounts[item.domain] || 0;
+    const count =
+      domainCounts[item.domain] || 0;
 
     if (count === 0) {
       selected.push(item);
@@ -430,19 +492,26 @@ function selectPriorityFindings(findings) {
   }
 
   // Second pass:
-  // Fill any remaining positions with the strongest remaining
-  // findings. Allow up to two findings from the same domain.
+  // Fill remaining positions with the strongest
+  // remaining findings, allowing at most two
+  // findings from the same diagnostic domain.
   if (selected.length < 5) {
     for (const item of sorted) {
-      if (selected.some((chosen) => chosen.id === item.id)) {
+      if (
+        selected.some(
+          (chosen) => chosen.id === item.id
+        )
+      ) {
         continue;
       }
 
-      const count = domainCounts[item.domain] || 0;
+      const count =
+        domainCounts[item.domain] || 0;
 
       if (count < 2) {
         selected.push(item);
-        domainCounts[item.domain] = count + 1;
+        domainCounts[item.domain] =
+          count + 1;
       }
 
       if (selected.length === 5) break;
@@ -462,26 +531,31 @@ function buildCurrentSystem(answers) {
     answers.assessment_scope ||
     "the sales operation";
 
-  const sources = Array.isArray(answers.sales_sources)
-    ? answers.sales_sources.filter(
-        (source) => source !== "Not sure"
-      )
-    : [];
+  const sources =
+    Array.isArray(answers.sales_sources)
+      ? answers.sales_sources.filter(
+          (source) => source !== "Not sure"
+        )
+      : [];
 
-  const importantSources = Array.isArray(answers.top_sources)
-    ? answers.top_sources.filter(
-        (source) =>
-          source !== "We don't know which contribute most"
-      )
-    : [];
+  const importantSources =
+    Array.isArray(answers.top_sources)
+      ? answers.top_sources.filter(
+          (source) =>
+            source !==
+            "We don't know which contribute most"
+        )
+      : [];
 
-  const processSteps = Array.isArray(answers.process_steps)
-    ? answers.process_steps
-    : [];
+  const processSteps =
+    Array.isArray(answers.process_steps)
+      ? answers.process_steps
+      : [];
 
-  const orderedSteps = Array.isArray(answers.process_order)
-    ? answers.process_order
-    : processSteps;
+  const orderedSteps =
+    Array.isArray(answers.process_order)
+      ? answers.process_order
+      : processSteps;
 
   return {
     scope,
@@ -489,9 +563,12 @@ function buildCurrentSystem(answers) {
     sources,
     importantSources,
     processSteps: orderedSteps,
-    processClarity: answers.process_clarity || null,
-    differentPath: answers.different_path || null,
-    stallPoint: answers.stall_point || null
+    processClarity:
+      answers.process_clarity || null,
+    differentPath:
+      answers.different_path || null,
+    stallPoint:
+      answers.stall_point || null
   };
 }
 
@@ -502,258 +579,320 @@ function buildCurrentSystem(answers) {
 const buildPathMap = {
   unknown_source_contribution: {
     id: "establish_source_visibility",
-    title: "Establish which opportunity sources materially contribute",
-    guideTopic: "Map How Your Business Sells / Sales Lines"
+    title:
+      "Establish which opportunity sources materially contribute",
+    guideTopic:
+      "Map How Your Business Sells / Sales Lines"
   },
 
   partial_source_objectives: {
     id: "define_source_results",
-    title: "Define the intended results of important opportunity sources",
-    guideTopic: "Define the Objective of Each Step"
+    title:
+      "Define the intended results of important opportunity sources",
+    guideTopic:
+      "Define the Objective of Each Step"
   },
 
   undefined_source_objectives: {
     id: "define_source_results",
-    title: "Define the intended results of important opportunity sources",
-    guideTopic: "Define the Objective of Each Step"
+    title:
+      "Define the intended results of important opportunity sources",
+    guideTopic:
+      "Define the Objective of Each Step"
   },
 
   partial_source_evidence: {
     id: "verify_sources",
-    title: "Establish evidence for important opportunity sources",
-    guideTopic: "Evidence and Verification"
+    title:
+      "Establish evidence for important opportunity sources",
+    guideTopic:
+      "Evidence and Verification"
   },
 
   source_assumption: {
     id: "verify_sources",
-    title: "Replace assumptions about source effectiveness with evidence",
-    guideTopic: "Evidence and Verification"
+    title:
+      "Replace assumptions about source effectiveness with evidence",
+    guideTopic:
+      "Evidence and Verification"
   },
 
   unknown_source_effectiveness: {
     id: "verify_sources",
-    title: "Establish how source effectiveness will be determined",
-    guideTopic: "Evidence and Verification"
+    title:
+      "Establish how source effectiveness will be determined",
+    guideTopic:
+      "Evidence and Verification"
   },
 
   defined_but_unverified_sources: {
     id: "connect_source_evidence",
-    title: "Connect source objectives to evidence of their results",
-    guideTopic: "Evidence and Verification"
+    title:
+      "Connect source objectives to evidence of their results",
+    guideTopic:
+      "Evidence and Verification"
   },
 
   unmapped_process: {
     id: "map_sales_path",
-    title: "Map the major path opportunities follow through the sale",
-    guideTopic: "Map How Your Business Sells / Sales Lines"
+    title:
+      "Map the major path opportunities follow through the sale",
+    guideTopic:
+      "Map How Your Business Sells / Sales Lines"
   },
 
   unknown_process: {
     id: "map_sales_path",
-    title: "Reconstruct the actual sales path",
-    guideTopic: "Map How Your Business Sells / Sales Lines"
+    title:
+      "Reconstruct the actual sales path",
+    guideTopic:
+      "Map How Your Business Sells / Sales Lines"
   },
 
   variable_process: {
     id: "clarify_variation",
-    title: "Distinguish deliberate process variation from individual habit",
-    guideTopic: "Define the Objective of Each Step"
+    title:
+      "Distinguish deliberate process variation from individual habit",
+    guideTopic:
+      "Define the Objective of Each Step"
   },
 
   no_step_objectives: {
     id: "define_advancement",
-    title: "Establish advancement objectives for important sales steps",
-    guideTopic: "Define the Objective of Each Step"
+    title:
+      "Establish advancement objectives for important sales steps",
+    guideTopic:
+      "Define the Objective of Each Step"
   },
 
   informal_step_objectives: {
     id: "define_advancement",
-    title: "Turn informal step expectations into explicit advancement objectives",
-    guideTopic: "Define the Objective of Each Step"
+    title:
+      "Turn informal step expectations into explicit advancement objectives",
+    guideTopic:
+      "Define the Objective of Each Step"
   },
 
   partial_step_objectives: {
     id: "define_advancement",
-    title: "Complete the advancement objectives across important sales steps",
-    guideTopic: "Define the Objective of Each Step"
+    title:
+      "Complete the advancement objectives across important sales steps",
+    guideTopic:
+      "Define the Objective of Each Step"
   },
 
   subjective_step_evidence: {
     id: "verify_advancement",
-    title: "Establish observable evidence of sales-step advancement",
-    guideTopic: "Evidence and Verification"
+    title:
+      "Establish observable evidence of sales-step advancement",
+    guideTopic:
+      "Evidence and Verification"
   },
 
   continuation_assumption: {
     id: "verify_advancement",
-    title: "Distinguish successful advancement from simple opportunity continuation",
-    guideTopic: "Evidence and Verification"
+    title:
+      "Distinguish successful advancement from simple opportunity continuation",
+    guideTopic:
+      "Evidence and Verification"
   },
 
   no_step_evidence: {
     id: "verify_advancement",
-    title: "Establish evidence for important process-step outcomes",
-    guideTopic: "Evidence and Verification"
+    title:
+      "Establish evidence for important process-step outcomes",
+    guideTopic:
+      "Evidence and Verification"
   },
 
   clear_process_contradiction: {
     id: "operationalize_process",
-    title: "Operationalize the existing process with defined outcomes and evidence",
-    guideTopic: "Define the Objective of Each Step"
+    title:
+      "Operationalize the existing process with defined outcomes and evidence",
+    guideTopic:
+      "Define the Objective of Each Step"
   },
 
   buyer_requirements_undefined: {
     id: "define_buyer_progression",
-    title: "Define what buyers must understand and conclude",
+    title:
+      "Define what buyers must understand and conclude",
     guideTopic: "Cross-Through Points"
   },
 
   buyer_progression_individual: {
     id: "define_buyer_progression",
-    title: "Establish common buyer-progression outcomes",
+    title:
+      "Establish common buyer-progression outcomes",
     guideTopic: "Cross-Through Points"
   },
 
   preference_undefined: {
     id: "establish_preference",
-    title: "Define how buyer preference will be established and recognized",
+    title:
+      "Define how buyer preference will be established and recognized",
     guideTopic: "Cross-Through Points"
   },
 
   preference_unverified: {
     id: "establish_preference",
-    title: "Replace inferred buyer preference with observable evidence",
+    title:
+      "Replace inferred buyer preference with observable evidence",
     guideTopic: "Cross-Through Points"
   },
 
   preference_unknown: {
     id: "establish_preference",
-    title: "Determine how buyer preference can be recognized",
+    title:
+      "Determine how buyer preference can be recognized",
     guideTopic: "Cross-Through Points"
   },
 
   value_assumed: {
     id: "verify_value",
-    title: "Establish how buyer-perceived value will be verified",
+    title:
+      "Establish how buyer-perceived value will be verified",
     guideTopic: "Cross-Through Points"
   },
 
   value_undefined: {
     id: "verify_value",
-    title: "Define evidence of sufficient buyer-perceived value",
+    title:
+      "Define evidence of sufficient buyer-perceived value",
     guideTopic: "Cross-Through Points"
   },
 
   value_unknown: {
     id: "verify_value",
-    title: "Determine how buyer-perceived value can be verified",
+    title:
+      "Determine how buyer-perceived value can be verified",
     guideTopic: "Cross-Through Points"
   },
 
   value_communication_verification_gap: {
     id: "verify_value",
-    title: "Connect the value approach to evidence of buyer-perceived value",
+    title:
+      "Connect the value approach to evidence of buyer-perceived value",
     guideTopic: "Cross-Through Points"
   },
 
   benefit_incomplete: {
     id: "strengthen_reason_to_act",
-    title: "Establish the buyer's meaningful reason to act",
+    title:
+      "Establish the buyer's meaningful reason to act",
     guideTopic: "Cross-Through Points"
   },
 
   resolution_incomplete: {
     id: "strengthen_resolution",
-    title: "Establish how remaining buying issues will be surfaced and resolved",
+    title:
+      "Establish how remaining buying issues will be surfaced and resolved",
     guideTopic: "Confirmation"
   },
 
   resolution_unknown: {
     id: "strengthen_resolution",
-    title: "Examine how remaining buying issues are currently resolved",
+    title:
+      "Examine how remaining buying issues are currently resolved",
     guideTopic: "Confirmation"
   },
 
   readiness_unverified: {
     id: "verify_readiness",
-    title: "Define observable evidence of buyer willingness to proceed",
+    title:
+      "Define observable evidence of buyer willingness to proceed",
     guideTopic: "Confirmation"
   },
 
   stall_unknown: {
     id: "locate_breakdown",
-    title: "Establish where promising opportunities stop advancing",
-    guideTopic: "Evidence and Verification"
+    title:
+      "Establish where promising opportunities stop advancing",
+    guideTopic:
+      "Evidence and Verification"
   },
 
   stall_cause_unverified: {
     id: "investigate_breakdown",
-    title: "Test the suspected causes of opportunity breakdown",
+    title:
+      "Test the suspected causes of opportunity breakdown",
     guideTopic: "Drivers and Barriers"
   },
 
   stall_cause_unknown: {
     id: "investigate_breakdown",
-    title: "Investigate why opportunities break down at the identified point",
+    title:
+      "Investigate why opportunities break down at the identified point",
     guideTopic: "Drivers and Barriers"
   },
 
   cause_assumption: {
     id: "investigate_causes",
-    title: "Separate suspected causes from established causes",
+    title:
+      "Separate suspected causes from established causes",
     guideTopic: "Drivers and Barriers"
   },
 
   activity_response: {
     id: "diagnose_before_change",
-    title: "Diagnose weak results before changing tactics or increasing activity",
+    title:
+      "Diagnose weak results before changing tactics or increasing activity",
     guideTopic: "Drivers and Barriers"
   },
 
   testing_incomplete: {
     id: "establish_testing",
-    title: "Use deliberate testing for important sales changes",
+    title:
+      "Use deliberate testing for important sales changes",
     guideTopic: "Discovery and Testing"
   },
 
   testing_unknown: {
     id: "establish_testing",
-    title: "Establish a method for determining whether sales changes work",
+    title:
+      "Establish a method for determining whether sales changes work",
     guideTopic: "Discovery and Testing"
   },
 
   testing_claim_contradiction: {
     id: "complete_testing",
-    title: "Complete the evidence required for reliable sales testing",
+    title:
+      "Complete the evidence required for reliable sales testing",
     guideTopic: "Discovery and Testing"
   },
 
   execution_variation: {
     id: "address_execution",
-    title: "Identify and correct material execution weaknesses",
+    title:
+      "Identify and correct material execution weaknesses",
     guideTopic: "System vs. Execution"
   },
 
   execution_unknown: {
     id: "establish_execution_visibility",
-    title: "Establish visibility into execution of the sales approach",
+    title:
+      "Establish visibility into execution of the sales approach",
     guideTopic: "System vs. Execution"
   },
 
   system_execution_gap: {
     id: "address_execution",
-    title: "Strengthen execution before redesigning a viable process",
+    title:
+      "Strengthen execution before redesigning a viable process",
     guideTopic: "System vs. Execution"
   },
 
   undefined_system_execution: {
     id: "define_before_execution",
-    title: "Define the required system before treating execution as the primary problem",
+    title:
+      "Define the required system before treating execution as the primary problem",
     guideTopic: "System vs. Execution"
   }
 };
 
-function buildPathFromFindings(priorityFindings) {
+function buildPathFromFindings(
+  priorityFindings
+) {
   const steps = [];
   const seen = new Set();
 
@@ -774,9 +913,14 @@ function buildPathFromFindings(priorityFindings) {
 // --------------------------------------------------
 
 export function buildDiagnostic(answers) {
-  const directFindings = evaluateDirectFindings(answers);
-  const crossFindings = evaluateCrossAnswerFindings(answers);
-  const additionalStrengths = evaluateAdditionalStrengths(answers);
+  const directFindings =
+    evaluateDirectFindings(answers);
+
+  const crossFindings =
+    evaluateCrossAnswerFindings(answers);
+
+  const additionalStrengths =
+    evaluateAdditionalStrengths(answers);
 
   const combined = uniqueById([
     ...directFindings,
@@ -785,30 +929,58 @@ export function buildDiagnostic(answers) {
   ]);
 
   const strengths = uniqueById(
-    combined.filter((item) => item.type === findingTypes.SOLID)
+    combined.filter(
+      (item) =>
+        item.type === findingTypes.SOLID
+    )
   );
 
-  let attentionFindings = combined.filter(
-    (item) => item.type !== findingTypes.SOLID
-  );
+  let attentionFindings =
+    combined.filter(
+      (item) =>
+        item.type !== findingTypes.SOLID
+    );
 
-  attentionFindings = removeSupersededFindings(attentionFindings);
-  attentionFindings = applyCorroboration(attentionFindings);
+  attentionFindings =
+    removeSupersededFindings(
+      attentionFindings
+    );
+
+  attentionFindings =
+    consolidateRelatedFindings(
+      attentionFindings
+    );
+
+  attentionFindings =
+    applyCorroboration(
+      attentionFindings
+    );
 
   const priorityFindings =
-    selectPriorityFindings(attentionFindings);
+    selectPriorityFindings(
+      attentionFindings
+    );
 
   const buildPath =
-    buildPathFromFindings(priorityFindings);
+    buildPathFromFindings(
+      priorityFindings
+    );
 
   return {
-    currentSystem: buildCurrentSystem(answers),
+    currentSystem:
+      buildCurrentSystem(answers),
+
     strengths,
+
     attentionFindings,
+
     priorityFindings,
+
     buildPath,
+
     context: {
-      additionalContext: answers.additional_context || null
+      additionalContext:
+        answers.additional_context || null
     }
   };
 }
