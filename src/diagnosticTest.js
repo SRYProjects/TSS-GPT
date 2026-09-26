@@ -7,37 +7,26 @@ const testAnswers = {
   sales_sources: [
     "Referrals",
     "Outbound email",
-    "Website / search",
-    "Partners / distributors"
+    "Website / search"
   ],
 
   top_sources: [
     "Referrals",
-    "Partners / distributors",
     "Outbound email"
   ],
 
+  // Claims strong source discipline...
   source_objectives:
     "We have a specific intended result for each important activity",
 
   source_objective_verification: [
     "Qualified lead",
-    "Scheduled conversation",
-    "Request for estimate or quote"
+    "Scheduled conversation"
   ],
 
+  // ...but later reveals weak verification.
   source_evidence:
-    "We track the results of each important source",
-
-  source_evidence_verification: [
-    "Recorded inquiries",
-    "Qualified leads",
-    "Meetings or appointments",
-    "Source-to-sale conversion",
-    "CRM records",
-    "Orders or revenue",
-    "Customer-source tracking"
-  ],
+    "We rely mostly on experience or judgment",
 
   process_clarity:
     "We have a clear, deliberate process",
@@ -45,11 +34,9 @@ const testAnswers = {
   process_steps: [
     "Initial response or contact",
     "Qualification / determining fit",
-    "Learning about needs or requirements",
     "Consultation or meeting",
     "Demo or presentation",
     "Proposal",
-    "Customer internal review or approval",
     "Negotiation",
     "Contract or agreement"
   ],
@@ -57,17 +44,16 @@ const testAnswers = {
   process_order: [
     "Initial response or contact",
     "Qualification / determining fit",
-    "Learning about needs or requirements",
     "Consultation or meeting",
     "Demo or presentation",
     "Proposal",
-    "Customer internal review or approval",
     "Negotiation",
     "Contract or agreement"
   ],
 
   different_path: "No",
 
+  // Claims defined advancement...
   step_objectives:
     "Yes, for essentially every important step",
 
@@ -75,37 +61,27 @@ const testAnswers = {
     "Understand the buyer's situation",
     "Determine fit",
     "Establish interest",
-    "Identify decision participants",
-    "Agree on the next step",
-    "Establish scope and price",
-    "Obtain approval"
+    "Agree on the next step"
   ],
 
+  // ...but actual advancement is judged subjectively.
   step_evidence:
-    "We use defined evidence or measures",
+    "We rely primarily on salesperson judgment",
 
   buyer_understanding:
     "We have deliberately worked out what buyers need to understand",
 
+  // Claims buyer preference is recognized...
   buyer_preference:
     "We have recognizable evidence of buyer preference",
 
   preference_evidence: [
-    "The buyer explicitly expresses preference",
-    "The buyer advances us to a shortlist or next stage",
-    "The buyer agrees to a meaningful next step",
-    "The buyer asks serious evaluation questions"
+    "The buyer agrees to a meaningful next step"
   ],
 
+  // ...but value is still assumed rather than verified.
   buyer_value:
-    "We deliberately establish and verify perceived value",
-
-  value_evidence: [
-    "The buyer confirms the value",
-    "The buyer's actions indicate sufficient value",
-    "The buyer accepts the business case",
-    "The buyer advances despite alternatives"
-  ],
+    "We mainly explain our value and assume the buyer understands",
 
   buyer_benefit:
     "We deliberately identify and establish why the buyer wants to proceed",
@@ -116,32 +92,37 @@ const testAnswers = {
   resolution_details: [
     "Price",
     "Scope or specifications",
-    "Timing",
-    "Implementation",
-    "Risk",
-    "Contract terms",
-    "Procurement requirements",
-    "Internal approval"
+    "Internal approval",
+    "Contract terms"
   ],
 
+  // Contradicts the claimed deliberate resolution discipline.
   readiness_evidence:
-    "The buyer explicitly says they want to proceed",
+    "The salesperson judges that they are ready",
 
-  stall_point:
-    "No consistent pattern",
+  stall_point: "Proposal",
 
+  stall_reason: [
+    "Price becomes a problem",
+    "Customer stops responding"
+  ],
+
+  // Company believes it knows the problem, but evidence is weak.
+  stall_confidence:
+    "It is mainly salesperson judgment",
+
+  // Claims disciplined diagnosis...
   weak_result_response:
     "We investigate causes before deciding what to change",
 
+  // ...and claims disciplined testing...
   testing:
     "We compare deliberate changes against meaningful evidence",
 
+  // ...but the claimed testing process is incomplete.
   testing_verification: [
-    "What result is occurring before the change",
     "What specifically is being changed",
-    "What improvement is expected",
-    "What evidence will indicate whether it worked",
-    "A comparison afterward"
+    "What improvement is expected"
   ],
 
   execution:
@@ -150,7 +131,7 @@ const testAnswers = {
 
 const result = buildDiagnostic(testAnswers);
 
-console.log("SAGE STRONG-COMPANY TEST");
+console.log("SAGE CONTRADICTION TEST");
 
 console.log(
   "STRENGTHS:",
