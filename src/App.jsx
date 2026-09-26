@@ -1,460 +1,1969 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { stages, questions } from "./diagnosticConfig";
+import { buildDiagnostic } from "./diagnosticEngine";
 
-const questions = [
-  {
-    id: "sales_sources",
-    section: "How Sales Begin",
-    question: "How does new business typically find its way to you?",
-    help: "Select every source that makes a meaningful contribution to sales.",
-    type: "multi",
-    options: [
-      "Referrals",
-      "Existing customers",
-      "Outbound sales",
-      "Website / search",
-      "Advertising",
-      "Email campaigns",
-      "Social media",
-      "Events / trade shows",
-      "Partners / distributors",
-      "Other"
-    ]
-  },
-  {
-    id: "source_intent",
-    section: "How Sales Begin",
-    question: "For those sales activities, how clear are you about what each one is supposed to produce?",
-    help: "Think beyond 'generate sales.' What specific response or result should each activity create?",
-    type: "single",
-    options: [
-      "Each important activity has a specific intended result",
-      "Some do, but others are less clearly defined",
-      "We generally know what we want, but it isn't specifically defined",
-      "We mostly perform the activities and judge the results afterward"
-    ]
-  },
-  {
-    id: "source_evidence",
-    section: "How Sales Begin",
-    question: "How do you know which ways of generating business are actually working?",
-    help: "Choose the answer that best describes your current practice.",
-    type: "single",
-    options: [
-      "We track the result of each important source",
-      "We track some sources but not others",
-      "We rely mostly on experience or judgment",
-      "We don't really know"
-    ]
-  },
-  {
-    id: "process_visibility",
-    section: "How Sales Move",
-    question: "Once a potential buyer engages, how clearly can you describe what normally happens between that point and a sale?",
-    help: "We're looking for what actually happens—not an ideal process on paper.",
-    type: "single",
-    options: [
-      "We have a clear, deliberate process",
-      "There is a general process, but it varies",
-      "It depends heavily on the salesperson or situation",
-      "We have never really mapped it"
-    ]
-  },
-  {
-    id: "step_objectives",
-    section: "How Sales Move",
-    question: "Do the important steps in your sales process have a specific result they are expected to produce?",
-    help: "For example, a meeting might need to establish fit and agreement on a next step—not merely 'have a good meeting.'",
-    type: "single",
-    options: [
-      "Yes, for essentially every important step",
-      "For some steps",
-      "The results are generally understood but not defined",
-      "No"
-    ]
-  },
-  {
-    id: "step_evidence",
-    section: "How Sales Move",
-    question: "How do you determine whether each important step actually accomplished what it needed to?",
-    help: "Think about observable buyer response, measurable results, or other reliable evidence.",
-    type: "single",
-    options: [
-      "We use defined evidence or measures",
-      "We have evidence for some steps",
-      "We rely primarily on salesperson judgment",
-      "We don't evaluate individual steps this way"
-    ]
-  },
-  {
-    id: "buyer_understanding",
-    section: "The Buyer's Experience",
-    question: "How deliberately do you establish what a buyer needs to understand before they should choose you?",
-    help: "Consider relevance, differentiation, value, evidence, risk, and alternatives.",
-    type: "single",
-    options: [
-      "We have deliberately worked this out",
-      "We understand much of it, but it isn't fully developed",
-      "It is largely left to individual salespeople",
-      "We have not examined it this way"
-    ]
-  },
-  {
-    id: "buyer_favor",
-    section: "The Buyer's Experience",
-    question: "How do you know when a buyer has moved from simply being interested to actually favoring your company or offer?",
-    help: "We're asking about evidence of preference—not whether the conversation seems positive.",
-    type: "single",
-    options: [
-      "We have recognizable evidence of buyer preference",
-      "We have some indicators, but they aren't consistent",
-      "We mostly infer it from the conversation",
-      "We don't distinguish interest from preference"
-    ]
-  },
-  {
-    id: "value",
-    section: "The Buyer's Experience",
-    question: "How do you know buyers perceive enough value in your offer to justify choosing it over alternatives?",
-    help: "Explaining value and knowing the buyer perceives value are different things.",
-    type: "single",
-    options: [
-      "We deliberately establish and verify perceived value",
-      "We address value but don't consistently verify it",
-      "We mainly explain our value and assume the buyer understands",
-      "We haven't defined how to determine this"
-    ]
-  },
-  {
-    id: "benefit",
-    section: "The Buyer's Experience",
-    question: "Beyond the rational value of your offer, how deliberately do you address why the buyer would actually want to act?",
-    help: "Consider what changes for the buyer personally, why it matters, and why proceeding is worthwhile.",
-    type: "single",
-    options: [
-      "We deliberately identify and establish this",
-      "We address it in some situations",
-      "It depends mostly on the salesperson",
-      "We focus primarily on the rational business case"
-    ]
-  },
-  {
-    id: "causes",
-    section: "Understanding Performance",
-    question: "When a sales result is weaker than expected, what normally happens next?",
-    help: "Choose the answer that most closely reflects your usual practice.",
-    type: "single",
-    options: [
-      "We investigate possible causes before deciding what to change",
-      "We review the situation, but the process is informal",
-      "We usually act on the most likely explanation",
-      "We tend to change tactics or push for more activity"
-    ]
-  },
-  {
-    id: "testing",
-    section: "Understanding Performance",
-    question: "When you change how you sell, how do you determine whether the change actually improved performance?",
-    help: "Think about baseline results, deliberate changes, and evidence—not simply whether results later improved.",
-    type: "single",
-    options: [
-      "We compare deliberate changes against meaningful evidence",
-      "We measure some changes but not systematically",
-      "We judge primarily from experience and overall results",
-      "We rarely test changes in a structured way"
-    ]
-  },
-  {
-    id: "execution",
-    section: "Working the System",
-    question: "How confident are you that your sales approach is being executed consistently as intended?",
-    help: "Consider consistency, balance of effort, persistence, and the skills required to perform the work.",
-    type: "single",
-    options: [
-      "We verify execution and address deviations",
-      "Execution is generally consistent, with some variation",
-      "It varies significantly by person or situation",
-      "We don't have enough visibility to know"
-    ]
-  }
-];
+// --------------------------------------------------
+// HELPERS
+// --------------------------------------------------
 
-function App() {
-  const [screen, setScreen] = useState("landing");
-  const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState({});
+function hasValue(value) {
+  if (Array.isArray(value)) return value.length > 0;
 
-  const question = questions[current];
-  const answer = answers[question?.id];
-
-  function selectAnswer(value) {
-    if (question.type === "multi") {
-      const existing = answer || [];
-      const updated = existing.includes(value)
-        ? existing.filter((item) => item !== value)
-        : [...existing, value];
-
-      setAnswers({ ...answers, [question.id]: updated });
-    } else {
-      setAnswers({ ...answers, [question.id]: value });
-    }
+  if (value && typeof value === "object") {
+    return Object.keys(value).length > 0;
   }
 
-  function canContinue() {
-    if (!question) return false;
-    if (question.type === "multi") return answer?.length > 0;
-    return Boolean(answer);
-  }
-
-  function nextQuestion() {
-    if (!canContinue()) return;
-
-    if (current === questions.length - 1) {
-      setScreen("complete");
-      return;
-    }
-
-    setCurrent(current + 1);
-  }
-
-  function previousQuestion() {
-    if (current > 0) setCurrent(current - 1);
-  }
-
-  if (screen === "landing") {
-    return (
-      <div className="landing">
-        <Header />
-
-        <main className="hero">
-          <div className="hero-content">
-            <span className="eyebrow">STOP GOING THROUGH THE MOTIONS</span>
-
-            <h1>
-              Improve your sales by
-              <br />
-              improving <em>how you sell.</em>
-            </h1>
-
-            <p className="hero-copy">
-              You already have a sales system. SAGE helps you understand it,
-              see what's working, uncover what's missing, and determine where
-              improvement matters.
-            </p>
-
-            <p className="hero-statement">
-              The sales success you want starts with how you sell.
-            </p>
-
-            <button
-              className="primary-button"
-              onClick={() => setScreen("intro")}
-            >
-              Get Started <span>→</span>
-            </button>
-
-            <p className="free-note">
-              Free Sales System Review · No CRM connection required
-            </p>
-          </div>
-
-          <SystemVisual />
-        </main>
-      </div>
-    );
-  }
-
-  if (screen === "intro") {
-    return (
-      <div className="app-shell">
-        <Header review />
-
-        <main className="review-start">
-          <div className="review-card">
-            <span className="eyebrow">LET'S LOOK AT HOW YOU SELL</span>
-
-            <h1>First, let's make your sales system visible.</h1>
-
-            <p>
-              I'll ask you about how sales begin, how opportunities move,
-              what buyers need from you, and how you determine what is
-              actually working.
-            </p>
-
-            <div className="review-note">
-              <strong>No reports. No CRM access. No spreadsheets.</strong>
-              <span>
-                Answer based on how your business actually sells today.
-                There are no right answers.
-              </span>
-            </div>
-
-            <button
-              className="primary-button"
-              onClick={() => setScreen("questions")}
-            >
-              Begin My Review <span>→</span>
-            </button>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  if (screen === "complete") {
-    return (
-      <div className="app-shell">
-        <Header review />
-
-        <main className="review-start">
-          <div className="review-card complete-card">
-            <span className="eyebrow">REVIEW COMPLETE</span>
-            <h1>Now let's make sense of how you sell.</h1>
-            <p>
-              SAGE has enough information to begin identifying how deliberate,
-              connected, and measurable your sales system is—and where closer
-              examination may improve performance.
-            </p>
-
-            <button className="primary-button">
-              See My Sales System Review <span>→</span>
-            </button>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  const progress = ((current + 1) / questions.length) * 100;
-
-  return (
-    <div className="question-shell">
-      <Header review />
-
-      <div className="progress-track">
-        <div
-          className="progress-fill"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-
-      <main className="question-layout">
-        <aside className="question-meta">
-          <span className="question-count">
-            {String(current + 1).padStart(2, "0")} /{" "}
-            {String(questions.length).padStart(2, "0")}
-          </span>
-
-          <span className="question-section">{question.section}</span>
-
-          <div className="section-rule" />
-
-          <p>
-            Your answers build a clearer picture of how your sales system
-            actually works.
-          </p>
-        </aside>
-
-        <section className="question-panel">
-          <h2>{question.question}</h2>
-          <p className="question-help">{question.help}</p>
-
-          <div className="answer-list">
-            {question.options.map((option) => {
-              const selected =
-                question.type === "multi"
-                  ? answer?.includes(option)
-                  : answer === option;
-
-              return (
-                <button
-                  key={option}
-                  className={`answer-option ${selected ? "selected" : ""}`}
-                  onClick={() => selectAnswer(option)}
-                >
-                  <span className="answer-control">
-                    {selected ? "✓" : ""}
-                  </span>
-                  <span>{option}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="question-actions">
-            <button
-              className="back-button"
-              onClick={previousQuestion}
-              disabled={current === 0}
-            >
-              ← Back
-            </button>
-
-            <button
-              className="primary-button"
-              disabled={!canContinue()}
-              onClick={nextQuestion}
-            >
-              {current === questions.length - 1
-                ? "Complete Review"
-                : "Continue"}
-              <span>→</span>
-            </button>
-          </div>
-        </section>
-      </main>
-    </div>
-  );
+  return value !== undefined && value !== null && value !== "";
 }
 
-function Header({ review = false }) {
-  return (
-    <header className="landing-header">
-      <div className="brand">
-        <span className="brand-mark">S</span>
-        <div>
-          <strong>SAGE</strong>
-          <span>Sales System Guide</span>
-        </div>
-      </div>
+function getDynamicOptions(question, answers) {
+  const source = answers[question.sourceAnswer];
 
-      <span className="powered">
-        {review ? "Sales System Review" : "Powered by Cross-Through"}
-      </span>
+  const sourceOptions = Array.isArray(source) ? source : [];
+  const additional = question.additionalOptions || [];
+
+  return [...sourceOptions, ...additional];
+}
+
+function getImportantSources(answers) {
+  if (Array.isArray(answers.top_sources)) {
+    const usable = answers.top_sources.filter(
+      (item) => item !== "We don't know which contribute most"
+    );
+
+    if (usable.length > 0) return usable;
+  }
+
+  if (Array.isArray(answers.sales_sources)) {
+    return answers.sales_sources.filter(
+      (item) =>
+        item !== "Not sure" &&
+        item !== "Other"
+    );
+  }
+
+  return [];
+}
+
+function getImportantSteps(answers) {
+  if (Array.isArray(answers.process_steps)) {
+    return answers.process_steps;
+  }
+
+  return [];
+}
+
+function getStepOutcomeOptions(step) {
+  const normalized = step.toLowerCase();
+
+  if (
+    normalized.includes("meeting") ||
+    normalized.includes("consultation")
+  ) {
+    return [
+      "Understand the buyer's situation",
+      "Determine fit",
+      "Establish meaningful interest",
+      "Identify decision participants",
+      "Agree on the next step",
+      "Other defined result"
+    ];
+  }
+
+  if (
+    normalized.includes("demonstration") ||
+    normalized.includes("presentation")
+  ) {
+    return [
+      "Address the buyer's need",
+      "Establish preference",
+      "Demonstrate capability or expected results",
+      "Resolve important questions",
+      "Secure a meaningful next step",
+      "Other defined result"
+    ];
+  }
+
+  if (
+    normalized.includes("proposal") ||
+    normalized.includes("estimate") ||
+    normalized.includes("quote")
+  ) {
+    return [
+      "Enable the buyer to evaluate the offer",
+      "Establish scope and price",
+      "Obtain approval",
+      "Begin or advance negotiation",
+      "Secure a meaningful next step",
+      "Other defined result"
+    ];
+  }
+
+  if (normalized.includes("qualification")) {
+    return [
+      "Determine whether the opportunity is a fit",
+      "Confirm a meaningful need or requirement",
+      "Determine buying potential",
+      "Identify who is involved in the decision",
+      "Agree on the next step",
+      "Other defined result"
+    ];
+  }
+
+  if (
+    normalized.includes("needs") ||
+    normalized.includes("situation")
+  ) {
+    return [
+      "Understand the buyer's situation",
+      "Identify important needs or requirements",
+      "Understand desired results",
+      "Identify barriers or concerns",
+      "Agree on the next step",
+      "Other defined result"
+    ];
+  }
+
+  if (normalized.includes("negotiation")) {
+    return [
+      "Resolve remaining commercial issues",
+      "Reach acceptable terms",
+      "Resolve objections or concerns",
+      "Confirm willingness to proceed",
+      "Other defined result"
+    ];
+  }
+
+  if (
+    normalized.includes("contract") ||
+    normalized.includes("agreement")
+  ) {
+    return [
+      "Resolve remaining agreement issues",
+      "Obtain final approval",
+      "Secure commitment",
+      "Establish implementation or next steps",
+      "Other defined result"
+    ];
+  }
+
+  if (
+    normalized.includes("follow-up") ||
+    normalized.includes("nurturing")
+  ) {
+    return [
+      "Maintain meaningful engagement",
+      "Advance the buying decision",
+      "Resolve an outstanding issue",
+      "Secure a meaningful next step",
+      "Other defined result"
+    ];
+  }
+
+  return [
+    "Create a specific buyer response",
+    "Establish or confirm fit",
+    "Advance the opportunity",
+    "Resolve an important issue",
+    "Secure a meaningful next step",
+    "Other defined result"
+  ];
+}
+
+function buildQuestionFlow(answers) {
+  const flow = [];
+
+  questions.forEach((question) => {
+    flow.push({
+      ...question,
+      parentId: null
+    });
+
+    if (
+      question.followUp &&
+      question.followUp.when(answers)
+    ) {
+      flow.push({
+        ...question.followUp,
+        stage: question.stage,
+        parentId: question.id
+      });
+
+      if (
+        question.followUp.nextFollowUp &&
+        hasValue(answers[question.followUp.id])
+      ) {
+        flow.push({
+          ...question.followUp.nextFollowUp,
+          stage: question.stage,
+          parentId: question.followUp.id
+        });
+      }
+    }
+  });
+
+  return flow;
+}
+
+function getStageIndex(stageId) {
+  return stages.findIndex((stage) => stage.id === stageId);
+}
+
+function cleanReportFinding(item) {
+  return {
+    id: item.id,
+    type: item.type,
+    title: item.title,
+    support: item.support,
+    why: item.why,
+    direction: item.direction,
+    improvementEvidence: item.improvementEvidence,
+    guideTopic: item.guideTopic
+  };
+}
+
+// --------------------------------------------------
+// HEADER
+// --------------------------------------------------
+
+function Header({ onHome }) {
+  return (
+    <header className="site-header">
+      <button
+        type="button"
+        className="brand-button"
+        onClick={onHome}
+        aria-label="SAGE home"
+      >
+        <span className="brand-mark">S</span>
+
+        <span className="brand-copy">
+          <strong>SAGE</strong>
+          <small>Sales System Guide</small>
+        </span>
+      </button>
     </header>
   );
 }
+
+// --------------------------------------------------
+// LANDING VISUAL
+// --------------------------------------------------
 
 function SystemVisual() {
   return (
     <div className="system-visual" aria-hidden="true">
       <div className="visual-label">YOUR SALES SYSTEM</div>
 
-      <div className="system-path">
-        {[
-          ["01", "Create Interest", "How opportunities begin"],
-          ["02", "Build Preference", "Why buyers favor you"],
-          ["03", "Establish Value", "Why buying makes sense"],
-          ["04", "Move to Action", "Why buyers proceed"]
-        ].map(([number, title, description], index) => (
-          <React.Fragment key={number}>
-            <div className="system-node">
-              <span>{number}</span>
-              <strong>{title}</strong>
-              <small>{description}</small>
-            </div>
-            {index < 3 && <div className="connector" />}
-          </React.Fragment>
-        ))}
+      <div className="visual-flow">
+        <div className="visual-node">
+          <span>Opportunity</span>
+        </div>
+
+        <div className="visual-line" />
+
+        <div className="visual-node">
+          <span>Process</span>
+        </div>
+
+        <div className="visual-line" />
+
+        <div className="visual-node">
+          <span>Buyer</span>
+        </div>
+
+        <div className="visual-line" />
+
+        <div className="visual-node visual-node-accent">
+          <span>Sale</span>
+        </div>
       </div>
 
-      <div className="visual-footer">
-        <span>ACTIVITY</span>
-        <span>RESULT</span>
-        <span>EVIDENCE</span>
-        <span>IMPROVEMENT</span>
+      <div className="visual-signals">
+        <span>Objectives</span>
+        <span>Evidence</span>
+        <span>Progression</span>
+        <span>Execution</span>
       </div>
     </div>
   );
 }
 
-export default App;
+// --------------------------------------------------
+// LANDING
+// --------------------------------------------------
+
+function Landing({ onStart }) {
+  return (
+    <main className="landing-shell">
+      <section className="landing-copy">
+        <div className="eyebrow">
+          STOP GOING THROUGH THE MOTIONS
+        </div>
+
+        <h1>
+          Improve your sales by improving how you sell.
+        </h1>
+
+        <p className="landing-lead">
+          You already have a sales system. SAGE helps you
+          understand it, see what's working, uncover what's
+          missing, and determine where improvement matters.
+        </p>
+
+        <p className="landing-statement">
+          The sales success you want starts with how you sell.
+        </p>
+
+        <button
+          type="button"
+          className="primary-button landing-cta"
+          onClick={onStart}
+        >
+          Get Started
+        </button>
+
+        <div className="landing-note">
+          Free Sales System Review · No CRM connection required
+        </div>
+      </section>
+
+      <section className="landing-visual">
+        <SystemVisual />
+      </section>
+    </main>
+  );
+}
+
+// --------------------------------------------------
+// INTRO
+// --------------------------------------------------
+
+function Intro({ onContinue, onBack }) {
+  return (
+    <main className="intro-shell">
+      <section className="intro-card">
+        <div className="eyebrow">
+          LET'S LOOK AT HOW YOU SELL
+        </div>
+
+        <h1>First, let's make your sales system visible.</h1>
+
+        <p>
+          SAGE will ask about how sales begin, how opportunities
+          move, how buyers progress, how you determine what is
+          working, and how consistently the system is executed.
+        </p>
+
+        <p>
+          Some answers may trigger a short follow-up. Those
+          follow-ups help distinguish established practices from
+          assumptions, uncertainty, or incomplete information.
+        </p>
+
+        <div className="intro-promise">
+          No reports to upload. No CRM access. No spreadsheets.
+        </div>
+
+        <div className="question-actions">
+          <button
+            type="button"
+            className="back-button"
+            onClick={onBack}
+          >
+            Back
+          </button>
+
+          <button
+            type="button"
+            className="primary-button"
+            onClick={onContinue}
+          >
+            Begin Review
+          </button>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+// --------------------------------------------------
+// PROGRESS
+// --------------------------------------------------
+
+function StageProgress({ currentStage }) {
+  const currentIndex = getStageIndex(currentStage);
+
+  return (
+    <div className="stage-progress">
+      <div className="stage-progress-row">
+        {stages.map((stage, index) => {
+          const complete = index < currentIndex;
+          const active = index === currentIndex;
+
+          return (
+            <div
+              key={stage.id}
+              className={[
+                "stage-item",
+                complete ? "complete" : "",
+                active ? "active" : ""
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              <div className="stage-dot">
+                {complete ? "✓" : index + 1}
+              </div>
+
+              <div className="stage-label">
+                {stage.label}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// --------------------------------------------------
+// STANDARD ANSWERS
+// --------------------------------------------------
+
+function SingleAnswer({
+  question,
+  value,
+  onChange
+}) {
+  const options =
+    question.type === "dynamicSingle"
+      ? question.dynamicOptions
+      : question.options || [];
+
+  return (
+    <div className="answer-list">
+      {options.map((option) => (
+        <button
+          type="button"
+          key={option}
+          className={`answer-option ${
+            value === option ? "selected" : ""
+          }`}
+          onClick={() => onChange(option)}
+        >
+          <span className="answer-control">
+            {value === option ? "●" : "○"}
+          </span>
+
+          <span>{option}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function MultiAnswer({
+  question,
+  value = [],
+  onChange
+}) {
+  const options = question.options || [];
+  const selected = Array.isArray(value) ? value : [];
+
+  function toggle(option) {
+    const isSelected = selected.includes(option);
+
+    if (isSelected) {
+      onChange(
+        selected.filter((item) => item !== option)
+      );
+      return;
+    }
+
+    if (
+      question.maxSelections &&
+      selected.length >= question.maxSelections
+    ) {
+      return;
+    }
+
+    onChange([...selected, option]);
+  }
+
+  return (
+    <>
+      <div className="answer-list">
+        {options.map((option) => {
+          const isSelected = selected.includes(option);
+
+          const maxReached =
+            question.maxSelections &&
+            selected.length >= question.maxSelections &&
+            !isSelected;
+
+          return (
+            <button
+              type="button"
+              key={option}
+              className={`answer-option ${
+                isSelected ? "selected" : ""
+              }`}
+              disabled={maxReached}
+              onClick={() => toggle(option)}
+            >
+              <span className="answer-control">
+                {isSelected ? "✓" : "□"}
+              </span>
+
+              <span>{option}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {question.maxSelections && (
+        <div className="selection-note">
+          {selected.length} of {question.maxSelections} selected
+        </div>
+      )}
+    </>
+  );
+}
+
+function DynamicMultiAnswer({
+  question,
+  value = [],
+  onChange
+}) {
+  const selected = Array.isArray(value) ? value : [];
+  const options = question.dynamicOptions || [];
+
+  function toggle(option) {
+    const isSelected = selected.includes(option);
+
+    if (isSelected) {
+      onChange(
+        selected.filter((item) => item !== option)
+      );
+      return;
+    }
+
+    if (
+      question.maxSelections &&
+      selected.length >= question.maxSelections
+    ) {
+      return;
+    }
+
+    onChange([...selected, option]);
+  }
+
+  return (
+    <>
+      <div className="answer-list">
+        {options.map((option) => {
+          const isSelected = selected.includes(option);
+
+          const maxReached =
+            question.maxSelections &&
+            selected.length >= question.maxSelections &&
+            !isSelected;
+
+          return (
+            <button
+              type="button"
+              key={option}
+              className={`answer-option ${
+                isSelected ? "selected" : ""
+              }`}
+              disabled={maxReached}
+              onClick={() => toggle(option)}
+            >
+              <span className="answer-control">
+                {isSelected ? "✓" : "□"}
+              </span>
+
+              <span>{option}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="selection-note">
+        Choose up to {question.maxSelections}.
+      </div>
+    </>
+  );
+}
+
+// --------------------------------------------------
+// TEXT ANSWERS
+// --------------------------------------------------
+
+function TextAnswer({
+  value = "",
+  onChange,
+  textarea = false
+}) {
+  if (textarea) {
+    return (
+      <textarea
+        className="text-answer textarea-answer"
+        value={value}
+        rows={5}
+        maxLength={700}
+        placeholder="Type your answer here..."
+        onChange={(event) =>
+          onChange(event.target.value)
+        }
+      />
+    );
+  }
+
+  return (
+    <input
+      className="text-answer"
+      type="text"
+      value={value}
+      maxLength={250}
+      placeholder="Type your answer here..."
+      onChange={(event) =>
+        onChange(event.target.value)
+      }
+    />
+  );
+}
+
+// --------------------------------------------------
+// SOURCE OUTCOME MAP
+// --------------------------------------------------
+
+function SourceOutcomeMap({
+  answers,
+  value = {},
+  onChange,
+  options
+}) {
+  const sources = getImportantSources(answers);
+  const current =
+    value && typeof value === "object" && !Array.isArray(value)
+      ? value
+      : {};
+
+  function setOutcome(source, outcome) {
+    onChange({
+      ...current,
+      [source]: outcome
+    });
+  }
+
+  if (sources.length === 0) {
+    return (
+      <div className="inline-notice">
+        No specific source was identified earlier.
+      </div>
+    );
+  }
+
+  return (
+    <div className="mapping-list">
+      {sources.map((source) => (
+        <div className="mapping-card" key={source}>
+          <div className="mapping-title">{source}</div>
+
+          <div className="mapping-options">
+            {options.map((option) => (
+              <button
+                type="button"
+                key={option}
+                className={`mapping-option ${
+                  current[source] === option
+                    ? "selected"
+                    : ""
+                }`}
+                onClick={() =>
+                  setOutcome(source, option)
+                }
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// --------------------------------------------------
+// STEP OUTCOME MAP
+// --------------------------------------------------
+
+function StepOutcomeMap({
+  answers,
+  value = {},
+  onChange
+}) {
+  const steps = getImportantSteps(answers);
+
+  const current =
+    value && typeof value === "object" && !Array.isArray(value)
+      ? value
+      : {};
+
+  function setOutcome(step, outcome) {
+    onChange({
+      ...current,
+      [step]: outcome
+    });
+  }
+
+  return (
+    <div className="mapping-list">
+      {steps.map((step) => {
+        const options = getStepOutcomeOptions(step);
+
+        return (
+          <div className="mapping-card" key={step}>
+            <div className="mapping-title">{step}</div>
+
+            <div className="mapping-options">
+              {options.map((option) => (
+                <button
+                  type="button"
+                  key={option}
+                  className={`mapping-option ${
+                    current[step] === option
+                      ? "selected"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setOutcome(step, option)
+                  }
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// --------------------------------------------------
+// ORDERING
+// --------------------------------------------------
+
+function OrderAnswer({
+  question,
+  answers,
+  value,
+  onChange
+}) {
+  const original = Array.isArray(
+    answers[question.sourceAnswer]
+  )
+    ? answers[question.sourceAnswer]
+    : [];
+
+  const isSpecial =
+    typeof value === "string" &&
+    (question.additionalOptions || []).includes(value);
+
+  const ordered =
+    Array.isArray(value) &&
+    value.length === original.length
+      ? value
+      : original;
+
+  function move(index, direction) {
+    const next = [...ordered];
+    const target = index + direction;
+
+    if (target < 0 || target >= next.length) return;
+
+    [next[index], next[target]] = [
+      next[target],
+      next[index]
+    ];
+
+    onChange(next);
+  }
+
+  function useOrderedSteps() {
+    onChange([...original]);
+  }
+
+  return (
+    <div className="order-shell">
+      <button
+        type="button"
+        className={`order-mode ${
+          !isSpecial ? "selected" : ""
+        }`}
+        onClick={useOrderedSteps}
+      >
+        These steps usually follow an identifiable order
+      </button>
+
+      {!isSpecial && (
+        <div className="order-list">
+          {ordered.map((step, index) => (
+            <div className="order-item" key={step}>
+              <div className="order-number">
+                {index + 1}
+              </div>
+
+              <div className="order-name">{step}</div>
+
+              <div className="order-buttons">
+                <button
+                  type="button"
+                  disabled={index === 0}
+                  onClick={() => move(index, -1)}
+                  aria-label={`Move ${step} up`}
+                >
+                  ↑
+                </button>
+
+                <button
+                  type="button"
+                  disabled={index === ordered.length - 1}
+                  onClick={() => move(index, 1)}
+                  aria-label={`Move ${step} down`}
+                >
+                  ↓
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {(question.additionalOptions || []).map(
+        (option) => (
+          <button
+            type="button"
+            key={option}
+            className={`order-mode ${
+              value === option ? "selected" : ""
+            }`}
+            onClick={() => onChange(option)}
+          >
+            {option}
+          </button>
+        )
+      )}
+    </div>
+  );
+}
+
+// --------------------------------------------------
+// DIFFERENT PATH
+// --------------------------------------------------
+
+function DifferentPathAnswer({
+  answers,
+  value,
+  onChange
+}) {
+  const sources = getImportantSources(answers);
+
+  const current =
+    value && typeof value === "object"
+      ? value
+      : {
+          source: "",
+          steps: []
+        };
+
+  const steps = Array.isArray(current.steps)
+    ? current.steps
+    : [];
+
+  function selectSource(source) {
+    onChange({
+      ...current,
+      source
+    });
+  }
+
+  function toggleStep(step) {
+    const exists = steps.includes(step);
+
+    onChange({
+      ...current,
+      steps: exists
+        ? steps.filter((item) => item !== step)
+        : [...steps, step]
+    });
+  }
+
+  function moveStep(index, direction) {
+    const next = [...steps];
+    const target = index + direction;
+
+    if (target < 0 || target >= next.length) return;
+
+    [next[index], next[target]] = [
+      next[target],
+      next[index]
+    ];
+
+    onChange({
+      ...current,
+      steps: next
+    });
+  }
+
+  return (
+    <div className="different-path-shell">
+      <div className="subquestion-label">
+        Source
+      </div>
+
+      <div className="answer-list compact">
+        {sources.map((source) => (
+          <button
+            type="button"
+            key={source}
+            className={`answer-option ${
+              current.source === source
+                ? "selected"
+                : ""
+            }`}
+            onClick={() => selectSource(source)}
+          >
+            <span className="answer-control">
+              {current.source === source ? "●" : "○"}
+            </span>
+
+            <span>{source}</span>
+          </button>
+        ))}
+      </div>
+
+      {current.source && (
+        <>
+          <div className="subquestion-label">
+            Select the major steps in this path
+          </div>
+
+          <div className="answer-list compact">
+            {getImportantSteps(answers).map((step) => (
+              <button
+                type="button"
+                key={step}
+                className={`answer-option ${
+                  steps.includes(step)
+                    ? "selected"
+                    : ""
+                }`}
+                onClick={() => toggleStep(step)}
+              >
+                <span className="answer-control">
+                  {steps.includes(step) ? "✓" : "□"}
+                </span>
+
+                <span>{step}</span>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {steps.length > 1 && (
+        <>
+          <div className="subquestion-label">
+            Put those steps in their usual order
+          </div>
+
+          <div className="order-list">
+            {steps.map((step, index) => (
+              <div className="order-item" key={step}>
+                <div className="order-number">
+                  {index + 1}
+                </div>
+
+                <div className="order-name">{step}</div>
+
+                <div className="order-buttons">
+                  <button
+                    type="button"
+                    disabled={index === 0}
+                    onClick={() =>
+                      moveStep(index, -1)
+                    }
+                  >
+                    ↑
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={
+                      index === steps.length - 1
+                    }
+                    onClick={() =>
+                      moveStep(index, 1)
+                    }
+                  >
+                    ↓
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// --------------------------------------------------
+// ANSWER ROUTER
+// --------------------------------------------------
+
+function AnswerInput({
+  question,
+  answers,
+  value,
+  onChange
+}) {
+  if (
+    question.type === "single" ||
+    question.type === "dynamicSingle"
+  ) {
+    return (
+      <SingleAnswer
+        question={question}
+        value={value}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (question.type === "multi") {
+    return (
+      <MultiAnswer
+        question={question}
+        value={value}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (question.type === "dynamicMulti") {
+    return (
+      <DynamicMultiAnswer
+        question={question}
+        value={value}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (question.type === "text") {
+    return (
+      <TextAnswer
+        value={value}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (question.type === "textarea") {
+    return (
+      <TextAnswer
+        value={value}
+        onChange={onChange}
+        textarea
+      />
+    );
+  }
+
+  if (question.type === "sourceOutcomeMap") {
+    return (
+      <SourceOutcomeMap
+        answers={answers}
+        value={value}
+        onChange={onChange}
+        options={question.options || []}
+      />
+    );
+  }
+
+  if (question.type === "stepOutcomeMap") {
+    return (
+      <StepOutcomeMap
+        answers={answers}
+        value={value}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (question.type === "order") {
+    return (
+      <OrderAnswer
+        question={question}
+        answers={answers}
+        value={value}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (question.type === "differentPath") {
+    return (
+      <DifferentPathAnswer
+        answers={answers}
+        value={value}
+        onChange={onChange}
+      />
+    );
+  }
+
+  return null;
+}
+
+// --------------------------------------------------
+// QUESTION VALIDATION
+// --------------------------------------------------
+
+function questionComplete(question, value, answers) {
+  if (question.optional) return true;
+
+  if (!hasValue(value)) return false;
+
+  if (question.type === "sourceOutcomeMap") {
+    const sources = getImportantSources(answers);
+
+    return sources.every(
+      (source) =>
+        value &&
+        typeof value === "object" &&
+        hasValue(value[source])
+    );
+  }
+
+  if (question.type === "stepOutcomeMap") {
+    const steps = getImportantSteps(answers);
+
+    return steps.every(
+      (step) =>
+        value &&
+        typeof value === "object" &&
+        hasValue(value[step])
+    );
+  }
+
+  if (question.type === "differentPath") {
+    return Boolean(
+      value &&
+      value.source &&
+      Array.isArray(value.steps) &&
+      value.steps.length > 0
+    );
+  }
+
+  return true;
+}
+
+// --------------------------------------------------
+// QUESTION SCREEN
+// --------------------------------------------------
+
+function QuestionScreen({
+  question,
+  answers,
+  onAnswer,
+  onNext,
+  onBack
+}) {
+  const value = answers[question.id];
+
+  const complete = questionComplete(
+    question,
+    value,
+    answers
+  );
+
+  const stage =
+    stages.find(
+      (item) => item.id === question.stage
+    ) || stages[0];
+
+  return (
+    <main className="question-shell">
+      <StageProgress currentStage={question.stage} />
+
+      <div className="question-layout">
+        <aside className="question-meta">
+          <div className="question-section">
+            {stage.label}
+          </div>
+
+          <div className="section-rule" />
+
+          <p>
+            SAGE asks only what is needed to understand
+            this part of your sales system.
+          </p>
+        </aside>
+
+        <section className="question-panel">
+          <h1>{question.title}</h1>
+
+          {question.help && (
+            <p className="question-help">
+              {question.help}
+            </p>
+          )}
+
+          <AnswerInput
+            question={question}
+            answers={answers}
+            value={value}
+            onChange={(newValue) =>
+              onAnswer(question.id, newValue)
+            }
+          />
+
+          <div className="question-actions">
+            <button
+              type="button"
+              className="back-button"
+              onClick={onBack}
+            >
+              Back
+            </button>
+
+            <button
+              type="button"
+              className="primary-button"
+              disabled={!complete}
+              onClick={onNext}
+            >
+              Continue
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
+
+// --------------------------------------------------
+// COMPLETE SCREEN
+// --------------------------------------------------
+
+function CompleteScreen({
+  onViewReport,
+  onBack
+}) {
+  return (
+    <main className="complete-shell">
+      <section className="complete-card">
+        <div className="eyebrow">
+          REVIEW COMPLETE
+        </div>
+
+        <h1>
+          Now let's make sense of how you sell.
+        </h1>
+
+        <p>
+          SAGE has reconstructed the major parts of your
+          sales system and compared your answers across the
+          review.
+        </p>
+
+        <p>
+          Your diagnostic distinguishes supported strengths
+          from incomplete, disconnected, unverified, unknown,
+          performance-related, and execution-related issues.
+        </p>
+
+        <div className="question-actions">
+          <button
+            type="button"
+            className="back-button"
+            onClick={onBack}
+          >
+            Back
+          </button>
+
+          <button
+            type="button"
+            className="primary-button"
+            onClick={onViewReport}
+          >
+            See My Sales System Diagnostic
+          </button>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+// --------------------------------------------------
+// REPORT COMPONENTS
+// --------------------------------------------------
+
+function FindingCard({ finding, priority = false }) {
+  const clean = cleanReportFinding(finding);
+
+  return (
+    <article
+      className={`finding-card ${
+        priority ? "priority-finding" : ""
+      }`}
+    >
+      <div className="finding-topline">
+        <span className="finding-type">
+          {clean.type}
+        </span>
+
+        {priority && (
+          <span className="priority-label">
+            Priority
+          </span>
+        )}
+      </div>
+
+      <h3>{clean.title}</h3>
+
+      {clean.support && (
+        <div className="finding-block">
+          <strong>What we found</strong>
+          <p>{clean.support}</p>
+        </div>
+      )}
+
+      {clean.why && (
+        <div className="finding-block">
+          <strong>Why it matters</strong>
+          <p>{clean.why}</p>
+        </div>
+      )}
+
+      {clean.direction && (
+        <div className="finding-block">
+          <strong>Direction</strong>
+          <p>{clean.direction}</p>
+        </div>
+      )}
+
+      {clean.improvementEvidence && (
+        <div className="finding-block">
+          <strong>Evidence of improvement</strong>
+          <p>{clean.improvementEvidence}</p>
+        </div>
+      )}
+
+      {clean.guideTopic && (
+        <div className="guide-reference">
+          Cross-Through Guide: {clean.guideTopic}
+        </div>
+      )}
+    </article>
+  );
+}
+
+function CurrentSystemSection({ system }) {
+  return (
+    <section className="report-section">
+      <div className="report-section-number">01</div>
+
+      <div className="report-section-content">
+        <div className="eyebrow">
+          YOUR CURRENT SALES SYSTEM
+        </div>
+
+        <h2>How your sales operation currently works</h2>
+
+        <div className="system-summary-grid">
+          <div className="summary-card">
+            <span>Assessment</span>
+            <strong>
+              {system.scope || "Sales operation"}
+            </strong>
+          </div>
+
+          <div className="summary-card">
+            <span>Primary buyer</span>
+            <strong>
+              {system.buyerType || "Not established"}
+            </strong>
+          </div>
+
+          <div className="summary-card">
+            <span>Important opportunity sources</span>
+            <strong>
+              {system.importantSources?.length
+                ? system.importantSources.join(", ")
+                : system.sources?.length
+                  ? system.sources.join(", ")
+                  : "Not established"}
+            </strong>
+          </div>
+
+          <div className="summary-card">
+            <span>Process clarity</span>
+            <strong>
+              {system.processClarity ||
+                "Not established"}
+            </strong>
+          </div>
+        </div>
+
+        {system.processSteps?.length > 0 && (
+          <div className="sales-path">
+            <div className="sales-path-label">
+              Major sales path
+            </div>
+
+            <div className="sales-path-steps">
+              {system.processSteps.map(
+                (step, index) => (
+                  <React.Fragment key={`${step}-${index}`}>
+                    <div className="sales-path-step">
+                      <span>{index + 1}</span>
+                      {step}
+                    </div>
+
+                    {index <
+                      system.processSteps.length - 1 && (
+                      <div className="sales-path-arrow">
+                        →
+                      </div>
+                    )}
+                  </React.Fragment>
+                )
+              )}
+            </div>
+          </div>
+        )}
+
+        {system.stallPoint && (
+          <div className="system-observation">
+            <strong>
+              Reported opportunity breakdown:
+            </strong>{" "}
+            {system.stallPoint}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function StrengthsSection({ strengths }) {
+  return (
+    <section className="report-section">
+      <div className="report-section-number">02</div>
+
+      <div className="report-section-content">
+        <div className="eyebrow">
+          WHAT APPEARS SOLID
+        </div>
+
+        <h2>
+          Practices supported by your answers
+        </h2>
+
+        {strengths.length === 0 ? (
+          <div className="report-empty">
+            The review did not establish a practice strongly
+            enough to classify it as solid from the information
+            provided. That does not mean strengths do not exist;
+            it means SAGE did not receive enough supporting
+            evidence to establish them here.
+          </div>
+        ) : (
+          <div className="finding-grid">
+            {strengths.map((finding) => (
+              <FindingCard
+                key={finding.id}
+                finding={finding}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function AttentionSection({ findings }) {
+  return (
+    <section className="report-section">
+      <div className="report-section-number">03</div>
+
+      <div className="report-section-content">
+        <div className="eyebrow">
+          WHAT NEEDS ATTENTION
+        </div>
+
+        <h2>
+          Conditions that deserve examination
+        </h2>
+
+        {findings.length === 0 ? (
+          <div className="report-empty">
+            This review did not identify a material issue that
+            can be supported by your answers. Continue verifying
+            performance as conditions change rather than assuming
+            the system will remain effective.
+          </div>
+        ) : (
+          <div className="finding-grid">
+            {findings.map((finding) => (
+              <FindingCard
+                key={finding.id}
+                finding={finding}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function PrioritySection({ findings }) {
+  return (
+    <section className="report-section">
+      <div className="report-section-number">04</div>
+
+      <div className="report-section-content">
+        <div className="eyebrow">
+          HIGHEST-PRIORITY FINDINGS
+        </div>
+
+        <h2>
+          Where attention matters most
+        </h2>
+
+        {findings.length === 0 ? (
+          <div className="report-empty">
+            No priority deficiency was established from this
+            review. The appropriate next step is continued
+            verification rather than manufacturing a corrective
+            action.
+          </div>
+        ) : (
+          <div className="priority-list">
+            {findings.map((finding, index) => (
+              <div
+                className="priority-wrapper"
+                key={finding.id}
+              >
+                <div className="priority-number">
+                  {String(index + 1).padStart(2, "0")}
+                </div>
+
+                <FindingCard
+                  finding={finding}
+                  priority
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function BuildPathSection({ buildPath }) {
+  return (
+    <section className="report-section">
+      <div className="report-section-number">05</div>
+
+      <div className="report-section-content">
+        <div className="eyebrow">
+          YOUR CROSS-THROUGH BUILD PATH
+        </div>
+
+        <h2>
+          What to work on next
+        </h2>
+
+        {buildPath.length === 0 ? (
+          <div className="report-empty">
+            SAGE did not establish a corrective build path from
+            this review. Maintain the practices you can verify
+            and continue testing them against actual results.
+          </div>
+        ) : (
+          <div className="build-path-list">
+            {buildPath.map((step, index) => (
+              <div
+                className="build-path-item"
+                key={step.id}
+              >
+                <div className="build-path-number">
+                  {index + 1}
+                </div>
+
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>
+                    Cross-Through Guide:{" "}
+                    {step.guideTopic}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="report-next-step">
+          <h3>Two ways forward</h3>
+
+          <p>
+            Use the Cross-Through guide with these findings to
+            investigate and improve the system internally, or
+            get professional help to investigate, design, test,
+            implement, and manage the improvements.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// --------------------------------------------------
+// REPORT
+// --------------------------------------------------
+
+function DiagnosticReport({
+  diagnostic,
+  onRestart
+}) {
+  return (
+    <main className="report-shell">
+      <section className="report-hero">
+        <div className="eyebrow">
+          SAGE SALES SYSTEM DIAGNOSTIC
+        </div>
+
+        <h1>Your Sales System Diagnostic</h1>
+
+        <p>
+          A structured view of how your business currently
+          creates and advances sales, what appears established,
+          and where improvement deserves attention.
+        </p>
+      </section>
+
+      <CurrentSystemSection
+        system={diagnostic.currentSystem}
+      />
+
+      <StrengthsSection
+        strengths={diagnostic.strengths}
+      />
+
+      <AttentionSection
+        findings={diagnostic.attentionFindings}
+      />
+
+      <PrioritySection
+        findings={diagnostic.priorityFindings}
+      />
+
+      <BuildPathSection
+        buildPath={diagnostic.buildPath}
+      />
+
+      <div className="report-footer-actions">
+        <button
+          type="button"
+          className="back-button"
+          onClick={() => window.print()}
+        >
+          Print / Save PDF
+        </button>
+
+        <button
+          type="button"
+          className="primary-button"
+          onClick={onRestart}
+        >
+          Start a New Review
+        </button>
+      </div>
+    </main>
+  );
+}
+
+// --------------------------------------------------
+// MAIN APP
+// --------------------------------------------------
+
+export default function App() {
+  const [screen, setScreen] = useState("landing");
+
+  const [answers, setAnswers] = useState(() => {
+    try {
+      const saved =
+        window.localStorage.getItem(
+          "sage-diagnostic-answers"
+        );
+
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const [currentQuestionId, setCurrentQuestionId] =
+    useState(null);
+
+  const [history, setHistory] = useState([]);
+
+  const [diagnostic, setDiagnostic] =
+    useState(null);
+
+  const flow = useMemo(
+    () => buildQuestionFlow(answers),
+    [answers]
+  );
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        "sage-diagnostic-answers",
+        JSON.stringify(answers)
+      );
+    } catch {
+      // Continue without local persistence.
+    }
+  }, [answers]);
+
+  useEffect(() => {
+    if (
+      screen === "questions" &&
+      !currentQuestionId &&
+      flow.length > 0
+    ) {
+      setCurrentQuestionId(flow[0].id);
+    }
+  }, [
+    screen,
+    currentQuestionId,
+    flow
+  ]);
+
+  const currentIndex = flow.findIndex(
+    (question) =>
+      question.id === currentQuestionId
+  );
+
+  const currentQuestion =
+    currentIndex >= 0
+      ? flow[currentIndex]
+      : flow[0];
+
+  function goHome() {
+    setScreen("landing");
+  }
+
+  function startReview() {
+    setScreen("intro");
+  }
+
+  function beginQuestions() {
+    const first = flow[0];
+
+    if (first) {
+      setCurrentQuestionId(first.id);
+      setHistory([]);
+      setScreen("questions");
+    }
+  }
+
+  function updateAnswer(id, value) {
+    setAnswers((previous) => ({
+      ...previous,
+      [id]: value
+    }));
+  }
+
+  function nextQuestion() {
+    if (!currentQuestion) return;
+
+    const updatedFlow =
+      buildQuestionFlow(answers);
+
+    const index = updatedFlow.findIndex(
+      (question) =>
+        question.id === currentQuestion.id
+    );
+
+    const next = updatedFlow[index + 1];
+
+    if (next) {
+      setHistory((previous) => [
+        ...previous,
+        currentQuestion.id
+      ]);
+
+      setCurrentQuestionId(next.id);
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    setHistory((previous) => [
+      ...previous,
+      currentQuestion.id
+    ]);
+
+    setScreen("complete");
+    window.scrollTo(0, 0);
+  }
+
+  function previousQuestion() {
+    if (history.length === 0) {
+      setScreen("intro");
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    const previousId =
+      history[history.length - 1];
+
+    setHistory((previous) =>
+      previous.slice(0, -1)
+    );
+
+    setCurrentQuestionId(previousId);
+    window.scrollTo(0, 0);
+  }
+
+  function backFromComplete() {
+    const lastId =
+      history[history.length - 1];
+
+    if (lastId) {
+      setHistory((previous) =>
+        previous.slice(0, -1)
+      );
+
+      setCurrentQuestionId(lastId);
+      setScreen("questions");
+      window.scrollTo(0, 0);
+    }
+  }
+
+  function createDiagnostic() {
+    const result = buildDiagnostic(answers);
+
+    setDiagnostic(result);
+    setScreen("report");
+    window.scrollTo(0, 0);
+  }
+
+  function restart() {
+    const confirmed = window.confirm(
+      "Start a new review? This will clear your current answers."
+    );
+
+    if (!confirmed) return;
+
+    try {
+      window.localStorage.removeItem(
+        "sage-diagnostic-answers"
+      );
+    } catch {
+      // Continue even if storage is unavailable.
+    }
+
+    setAnswers({});
+    setHistory([]);
+    setCurrentQuestionId(null);
+    setDiagnostic(null);
+    setScreen("landing");
+    window.scrollTo(0, 0);
+  }
+
+  let content = null;
+
+  if (screen === "landing") {
+    content = (
+      <Landing onStart={startReview} />
+    );
+  }
+
+  if (screen === "intro") {
+    content = (
+      <Intro
+        onContinue={beginQuestions}
+        onBack={() => setScreen("landing")}
+      />
+    );
+  }
+
+  if (
+    screen === "questions" &&
+    currentQuestion
+  ) {
+    const enhancedQuestion = {
+      ...currentQuestion
+    };
+
+    if (
+      currentQuestion.type === "dynamicMulti" ||
+      currentQuestion.type === "dynamicSingle"
+    ) {
+      enhancedQuestion.dynamicOptions =
+        getDynamicOptions(
+          currentQuestion,
+          answers
+        );
+    }
+
+    content = (
+      <QuestionScreen
+        question={enhancedQuestion}
+        answers={answers}
+        onAnswer={updateAnswer}
+        onNext={nextQuestion}
+        onBack={previousQuestion}
+      />
+    );
+  }
+
+  if (screen === "complete") {
+    content = (
+      <CompleteScreen
+        onViewReport={createDiagnostic}
+        onBack={backFromComplete}
+      />
+    );
+  }
+
+  if (
+    screen === "report" &&
+    diagnostic
+  ) {
+    content = (
+      <DiagnosticReport
+        diagnostic={diagnostic}
+        onRestart={restart}
+      />
+    );
+  }
+
+  return (
+    <div className="app">
+      <Header onHome={goHome} />
+      {content}
+    </div>
+  );
+}
