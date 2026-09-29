@@ -61,23 +61,21 @@ Diagnostic engine:
 - Core diagnostic reasoning architecture was accepted as locked unless testing reveals a real defect.
 
 Live adaptive UI:
-- After commit `Build adaptive SAGE diagnostic interface`, the following were manually confirmed in production:
-  1. site loads without a blank screen;
-  2. landing page appears;
-  3. Get Started → Begin Review works;
-  4. first question “What are we assessing?” appears.
+- Production app loads and the landing → introduction → diagnostic journey works.
+- A complete normal-user production run was completed on 2026-09-29 using **Our overall sales operation**.
+- The diagnostic can be completed through the final report.
+- User response to the foundation was strongly positive, but the journey was judged **too long, overwhelming, and difficult to get through**.
+- The existing six-stage indicator does not provide enough sense of how much work is complete or remains.
+- User wants meaningful progress feedback during the diagnostic, not an endless sequence of questions.
+- The final report page needs a more dramatic, less text-heavy presentation.
+- The current browser printout is not client-ready and needs dedicated document design/formatting.
 
 ### Not yet tested/confirmed
-The newly styled full journey has **not yet been run end-to-end as a normal user** after the latest design commit.
-
-Specifically unconfirmed:
-- every adaptive branch in the live UI;
-- ordering and mapping controls through a complete run;
-- final completion-to-report transition;
-- report rendering with real live answers;
-- print/save-PDF output;
+- every possible adaptive branch;
+- back-navigation/branch-change behavior;
 - mobile/responsive behavior;
-- whether the experience feels engaging rather than tedious.
+- redesigned progress/feedback experience;
+- redesigned final report and client-ready print output.
 
 ## Relevant current files
 
@@ -134,7 +132,7 @@ No backend database, authentication, CRM integration, or production AI/API is pr
 
 These are implementation risks to verify, not settled product changes:
 
-1. **End-to-end live flow remains untested after the latest UI/design build.** This is the immediate priority.
+1. **Diagnostic burden is now a confirmed UX problem.** The current config contains 22 core question screens plus conditional verification screens; depending on answers, the journey can become substantially longer than the intended lightweight diagnostic. Reduce perceived and actual burden without weakening diagnostic validity.
 2. **Stale conditional answers:** `App.jsx` builds the visible adaptive flow from current answers, but hidden follow-up answers are not currently pruned when an earlier answer changes. A user who goes Back and changes a branching answer could leave stale hidden data that still reaches the diagnostic engine. Test and fix if confirmed.
 3. **“Other” handling:** several answer sets contain “Other,” but the current interface does not always collect explanatory text. Determine during UX testing whether this creates a material diagnostic gap before expanding scope.
 4. **Different-path mapping:** current UI captures one important different path using previously selected process steps. Confirm this is sufficient and usable in the live journey.
@@ -167,34 +165,32 @@ Canonical documentation commits follow these.
 - Build command previously confirmed: `npm run build`.
 - Deploy command previously confirmed: `npx wrangler deploy`.
 - Root configuration: `vite.config.js` and `wrangler.jsonc`.
-- Current production URL has been manually confirmed to load the adaptive app through the first question.
-- The latest full visual build is committed, but the complete production journey/report has not yet been manually validated.
+- Current production URL has been manually tested through a complete overall-sales-operation diagnostic and final report.
+- Functional completion is confirmed for that path.
+- UX redesign is required before the experience is suitable for prospective clients: diagnostic length/progress, final report presentation, and print formatting.
 
 ## Exact next step
 
-**Run one complete production diagnostic as a normal established B2B user using the latest styled build.**
+**Redesign the diagnostic journey before further polishing.**
 
-Do not deliberately edge-test on this first pass.
+First, reduce actual/perceived burden while preserving the approved diagnostic logic:
+1. establish a stable progress model that shows meaningful completion and remaining work;
+2. provide concise, evidence-bounded feedback as SAGE learns each major part of the sales system;
+3. reduce unnecessary screen count and convert verification follow-ups into lighter interactions where possible;
+4. correct the current step-objective verification so it does not require mapping every selected process step;
+5. preserve adaptive stop/verify/clarify behavior and cross-answer validation.
 
-Evaluate:
-1. whether the journey feels engaging rather than tedious;
-2. whether every question is immediately understandable;
-3. whether SAGE feels like it is progressively learning how the company sells;
-4. whether all adaptive controls work;
-5. whether **See My Sales System Diagnostic** successfully renders the report;
-6. whether the report accurately reflects the answers and provides useful, evidence-bounded findings.
-
-Record every issue before changing code.
+Do not code this redesign until the revised interaction model is agreed.
 
 ## Short remaining V1 roadmap
 
-1. Complete normal-user end-to-end production test.
-2. Fix functional/structural defects found in that test.
+1. Agree and implement the shorter, more engaging diagnostic interaction model.
+2. Retest one normal overall-sales-operation path for burden, clarity, progress, and diagnostic accuracy.
 3. Test branch changes/back navigation, including stale conditional-answer risk.
-4. Critically review the diagnostic report for accuracy, usefulness, duplication, and unsupported conclusions.
-5. Test responsive/mobile behavior and Print / Save PDF.
-6. Polish copy/spacing/interactions only after functional behavior is stable.
-7. Decide unresolved delivery/conversion items needed for launch: Cross-Through guide access, final report naming, and professional-help CTA.
+4. Redesign the final diagnostic page to be more dramatic, concise, and decision-focused.
+5. Create a dedicated client-ready print/PDF layout rather than relying on the current web-card print treatment.
+6. Test responsive/mobile behavior and remaining adaptive branches.
+7. Decide launch items: Cross-Through guide access, final report naming, and professional-help CTA.
 8. Run final V1 regression and deployment check.
 
 ## End-of-session protocol
