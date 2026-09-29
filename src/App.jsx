@@ -53,6 +53,53 @@ function getImportantSteps(answers) {
   return [];
 }
 
+function getVerificationSteps(answers) {
+  const steps = getImportantSteps(answers);
+
+  if (steps.length <= 3) return steps;
+
+  const preferredPatterns = [
+    "qualification",
+    "needs",
+    "situation",
+    "meeting",
+    "consultation",
+    "demonstration",
+    "presentation",
+    "estimate",
+    "quote",
+    "proposal",
+    "negotiation",
+    "contract",
+    "agreement"
+  ];
+
+  const selected = [];
+
+  preferredPatterns.forEach((pattern) => {
+    const match = steps.find(
+      (step) =>
+        step.toLowerCase().includes(pattern) &&
+        !selected.includes(step)
+    );
+
+    if (match && selected.length < 3) {
+      selected.push(match);
+    }
+  });
+
+  steps.forEach((step) => {
+    if (
+      selected.length < 3 &&
+      !selected.includes(step)
+    ) {
+      selected.push(step);
+    }
+  });
+
+  return selected;
+}
+
 function getStepOutcomeOptions(step) {
   const normalized = step.toLowerCase();
 
@@ -170,39 +217,139 @@ function getStepOutcomeOptions(step) {
   ];
 }
 
-function buildQuestionFlow(answers) {
-  const flow = [];
+function buildQuestionFlow() {
+  return questions.map((question) => ({
+    ...question,
+    parentId: null
+  }));
+}
 
-  questions.forEach((question) => {
-    flow.push({
-      ...question,
-      parentId: null
-    });
+function getActiveFollowUps(question, answers) {
+  const followUps = [];
+
+  if (
+    question.followUp &&
+    question.followUp.when(answers)
+  ) {
+    followUps.push(question.followUp);
 
     if (
-      question.followUp &&
-      question.followUp.when(answers)
+      question.followUp.nextFollowUp &&
+      hasValue(answers[question.followUp.id])
     ) {
-      flow.push({
-        ...question.followUp,
-        stage: question.stage,
-        parentId: question.id
-      });
-
-      if (
-        question.followUp.nextFollowUp &&
-        hasValue(answers[question.followUp.id])
-      ) {
-        flow.push({
-          ...question.followUp.nextFollowUp,
-          stage: question.stage,
-          parentId: question.followUp.id
-        });
-      }
+      followUps.push(
+        question.followUp.nextFollowUp
+      );
     }
-  });
+  }
 
-  return flow;
+  return followUps;
+}
+
+function getProgressPercent(currentIndex) {
+  if (currentIndex < 0) return 0;
+
+  return Math.round(
+    ((currentIndex + 1) / questions.length) * 100
+  );
+}
+
+function getSectionFeedback(stageId, answers) {
+  const importantSources = getImportantSources(answers);
+  const processSteps = getImportantSteps(answers);
+
+  if (stageId === "business") {
+    const scope =
+      answers.assessment_scope ===
+        "Our overall sales operation"
+        ? "your overall sales operation"
+        : answers.assessment_scope_detail ||
+          "the part of the sales operation you selected";
+
+    return {
+      kicker: "Scope established",
+      title: "SAGE knows what it is examining.",
+      text: `The review is focused on ${scope}. Next, SAGE maps where sales opportunities come from and what those activities are expected to produce.`
+    };
+  }
+
+  if (stageId === "begin") {
+    const sourceText = importantSources.length
+      ? importantSources.join(", ")
+      : "your reported opportunity sources";
+
+    const evidenceText =
+      answers.source_evidence ===
+      "We don't really know"
+        ? "The evidence behind source performance is currently unclear."
+        : answers.source_evidence ===
+            "We rely mostly on experience or judgment"
+          ? "Source performance currently relies more on judgment than recorded evidence."
+          : "SAGE has also captured how source performance is evaluated.";
+
+    return {
+      kicker: "Opportunity picture mapped",
+      title: "SAGE can now see how sales begin.",
+      text: `The most important sources currently identified are ${sourceText}. ${evidenceText} Next, SAGE follows what happens after a buyer engages.`
+    };
+  }
+
+  if (stageId === "move") {
+    const processText = processSteps.length
+      ? `${processSteps.length} major process steps are now mapped.`
+      : "The major process path is not yet clearly established.";
+
+    const outcomeText =
+      answers.step_objectives ===
+      "Yes, for essentially every important step"
+        ? "You report defined outcomes across the important steps."
+        : answers.step_objectives === "For some steps"
+          ? "Defined outcomes exist for only part of the process."
+          : "The answers indicate that advancement outcomes are not fully defined.";
+
+    return {
+      kicker: "Sales path mapped",
+      title: "SAGE can now see how opportunities move.",
+      text: `${processText} ${outcomeText} Next, the review looks at what must happen in the buyer's decision process.`
+    };
+  }
+
+  if (stageId === "buyer") {
+    const stallText =
+      answers.stall_point === "We don't know"
+        ? "Where promising opportunities break down is currently unknown."
+        : answers.stall_point ===
+            "There is no noticeable pattern"
+          ? "You reported no consistent breakdown point."
+          : hasValue(answers.stall_point)
+            ? `You identified ${answers.stall_point} as an important point where opportunities can slow or stop.`
+            : "SAGE has captured how buyers progress toward a decision.";
+
+    return {
+      kicker: "Buyer progression mapped",
+      title: "The buyer side of the system is now visible.",
+      text: `${stallText} Next, SAGE looks at how the business learns from weak results and tests changes.`
+    };
+  }
+
+  if (stageId === "improve") {
+    const testText =
+      answers.testing ===
+      "We compare deliberate changes against meaningful evidence"
+        ? "You report a deliberate evidence-based approach to important sales changes."
+        : answers.testing ===
+            "We rarely test changes in a structured way"
+          ? "Structured testing of sales changes is currently limited."
+          : "SAGE has captured how sales changes are evaluated.";
+
+    return {
+      kicker: "Improvement discipline mapped",
+      title: "SAGE can now see how the system learns.",
+      text: `${testText} One final section checks whether the sales approach is consistently executed.`
+    };
+  }
+
+  return null;
 }
 
 function getStageIndex(stageId) {
@@ -391,11 +538,33 @@ function Intro({ onContinue, onBack }) {
 // PROGRESS
 // --------------------------------------------------
 
-function StageProgress({ currentStage }) {
+function StageProgress({
+  currentStage,
+  progressPercent
+}) {
   const currentIndex = getStageIndex(currentStage);
 
   return (
     <div className="stage-progress">
+      <div className="overall-progress">
+        <div className="overall-progress-copy">
+          <span>
+            Section {currentIndex + 1} of {stages.length}
+          </span>
+          <strong>{progressPercent}% complete</strong>
+        </div>
+
+        <div
+          className="overall-progress-track"
+          aria-label={`${progressPercent}% complete`}
+        >
+          <div
+            className="overall-progress-fill"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+      </div>
+
       <div className="stage-progress-row">
         {stages.map((stage, index) => {
           const complete = index < currentIndex;
@@ -705,7 +874,7 @@ function StepOutcomeMap({
   value = {},
   onChange
 }) {
-  const steps = getImportantSteps(answers);
+  const steps = getVerificationSteps(answers);
 
   const current =
     value && typeof value === "object" && !Array.isArray(value)
@@ -1150,7 +1319,7 @@ function questionComplete(question, value, answers) {
   }
 
   if (question.type === "stepOutcomeMap") {
-    const steps = getImportantSteps(answers);
+    const steps = getVerificationSteps(answers);
 
     return steps.every(
       (step) =>
@@ -1176,20 +1345,56 @@ function questionComplete(question, value, answers) {
 // QUESTION SCREEN
 // --------------------------------------------------
 
+function SectionFeedbackCard({ feedback }) {
+  if (!feedback) return null;
+
+  return (
+    <div className="section-feedback">
+      <div className="section-feedback-icon">✓</div>
+
+      <div>
+        <div className="section-feedback-kicker">
+          {feedback.kicker}
+        </div>
+
+        <h3>{feedback.title}</h3>
+        <p>{feedback.text}</p>
+      </div>
+    </div>
+  );
+}
+
 function QuestionScreen({
   question,
   answers,
   onAnswer,
   onNext,
-  onBack
+  onBack,
+  progressPercent,
+  sectionFeedback
 }) {
   const value = answers[question.id];
 
-  const complete = questionComplete(
+  const followUps =
+    getActiveFollowUps(question, answers);
+
+  const primaryComplete = questionComplete(
     question,
     value,
     answers
   );
+
+  const followUpsComplete = followUps.every(
+    (followUp) =>
+      questionComplete(
+        followUp,
+        answers[followUp.id],
+        answers
+      )
+  );
+
+  const complete =
+    primaryComplete && followUpsComplete;
 
   const stage =
     stages.find(
@@ -1198,7 +1403,10 @@ function QuestionScreen({
 
   return (
     <main className="question-shell">
-      <StageProgress currentStage={question.stage} />
+      <StageProgress
+        currentStage={question.stage}
+        progressPercent={progressPercent}
+      />
 
       <div className="question-layout">
         <aside className="question-meta">
@@ -1209,12 +1417,19 @@ function QuestionScreen({
           <div className="section-rule" />
 
           <p>
-            SAGE asks only what is needed to understand
-            this part of your sales system.
+            SAGE is building your sales-system picture as
+            you go. Follow-up questions appear only when
+            they help verify or clarify an answer.
           </p>
         </aside>
 
         <section className="question-panel">
+          {sectionFeedback && (
+            <SectionFeedbackCard
+              feedback={sectionFeedback}
+            />
+          )}
+
           <h1>{question.title}</h1>
 
           {question.help && (
@@ -1231,6 +1446,45 @@ function QuestionScreen({
               onAnswer(question.id, newValue)
             }
           />
+
+          {primaryComplete &&
+            followUps.map((followUp) => {
+              const enhancedFollowUp = {
+                ...followUp,
+                stage: question.stage
+              };
+
+              return (
+                <div
+                  className="inline-followup"
+                  key={followUp.id}
+                >
+                  <div className="inline-followup-label">
+                    Quick follow-up
+                  </div>
+
+                  <h2>{followUp.title}</h2>
+
+                  {followUp.help && (
+                    <p className="question-help">
+                      {followUp.help}
+                    </p>
+                  )}
+
+                  <AnswerInput
+                    question={enhancedFollowUp}
+                    answers={answers}
+                    value={answers[followUp.id]}
+                    onChange={(newValue) =>
+                      onAnswer(
+                        followUp.id,
+                        newValue
+                      )
+                    }
+                  />
+                </div>
+              );
+            })}
 
           <div className="question-actions">
             <button
@@ -1731,8 +1985,8 @@ export default function App() {
     useState(null);
 
   const flow = useMemo(
-    () => buildQuestionFlow(answers),
-    [answers]
+    () => buildQuestionFlow(),
+    []
   );
 
   useEffect(() => {
@@ -1799,7 +2053,7 @@ export default function App() {
     if (!currentQuestion) return;
 
     const updatedFlow =
-      buildQuestionFlow(answers);
+      buildQuestionFlow();
 
     const index = updatedFlow.findIndex(
       (question) =>
@@ -1928,6 +2182,21 @@ export default function App() {
         );
     }
 
+    const previousCoreQuestion =
+      currentIndex > 0
+        ? flow[currentIndex - 1]
+        : null;
+
+    const sectionFeedback =
+      previousCoreQuestion &&
+      previousCoreQuestion.stage !==
+        currentQuestion.stage
+        ? getSectionFeedback(
+            previousCoreQuestion.stage,
+            answers
+          )
+        : null;
+
     content = (
       <QuestionScreen
         question={enhancedQuestion}
@@ -1935,6 +2204,10 @@ export default function App() {
         onAnswer={updateAnswer}
         onNext={nextQuestion}
         onBack={previousQuestion}
+        progressPercent={getProgressPercent(
+          currentIndex
+        )}
+        sectionFeedback={sectionFeedback}
       />
     );
   }
