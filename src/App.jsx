@@ -217,11 +217,38 @@ function getStepOutcomeOptions(step) {
   ];
 }
 
+const combinedQuestionIds = {
+  assessment_scope: ["buyer_type"],
+  sales_sources: ["top_sources"],
+  process_steps: ["different_path"],
+  resolution: ["readiness_evidence"]
+};
+
+const embeddedQuestionIds = new Set(
+  Object.values(combinedQuestionIds).flat()
+);
+
 function buildQuestionFlow() {
-  return questions.map((question) => ({
-    ...question,
-    parentId: null
-  }));
+  return questions
+    .filter(
+      (question) =>
+        !embeddedQuestionIds.has(question.id)
+    )
+    .map((question) => ({
+      ...question,
+      parentId: null
+    }));
+}
+
+function getEmbeddedQuestions(question) {
+  const ids =
+    combinedQuestionIds[question.id] || [];
+
+  return ids
+    .map((id) =>
+      questions.find((item) => item.id === id)
+    )
+    .filter(Boolean);
 }
 
 function getActiveFollowUps(question, answers) {
@@ -250,7 +277,7 @@ function getProgressPercent(currentIndex) {
   if (currentIndex < 0) return 0;
 
   return Math.round(
-    ((currentIndex + 1) / questions.length) * 100
+    ((currentIndex + 1) / buildQuestionFlow().length) * 100
   );
 }
 
@@ -1375,13 +1402,32 @@ function QuestionScreen({
 }) {
   const value = answers[question.id];
 
-  const followUps =
-    getActiveFollowUps(question, answers);
+  const embeddedQuestions =
+    getEmbeddedQuestions(question);
 
-  const primaryComplete = questionComplete(
+  const questionSet = [
     question,
-    value,
-    answers
+    ...embeddedQuestions
+  ];
+
+  const followUps = questionSet.flatMap(
+    (item) =>
+      getActiveFollowUps(item, answers).map(
+        (followUp) => ({
+          ...followUp,
+          stage: question.stage,
+          embeddedParentId: item.id
+        })
+      )
+  );
+
+  const primaryComplete = questionSet.every(
+    (item) =>
+      questionComplete(
+        item,
+        answers[item.id],
+        answers
+      )
   );
 
   const followUpsComplete = followUps.every(
@@ -1447,8 +1493,70 @@ function QuestionScreen({
             }
           />
 
-          {primaryComplete &&
-            followUps.map((followUp) => {
+          {questionComplete(
+            question,
+            value,
+            answers
+          ) &&
+            embeddedQuestions.map(
+              (embeddedQuestion) => {
+                const enhancedEmbedded = {
+                  ...embeddedQuestion
+                };
+
+                if (
+                  embeddedQuestion.type ===
+                    "dynamicMulti" ||
+                  embeddedQuestion.type ===
+                    "dynamicSingle"
+                ) {
+                  enhancedEmbedded.dynamicOptions =
+                    getDynamicOptions(
+                      embeddedQuestion,
+                      answers
+                    );
+                }
+
+                return (
+                  <div
+                    className="inline-followup embedded-question"
+                    key={embeddedQuestion.id}
+                  >
+                    <div className="inline-followup-label">
+                      Next
+                    </div>
+
+                    <h2>
+                      {embeddedQuestion.title}
+                    </h2>
+
+                    {embeddedQuestion.help && (
+                      <p className="question-help">
+                        {embeddedQuestion.help}
+                      </p>
+                    )}
+
+                    <AnswerInput
+                      question={enhancedEmbedded}
+                      answers={answers}
+                      value={
+                        answers[
+                          embeddedQuestion.id
+                        ]
+                      }
+                      onChange={(newValue) =>
+                        onAnswer(
+                          embeddedQuestion.id,
+                          newValue
+                        )
+                      }
+                    />
+                  </div>
+                );
+              }
+            )}
+
+          {followUps.map((followUp) => {
               const enhancedFollowUp = {
                 ...followUp,
                 stage: question.stage
