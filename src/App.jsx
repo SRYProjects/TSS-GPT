@@ -1948,7 +1948,7 @@ function FindingCard({ finding, priority = false }) {
 function CurrentSystemSection({ system }) {
   return (
     <section className="report-section">
-      <div className="report-section-number">01</div>
+      <div className="report-section-number">04</div>
 
       <div className="report-section-content">
         <div className="eyebrow">
@@ -2036,7 +2036,7 @@ function CurrentSystemSection({ system }) {
 function StrengthsSection({ strengths }) {
   return (
     <section className="report-section">
-      <div className="report-section-number">02</div>
+      <div className="report-section-number">03</div>
 
       <div className="report-section-content">
         <div className="eyebrow">
@@ -2073,7 +2073,7 @@ function StrengthsSection({ strengths }) {
 function AttentionSection({ findings }) {
   return (
     <section className="report-section">
-      <div className="report-section-number">03</div>
+      <div className="report-section-number">02</div>
 
       <div className="report-section-content">
         <div className="eyebrow">
@@ -2109,7 +2109,7 @@ function AttentionSection({ findings }) {
 function PrioritySection({ findings }) {
   return (
     <section className="report-section">
-      <div className="report-section-number">04</div>
+      <div className="report-section-number">01</div>
 
       <div className="report-section-content">
         <div className="eyebrow">
@@ -2209,12 +2209,110 @@ function BuildPathSection({ buildPath }) {
   );
 }
 
+function SystemMapSection({
+  systemMap,
+  answers,
+  onGoDeeper
+}) {
+  const stageByArea = {
+    sources: "begin",
+    process: "move",
+    buyer: "buyer",
+    improvement: "improve",
+    execution: "execution"
+  };
+
+  return (
+    <section className="system-map-section">
+      <div className="eyebrow">
+        YOUR SALES SYSTEM AT A GLANCE
+      </div>
+
+      <div className="system-map-heading">
+        <div>
+          <h2>
+            Where the system deserves attention
+          </h2>
+          <p>
+            These are diagnostic conditions, not scores.
+            Open the detail below for the evidence and
+            direction behind each finding.
+          </p>
+        </div>
+      </div>
+
+      <div className="system-map-grid">
+        {systemMap.map((area, index) => {
+          const stageId =
+            stageByArea[area.id];
+
+          const depth = stageId
+            ? getDeepDiveStatus(
+                stageId,
+                answers
+              )
+            : null;
+
+          const canDeepen =
+            depth && depth.remaining > 0;
+
+          return (
+            <div
+              className="system-map-card"
+              key={area.id}
+            >
+              <div className="system-map-index">
+                {String(index + 1).padStart(
+                  2,
+                  "0"
+                )}
+              </div>
+
+              <div className="system-map-label">
+                {area.label}
+              </div>
+
+              <div
+                className={
+                  "system-map-status status-" +
+                  area.status
+                    .toLowerCase()
+                    .replace(/[^a-z]+/g, "-")
+                    .replace(/^-|-$/g, "")
+                }
+              >
+                {area.status}
+              </div>
+
+              <p>{area.message}</p>
+
+              {canDeepen && (
+                <button
+                  type="button"
+                  className="map-depth-button"
+                  onClick={() =>
+                    onGoDeeper(stageId)
+                  }
+                >
+                  Add evidence to this area →
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 // --------------------------------------------------
 // REPORT
 // --------------------------------------------------
 
 function DiagnosticReport({
   diagnostic,
+  answers,
+  onGoDeeper,
   onRestart
 }) {
   return (
@@ -2224,29 +2322,35 @@ function DiagnosticReport({
           SAGE SALES SYSTEM DIAGNOSTIC
         </div>
 
-        <h1>Your Sales System Diagnostic</h1>
+        <h1>See where attention matters.</h1>
 
         <p>
-          A structured view of how your business currently
-          creates and advances sales, what appears established,
-          and where improvement deserves attention.
+          SAGE found the conditions below from the evidence
+          you provided. Start with the at-a-glance view and
+          priority findings; the supporting detail follows.
         </p>
       </section>
 
-      <CurrentSystemSection
-        system={diagnostic.currentSystem}
+      <SystemMapSection
+        systemMap={diagnostic.systemMap || []}
+        answers={answers}
+        onGoDeeper={onGoDeeper}
       />
 
-      <StrengthsSection
-        strengths={diagnostic.strengths}
+      <PrioritySection
+        findings={diagnostic.priorityFindings}
       />
 
       <AttentionSection
         findings={diagnostic.attentionFindings}
       />
 
-      <PrioritySection
-        findings={diagnostic.priorityFindings}
+      <StrengthsSection
+        strengths={diagnostic.strengths}
+      />
+
+      <CurrentSystemSection
+        system={diagnostic.currentSystem}
       />
 
       <BuildPathSection
