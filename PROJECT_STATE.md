@@ -1,6 +1,6 @@
 # SAGE — PROJECT STATE
 
-**Last updated:** 2026-09-29  
+**Last updated:** 2026-09-30  
 **Repository:** `SRYProjects/TSS-GPT`  
 **Default branch:** `main`  
 **Deployment:** Cloudflare Worker `tss-gpt`  
@@ -46,6 +46,12 @@ SAGE has moved from prototype/testing into the live adaptive V1 interface.
 - Browser-local answer persistence via `localStorage`.
 - Browser Print / Save PDF action.
 - Responsive dark navy/charcoal + teal visual system.
+- 12-screen **Core Review** that preserves a useful first diagnostic while reducing mandatory burden.
+- Optional section-level **Deep Dives** that preserve the original diagnostic question bank and supporting verification without forcing every user through it.
+- Users can return from the report to unanswered Deep Dives and regenerate the diagnostic with added evidence.
+- Section checkpoints explain what SAGE has mapped and let the user continue or go deeper.
+- Report now leads with a non-scored **Sales System at a Glance** visual and highest-priority findings before supporting detail.
+- Adaptive-answer sanitization prevents hidden stale follow-up answers from affecting the diagnostic after a branching answer changes.
 
 ### Tested and confirmed
 Infrastructure/deployment:
@@ -71,12 +77,14 @@ Live adaptive UI:
 - The current browser printout is not client-ready and needs dedicated document design/formatting.
 
 ### Not yet tested/confirmed
+- the new 12-screen Core Review end-to-end in production;
+- section checkpoint → Continue behavior across all six sections;
+- each optional Deep Dive and early return to the Core Review;
+- report → Deep Dive → regenerated report behavior;
 - every possible adaptive branch;
-- back-navigation/branch-change behavior;
 - mobile/responsive behavior;
-- the newly implemented shorter 18-screen journey in production;
-- branch changes/back-navigation behavior after the journey redesign;
-- redesigned final report and client-ready print output.
+- the new at-a-glance report visual with varied diagnostic outcomes;
+- client-ready print/PDF output.
 
 ## Relevant current files
 
@@ -133,19 +141,28 @@ No backend database, authentication, CRM integration, or production AI/API is pr
 
 These are implementation risks to verify, not settled product changes:
 
-1. **Diagnostic burden was a confirmed UX problem and has now been redesigned for retest.** The underlying config still contains 22 diagnostic question definitions, but the UI now groups four related items into their parent interactions, producing 18 primary screens. Conditional verification is progressively revealed within the relevant screen instead of becoming another full-page screen.
-2. **Stale conditional answers:** `App.jsx` builds the visible adaptive flow from current answers, but hidden follow-up answers are not currently pruned when an earlier answer changes. A user who goes Back and changes a branching answer could leave stale hidden data that still reaches the diagnostic engine. Test and fix if confirmed.
-3. **“Other” handling:** several answer sets contain “Other,” but the current interface does not always collect explanatory text. Determine during UX testing whether this creates a material diagnostic gap before expanding scope.
-4. **Different-path mapping:** current UI captures one important different path using previously selected process steps. Confirm this is sufficient and usable in the live journey.
-5. **Legacy test fixture:** `src/diagnosticTest.js` remains in the repository but is no longer imported by production `main.jsx`. It contains an older manual fixture and should not be treated as production state.
-6. **Automated tests:** there is no formal test runner/script in `package.json`; prior diagnostic testing was manual fixture/console testing.
-7. **GitHub commit status:** the latest inspected commit had no GitHub status checks attached. Deployment success has been established through Cloudflare/manual production checks rather than GitHub CI.
-8. **Current-system reconstruction:** the report currently summarizes the primary path and flags whether a different path exists, but does not yet present a rich reconstruction of the alternate path. Evaluate against the report requirement during end-to-end review.
-9. **Questionnaire/rule completeness:** the architecture is locked, but real-use testing may reveal individual answer fields that need stronger use in findings/reporting. Adjust rules only from observed diagnostic need, not speculative expansion.
+1. **The Core Review + Deep Dive architecture is newly committed and requires production testing.** The full question bank is preserved, but only 12 primary screens are mandatory.
+2. **Deep Dive report regeneration must be verified.** A user should be able to add evidence from the report and return to an updated diagnostic without losing existing answers.
+3. **At-a-glance map language requires real-use validation.** It communicates diagnostic conditions, not scores; confirm that “No material issue identified” is not interpreted as a rating or guarantee.
+4. **“Other” handling:** several answer sets contain “Other,” but the interface does not always collect explanatory text. Evaluate during testing before expanding scope.
+5. **Different-path mapping:** retained in optional depth. Confirm that the current control is sufficiently clear and useful.
+6. **Legacy test fixture:** `src/diagnosticTest.js` remains but is not imported by production `main.jsx`.
+7. **Automated tests:** there is no formal test runner/script in `package.json`; prior diagnostic testing used manual fixtures and production testing.
+8. **Current-system reconstruction:** the report summarizes the primary path and flags alternate-path information but does not yet present a rich alternate-path visualization.
+9. **Print/PDF remains unfinished.** The web report has been reorganized, but the client-facing document layout has not yet been redesigned.
 
 ## Recent meaningful commits
 
-Latest journey-redesign commits:
+Latest Core Review / Deep Dive redesign:
+- `6b33041c` — **Clarify full diagnostic scope across review depth**
+- `1effe5c3` — **Explain SAGE Core Review and optional depth**
+- `c3fa68e6` / `bb877a41` — sanitize adaptive answers and prevent stale hidden answers
+- `bf9f28af` / `d4ca2489` — lead the report with gaps and add the at-a-glance system map
+- `55615ca9` / `a9a52dce` — wire Core Review and optional Deep Dives
+- `c26dd488` / `4a811dd5` — establish the 12-screen Core Review and experience model
+- `0eceb385` — **Lock core review and optional deep dives**
+
+Previous journey-redesign commits:
 - `885c3937` — **Group related SAGE questions into 18 screens**
 - `36b9b45d` — **Style SAGE progress and inline feedback**
 - `8960e276` — **Shorten SAGE journey and add progress feedback**
@@ -172,37 +189,35 @@ Canonical documentation commits follow these.
 - Build command previously confirmed: `npm run build`.
 - Deploy command previously confirmed: `npx wrangler deploy`.
 - Root configuration: `vite.config.js` and `wrangler.jsonc`.
-- The prior production version was manually tested through a complete overall-sales-operation diagnostic and final report.
-- The redesigned journey is committed to `main`; production verification of this new build is the next step.
-- Final report presentation and print formatting remain intentionally deferred until the shorter journey is validated.
+- The prior 18-screen production version was manually tested through a complete overall-sales-operation diagnostic and final report and was still judged too overwhelming.
+- The new Core Review + Deep Dive architecture and at-a-glance report are committed to `main`; production verification is the next step.
+- The dedicated client-ready print/PDF redesign remains intentionally unfinished until this interaction/report direction is validated.
 
 ## Exact next step
 
-**Retest the redesigned production journey as a normal user.**
+**Test the new Core Review + optional Deep Dive production experience.**
 
-The redesign now:
-1. uses 18 primary screens rather than 22 separate core screens;
-2. groups related questions that were separate pages;
-3. reveals adaptive verification within the current screen;
-4. shows **Section N of 6** and an overall completion percentage;
-5. provides concise evidence-bounded feedback at major section transitions;
-6. limits step-objective verification to up to three representative important steps.
+Use **Our overall sales operation** again and first take the fastest path:
+1. complete the Core Review;
+2. skip every optional Deep Dive;
+3. confirm the mandatory experience feels materially lighter;
+4. inspect whether the first report is still genuinely useful;
+5. verify that the Sales System at a Glance and priority findings communicate value immediately.
 
-On the next production test, evaluate:
-- whether the experience now feels materially shorter and less overwhelming;
-- whether progress is immediately clear;
-- whether inline follow-ups feel easier than separate pages;
-- whether section feedback creates useful payoff without becoming distracting;
-- whether all controls still work and the final diagnostic remains accurate.
+Then, from the report:
+1. choose **Add evidence to this area** for at least one area;
+2. answer the optional questions;
+3. return to the report;
+4. confirm the report updates appropriately and existing answers are preserved.
 
-Do not redesign the final report or print/PDF until this journey retest is complete.
+Also note whether the optional-depth offer feels useful rather than manipulative or burdensome.
 
 ## Short remaining V1 roadmap
 
-1. Retest the new 18-screen production journey.
-2. Fix any functional/structural defects revealed by that test, including branch-change/stale-answer behavior.
-3. Redesign the final diagnostic page to be more dramatic, concise, and conclusion-first.
-4. Create a dedicated client-ready print/PDF layout.
+1. Production-test the Core Review, one skipped-depth path, and one report-driven Deep Dive.
+2. Fix any functional/diagnostic defects found in that test.
+3. Refine report density and at-a-glance language from real-use feedback.
+4. Create the dedicated client-ready print/PDF layout.
 5. Test responsive/mobile behavior and remaining adaptive branches.
 6. Decide launch items: Cross-Through guide access, final report naming, and professional-help CTA.
 7. Run final V1 regression and deployment check.
