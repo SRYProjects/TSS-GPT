@@ -52,6 +52,9 @@ SAGE has moved from prototype/testing into the live adaptive V1 interface.
 - Section checkpoints explain what SAGE has mapped and let the user continue or go deeper.
 - Report now leads with a non-scored **Sales System at a Glance** visual and highest-priority findings before supporting detail.
 - Adaptive-answer sanitization prevents hidden stale follow-up answers from affecting the diagnostic after a branching answer changes.
+- Eligible SAGE Update checkpoints now present the optional Deep Dive as an explicit next-step choice.
+- The report now includes a centralized **Want a sharper diagnosis?** panel for adding evidence by area, in addition to area-level deep-dive controls.
+- Diagnostic condition cards now use a consistent colored top accent and dot alongside the written status label so Solid / Incomplete / Unverified / Unknown / other conditions are immediately scannable.
 
 ### Tested and confirmed
 Infrastructure/deployment:
@@ -195,22 +198,14 @@ Canonical documentation commits follow these.
 
 ## Exact next step
 
-**Test the new Core Review + optional Deep Dive production experience.**
+**Verify the strengthened Deep Dive choices and diagnostic status hierarchy in production.**
 
-Use **Our overall sales operation** again and first take the fastest path:
-1. complete the Core Review;
-2. skip every optional Deep Dive;
-3. confirm the mandatory experience feels materially lighter;
-4. inspect whether the first report is still genuinely useful;
-5. verify that the Sales System at a Glance and priority findings communicate value immediately.
-
-Then, from the report:
-1. choose **Add evidence to this area** for at least one area;
-2. answer the optional questions;
-3. return to the report;
-4. confirm the report updates appropriately and existing answers are preserved.
-
-Also note whether the optional-depth offer feels useful rather than manipulative or burdensome.
+Use **Our overall sales operation** again and confirm:
+1. eligible SAGE Update breaks clearly present **Go deeper** as an optional choice;
+2. continuing the Core Review remains equally clear and frictionless;
+3. the report visibly presents the centralized **Want a sharper diagnosis?** evidence panel;
+4. Solid / Incomplete / Unverified / Unknown / other diagnostic conditions are immediately distinguishable through the new colored line + dot while retaining the written label;
+5. choosing one report evidence option enters the correct Deep Dive and returns to an updated report without losing existing answers.
 
 ## Short remaining V1 roadmap
 
