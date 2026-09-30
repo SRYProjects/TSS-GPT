@@ -378,6 +378,14 @@ function cleanReportFinding(item) {
   };
 }
 
+function statusClassName(status) {
+  return String(status || "unknown")
+    .toLowerCase()
+    .replace(/[^a-z]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+
 // --------------------------------------------------
 // HEADER
 // --------------------------------------------------
@@ -1644,23 +1652,31 @@ function SectionReviewScreen({
 
         {meta && depth.available > 0 && (
           <div className="depth-choice">
+            <div className="depth-choice-icon">
+              +
+            </div>
+
             <div className="depth-choice-copy">
               <div className="depth-label">
-                OPTIONAL DEEP DIVE
+                OPTIONAL — YOUR CHOICE
               </div>
 
-              <h2>{meta.title}</h2>
+              <h2>
+                Want SAGE to investigate this area further?
+              </h2>
+
               <p>{meta.description}</p>
 
               <div className="depth-value">
                 {depth.complete
-                  ? "Additional evidence added to this area."
-                  : depth.remaining +
-                    " optional " +
+                  ? "Additional evidence has been added to this area."
+                  : "Answer " +
+                    depth.remaining +
+                    " more " +
                     (depth.remaining === 1
                       ? "question"
                       : "questions") +
-                    " can make this part of your diagnostic more specific."}
+                    " for a more specific, better-supported analysis here."}
               </div>
             </div>
 
@@ -1670,7 +1686,10 @@ function SectionReviewScreen({
                 className="secondary-accent-button"
                 onClick={onGoDeeper}
               >
-                Go deeper in this area
+                Go deeper — {depth.remaining}{" "}
+                {depth.remaining === 1
+                  ? "question"
+                  : "questions"}
               </button>
             )}
           </div>
@@ -1890,15 +1909,28 @@ function CompleteScreen({
 
 function FindingCard({ finding, priority = false }) {
   const clean = cleanReportFinding(finding);
+  const statusClass =
+    statusClassName(clean.type);
 
   return (
     <article
-      className={`finding-card ${
-        priority ? "priority-finding" : ""
-      }`}
+      className={
+        "finding-card status-card status-" +
+        statusClass +
+        (priority ? " priority-finding" : "")
+      }
     >
+      <div
+        className="status-accent-line"
+        aria-hidden="true"
+      />
+
       <div className="finding-topline">
         <span className="finding-type">
+          <span
+            className="status-dot"
+            aria-hidden="true"
+          />
           {clean.type}
         </span>
 
@@ -2261,9 +2293,17 @@ function SystemMapSection({
 
           return (
             <div
-              className="system-map-card"
+              className={
+                "system-map-card status-card status-" +
+                statusClassName(area.status)
+              }
               key={area.id}
             >
+              <div
+                className="status-accent-line"
+                aria-hidden="true"
+              />
+
               <div className="system-map-index">
                 {String(index + 1).padStart(
                   2,
@@ -2275,15 +2315,11 @@ function SystemMapSection({
                 {area.label}
               </div>
 
-              <div
-                className={
-                  "system-map-status status-" +
-                  area.status
-                    .toLowerCase()
-                    .replace(/[^a-z]+/g, "-")
-                    .replace(/^-|-$/g, "")
-                }
-              >
+              <div className="system-map-status">
+                <span
+                  className="status-dot"
+                  aria-hidden="true"
+                />
                 {area.status}
               </div>
 
@@ -2297,12 +2333,77 @@ function SystemMapSection({
                     onGoDeeper(stageId)
                   }
                 >
-                  Add evidence to this area →
+                  Go deeper / add evidence →
                 </button>
               )}
             </div>
           );
         })}
+      </div>
+    </section>
+  );
+}
+
+function ReportDepthPanel({
+  answers,
+  onGoDeeper
+}) {
+  const areas = [
+    "begin",
+    "move",
+    "buyer",
+    "improve",
+    "execution"
+  ]
+    .map((stageId) => ({
+      stageId,
+      meta: deepDiveMeta[stageId],
+      depth: getDeepDiveStatus(
+        stageId,
+        answers
+      )
+    }))
+    .filter(
+      (item) =>
+        item.meta &&
+        item.depth.remaining > 0
+    );
+
+  if (areas.length === 0) return null;
+
+  return (
+    <section className="report-depth-panel">
+      <div className="report-depth-copy">
+        <div className="depth-label">
+          WANT A SHARPER DIAGNOSIS?
+        </div>
+
+        <h2>
+          Add evidence where you want SAGE to go deeper.
+        </h2>
+
+        <p>
+          Your Core Review is complete. These optional
+          questions can make selected findings more specific
+          and better supported. Your current answers stay
+          intact.
+        </p>
+      </div>
+
+      <div className="report-depth-actions">
+        {areas.map(({ stageId, meta, depth }) => (
+          <button
+            type="button"
+            className="report-depth-button"
+            key={stageId}
+            onClick={() => onGoDeeper(stageId)}
+          >
+            <span>{meta.label}</span>
+            <strong>
+              Add evidence · {depth.remaining}
+            </strong>
+          </button>
+        ))}
       </div>
     </section>
   );
@@ -2336,6 +2437,11 @@ function DiagnosticReport({
 
       <SystemMapSection
         systemMap={diagnostic.systemMap || []}
+        answers={answers}
+        onGoDeeper={onGoDeeper}
+      />
+
+      <ReportDepthPanel
         answers={answers}
         onGoDeeper={onGoDeeper}
       />
