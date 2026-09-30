@@ -2302,6 +2302,32 @@ export default function App() {
   const [diagnostic, setDiagnostic] =
     useState(null);
 
+  const [
+    sectionReviewStage,
+    setSectionReviewStage
+  ] = useState(null);
+
+  const [
+    reviewFromQuestionId,
+    setReviewFromQuestionId
+  ] = useState(null);
+
+  const [
+    afterSectionReview,
+    setAfterSectionReview
+  ] = useState(null);
+
+  const [deepDiveStage, setDeepDiveStage] =
+    useState(null);
+
+  const [
+    deepDiveQuestionId,
+    setDeepDiveQuestionId
+  ] = useState(null);
+
+  const [deepDiveReturn, setDeepDiveReturn] =
+    useState("sectionReview");
+
   const flow = useMemo(
     () => buildQuestionFlow(),
     []
@@ -2367,11 +2393,22 @@ export default function App() {
     }));
   }
 
+  function openSectionReview(
+    stageId,
+    fromQuestionId,
+    nextTarget
+  ) {
+    setSectionReviewStage(stageId);
+    setReviewFromQuestionId(fromQuestionId);
+    setAfterSectionReview(nextTarget);
+    setScreen("sectionReview");
+    window.scrollTo(0, 0);
+  }
+
   function nextQuestion() {
     if (!currentQuestion) return;
 
-    const updatedFlow =
-      buildQuestionFlow();
+    const updatedFlow = buildQuestionFlow();
 
     const index = updatedFlow.findIndex(
       (question) =>
@@ -2380,24 +2417,36 @@ export default function App() {
 
     const next = updatedFlow[index + 1];
 
-    if (next) {
-      setHistory((previous) => [
-        ...previous,
-        currentQuestion.id
-      ]);
-
-      setCurrentQuestionId(next.id);
-      window.scrollTo(0, 0);
-      return;
-    }
-
     setHistory((previous) => [
       ...previous,
       currentQuestion.id
     ]);
 
-    setScreen("complete");
-    window.scrollTo(0, 0);
+    if (
+      next &&
+      next.stage !== currentQuestion.stage
+    ) {
+      setCurrentQuestionId(next.id);
+
+      openSectionReview(
+        currentQuestion.stage,
+        currentQuestion.id,
+        next.id
+      );
+      return;
+    }
+
+    if (next) {
+      setCurrentQuestionId(next.id);
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    openSectionReview(
+      currentQuestion.stage,
+      currentQuestion.id,
+      "complete"
+    );
   }
 
   function previousQuestion() {
@@ -2416,6 +2465,95 @@ export default function App() {
 
     setCurrentQuestionId(previousId);
     window.scrollTo(0, 0);
+  }
+
+  function backFromSectionReview() {
+    if (!reviewFromQuestionId) return;
+
+    setHistory((previous) =>
+      previous.slice(0, -1)
+    );
+
+    setCurrentQuestionId(
+      reviewFromQuestionId
+    );
+
+    setScreen("questions");
+    window.scrollTo(0, 0);
+  }
+
+  function continueAfterSectionReview() {
+    if (afterSectionReview === "complete") {
+      setScreen("complete");
+    } else {
+      setScreen("questions");
+    }
+
+    window.scrollTo(0, 0);
+  }
+
+  function startDeepDive(
+    stageId,
+    returnTarget = "sectionReview"
+  ) {
+    const deepQuestions =
+      getDeepDiveQuestions(stageId, answers);
+
+    if (deepQuestions.length === 0) {
+      if (returnTarget === "report") {
+        setScreen("report");
+      }
+      return;
+    }
+
+    const firstUnanswered =
+      deepQuestions.find(
+        (question) =>
+          !hasValue(answers[question.id])
+      ) || deepQuestions[0];
+
+    setDeepDiveStage(stageId);
+    setDeepDiveQuestionId(
+      firstUnanswered.id
+    );
+    setDeepDiveReturn(returnTarget);
+    setScreen("deepDive");
+    window.scrollTo(0, 0);
+  }
+
+  function finishDeepDive() {
+    if (deepDiveReturn === "report") {
+      const result = buildDiagnostic(answers);
+      setDiagnostic(result);
+      setScreen("report");
+    } else {
+      setScreen("sectionReview");
+    }
+
+    window.scrollTo(0, 0);
+  }
+
+  function nextDeepDiveQuestion() {
+    const deepQuestions =
+      getDeepDiveQuestions(
+        deepDiveStage,
+        answers
+      );
+
+    const index = deepQuestions.findIndex(
+      (question) =>
+        question.id === deepDiveQuestionId
+    );
+
+    const next = deepQuestions[index + 1];
+
+    if (next) {
+      setDeepDiveQuestionId(next.id);
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    finishDeepDive();
   }
 
   function backFromComplete() {
@@ -2441,6 +2579,10 @@ export default function App() {
     window.scrollTo(0, 0);
   }
 
+  function goDeeperFromReport(stageId) {
+    startDeepDive(stageId, "report");
+  }
+
   function restart() {
     const confirmed = window.confirm(
       "Start a new review? This will clear your current answers."
@@ -2460,6 +2602,12 @@ export default function App() {
     setHistory([]);
     setCurrentQuestionId(null);
     setDiagnostic(null);
+    setSectionReviewStage(null);
+    setReviewFromQuestionId(null);
+    setAfterSectionReview(null);
+    setDeepDiveStage(null);
+    setDeepDiveQuestionId(null);
+    setDeepDiveReturn("sectionReview");
     setScreen("landing");
     window.scrollTo(0, 0);
   }
@@ -2500,21 +2648,6 @@ export default function App() {
         );
     }
 
-    const previousCoreQuestion =
-      currentIndex > 0
-        ? flow[currentIndex - 1]
-        : null;
-
-    const sectionFeedback =
-      previousCoreQuestion &&
-      previousCoreQuestion.stage !==
-        currentQuestion.stage
-        ? getSectionFeedback(
-            previousCoreQuestion.stage,
-            answers
-          )
-        : null;
-
     content = (
       <QuestionScreen
         question={enhancedQuestion}
@@ -2525,9 +2658,81 @@ export default function App() {
         progressPercent={getProgressPercent(
           currentIndex
         )}
-        sectionFeedback={sectionFeedback}
       />
     );
+  }
+
+  if (
+    screen === "sectionReview" &&
+    sectionReviewStage
+  ) {
+    content = (
+      <SectionReviewScreen
+        stageId={sectionReviewStage}
+        answers={answers}
+        onContinue={continueAfterSectionReview}
+        onGoDeeper={() =>
+          startDeepDive(
+            sectionReviewStage,
+            "sectionReview"
+          )
+        }
+        onBack={backFromSectionReview}
+      />
+    );
+  }
+
+  if (
+    screen === "deepDive" &&
+    deepDiveStage
+  ) {
+    const deepQuestions =
+      getDeepDiveQuestions(
+        deepDiveStage,
+        answers
+      );
+
+    const deepIndex = Math.max(
+      0,
+      deepQuestions.findIndex(
+        (question) =>
+          question.id === deepDiveQuestionId
+      )
+    );
+
+    const baseQuestion =
+      deepQuestions[deepIndex];
+
+    if (baseQuestion) {
+      const enhancedDeepQuestion = {
+        ...baseQuestion
+      };
+
+      if (
+        baseQuestion.type === "dynamicMulti" ||
+        baseQuestion.type === "dynamicSingle"
+      ) {
+        enhancedDeepQuestion.dynamicOptions =
+          getDynamicOptions(
+            baseQuestion,
+            answers
+          );
+      }
+
+      content = (
+        <DeepDiveScreen
+          question={enhancedDeepQuestion}
+          answers={answers}
+          value={answers[baseQuestion.id]}
+          onAnswer={updateAnswer}
+          onNext={nextDeepDiveQuestion}
+          onFinish={finishDeepDive}
+          index={deepIndex}
+          total={deepQuestions.length}
+          meta={deepDiveMeta[deepDiveStage]}
+        />
+      );
+    }
   }
 
   if (screen === "complete") {
@@ -2546,6 +2751,8 @@ export default function App() {
     content = (
       <DiagnosticReport
         diagnostic={diagnostic}
+        answers={answers}
+        onGoDeeper={goDeeperFromReport}
         onRestart={restart}
       />
     );
