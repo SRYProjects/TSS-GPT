@@ -4,7 +4,8 @@
 **Repository:** `SRYProjects/TSS-GPT`  
 **Default branch:** `main`  
 **Deployment:** Cloudflare Worker `tss-gpt`  
-**Production URL:** `https://tss-gpt.account-7e8.workers.dev`
+**Production URL:** `https://thesalessuccess.app`  
+**Worker URL:** `https://tss-gpt.account-7e8.workers.dev`
 
 This file is the operational checkpoint. `PRODUCT_SPEC.md` controls product decisions; the live repository controls implementation truth.
 
@@ -60,6 +61,8 @@ SAGE has moved from prototype/testing into the live adaptive V1 interface.
 Infrastructure/deployment:
 - Cloudflare deployment pipeline is working.
 - Production app loads.
+- Custom production domain `https://thesalessuccess.app` is live and serves the SAGE app.
+- `https://www.thesalessuccess.app` is configured through a Cloudflare Redirect Rule to the root domain `https://thesalessuccess.app` using a permanent 301 redirect.
 - React blank-screen issue from missing React import was previously fixed.
 - Vite/Wrangler config location issue was previously fixed; both config files are at repository root.
 
@@ -187,6 +190,9 @@ Canonical documentation commits follow these.
 
 ## Deployment status
 
+- Primary public domain: `https://thesalessuccess.app`.
+- `www.thesalessuccess.app` redirects permanently to the root domain.
+- The Cloudflare Worker URL remains available as the underlying deployment URL.
 - GitHub repository: public, active, default branch `main`.
 - Cloudflare Worker: `tss-gpt`.
 - Build command previously confirmed: `npm run build`.
