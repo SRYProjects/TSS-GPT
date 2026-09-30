@@ -84,7 +84,10 @@ Professional services are a separate optional next step. They may investigate fi
 - The first report must remain genuinely useful from Core Review answers alone.
 - From the report, users should be able to return to relevant optional depth, provide more evidence, and regenerate a richer diagnostic without losing existing answers.
 - Continue using the six sections. Show **Section N of 6** plus an honest Core Review completion percentage. Optional Deep Dives do not make the user's required progress move backward.
-- At major section transitions, provide concise, evidence-bounded feedback about what SAGE has mapped or established so far.
+- At major section transitions, provide concise, evidence-bounded feedback about what SAGE has mapped or established so far. These **SAGE Update** breaks are a valued part of the experience and should be preserved.
+- Optional Deep Dives must be visually unmistakable at eligible SAGE Update checkpoints, with an explicit choice between continuing the Core Review and going deeper.
+- The report must also surface a conspicuous, centralized opportunity to add evidence by area; do not rely only on small links inside individual cards.
+- Wherever SAGE declares a diagnostic condition such as **Solid, Incomplete, Disconnected, Unverified, Unknown, Performance Problem, or Execution Exposure**, pair the text with a consistent visual status indicator (colored accent line and dot). Color is supplemental to the written label, never a score.
 - Adaptive questioning remains governed by stop / verify / clarify. Verification that is not essential to the first responsible finding belongs in optional depth.
 - Step-objective verification samples only a few representative important process steps rather than requiring mapping of every selected step.
 - The experience should make the exchange explicit: more evidence can produce a more specific and better-supported report, but the user controls how deep to go.
