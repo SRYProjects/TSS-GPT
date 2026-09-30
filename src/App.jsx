@@ -7,7 +7,8 @@ import {
   getCoreFlow,
   getCoreFollowUps,
   getDeepDiveQuestions,
-  getDeepDiveStatus
+  getDeepDiveStatus,
+  sanitizeDiagnosticAnswers
 } from "./diagnosticExperience";
 
 // --------------------------------------------------
@@ -2627,7 +2628,13 @@ export default function App() {
 
   function finishDeepDive() {
     if (deepDiveReturn === "report") {
-      const result = buildDiagnostic(answers);
+      const cleanAnswers =
+        sanitizeDiagnosticAnswers(answers);
+
+      const result =
+        buildDiagnostic(cleanAnswers);
+
+      setAnswers(cleanAnswers);
       setDiagnostic(result);
       setScreen("report");
     } else {
@@ -2676,8 +2683,13 @@ export default function App() {
   }
 
   function createDiagnostic() {
-    const result = buildDiagnostic(answers);
+    const cleanAnswers =
+      sanitizeDiagnosticAnswers(answers);
 
+    const result =
+      buildDiagnostic(cleanAnswers);
+
+    setAnswers(cleanAnswers);
     setDiagnostic(result);
     setScreen("report");
     window.scrollTo(0, 0);
