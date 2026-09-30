@@ -93,7 +93,7 @@ The first production version (22 core screens plus follow-ups) and the later 18-
 
 ## 5. Current V1 diagnostic scope
 
-The diagnostic examines:
+Across the Core Review and optional Deep Dives, the preserved diagnostic question bank can examine:
 - what part of the sales operation is being assessed;
 - primary B2B buyer type;
 - meaningful opportunity sources and which contribute most;
