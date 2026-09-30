@@ -1,6 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { stages, questions } from "./diagnosticConfig";
+import { stages } from "./diagnosticConfig";
 import { buildDiagnostic } from "./diagnosticEngine";
+import {
+  deepDiveMeta,
+  getCoreEmbeddedQuestions,
+  getCoreFlow,
+  getCoreFollowUps,
+  getDeepDiveQuestions,
+  getDeepDiveStatus
+} from "./diagnosticExperience";
 
 // --------------------------------------------------
 // HELPERS
@@ -217,38 +225,11 @@ function getStepOutcomeOptions(step) {
   ];
 }
 
-const combinedQuestionIds = {
-  assessment_scope: ["buyer_type"],
-  sales_sources: ["top_sources"],
-  process_steps: ["different_path"],
-  resolution: ["readiness_evidence"]
-};
-
-const embeddedQuestionIds = new Set(
-  Object.values(combinedQuestionIds).flat()
-);
-
 function buildQuestionFlow() {
-  return questions
-    .filter(
-      (question) =>
-        !embeddedQuestionIds.has(question.id)
-    )
-    .map((question) => ({
-      ...question,
-      parentId: null
-    }));
-}
-
-function getEmbeddedQuestions(question) {
-  const ids =
-    combinedQuestionIds[question.id] || [];
-
-  return ids
-    .map((id) =>
-      questions.find((item) => item.id === id)
-    )
-    .filter(Boolean);
+  return getCoreFlow().map((question) => ({
+    ...question,
+    parentId: null
+  }));
 }
 
 function getActiveFollowUps(question, answers) {
@@ -277,7 +258,7 @@ function getProgressPercent(currentIndex) {
   if (currentIndex < 0) return 0;
 
   return Math.round(
-    ((currentIndex + 1) / buildQuestionFlow().length) * 100
+    ((currentIndex + 1) / getCoreFlow().length) * 100
   );
 }
 
@@ -1403,22 +1384,16 @@ function QuestionScreen({
   const value = answers[question.id];
 
   const embeddedQuestions =
-    getEmbeddedQuestions(question);
+    getCoreEmbeddedQuestions(question.id);
 
   const questionSet = [
     question,
     ...embeddedQuestions
   ];
 
-  const followUps = questionSet.flatMap(
-    (item) =>
-      getActiveFollowUps(item, answers).map(
-        (followUp) => ({
-          ...followUp,
-          stage: question.stage,
-          embeddedParentId: item.id
-        })
-      )
+  const followUps = getCoreFollowUps(
+    questionSet,
+    answers
   );
 
   const primaryComplete = questionSet.every(
