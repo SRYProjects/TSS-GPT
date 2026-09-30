@@ -1594,6 +1594,241 @@ function QuestionScreen({
 }
 
 // --------------------------------------------------
+// SECTION CHECKPOINT + OPTIONAL DEPTH
+// --------------------------------------------------
+
+function SectionReviewScreen({
+  stageId,
+  answers,
+  onContinue,
+  onGoDeeper,
+  onBack
+}) {
+  const stage =
+    stages.find((item) => item.id === stageId) ||
+    stages[0];
+
+  const feedback =
+    getSectionFeedback(stageId, answers);
+
+  const meta = deepDiveMeta[stageId];
+  const depth = getDeepDiveStatus(
+    stageId,
+    answers
+  );
+
+  return (
+    <main className="checkpoint-shell">
+      <section className="checkpoint-card">
+        <div className="checkpoint-complete">
+          <span>✓</span>
+          Section complete
+        </div>
+
+        <div className="eyebrow">
+          {stage.label}
+        </div>
+
+        <h1>
+          {feedback?.title ||
+            "This part of your sales system is mapped."}
+        </h1>
+
+        <p className="checkpoint-summary">
+          {feedback?.text ||
+            "SAGE has enough information to continue the Core Review."}
+        </p>
+
+        {meta && depth.available > 0 && (
+          <div className="depth-choice">
+            <div className="depth-choice-copy">
+              <div className="depth-label">
+                OPTIONAL DEEP DIVE
+              </div>
+
+              <h2>{meta.title}</h2>
+              <p>{meta.description}</p>
+
+              <div className="depth-value">
+                {depth.complete
+                  ? "Additional evidence added to this area."
+                  : depth.remaining +
+                    " optional " +
+                    (depth.remaining === 1
+                      ? "question"
+                      : "questions") +
+                    " can make this part of your diagnostic more specific."}
+              </div>
+            </div>
+
+            {!depth.complete && (
+              <button
+                type="button"
+                className="secondary-accent-button"
+                onClick={onGoDeeper}
+              >
+                Go deeper in this area
+              </button>
+            )}
+          </div>
+        )}
+
+        <div className="checkpoint-actions">
+          <button
+            type="button"
+            className="back-button"
+            onClick={onBack}
+          >
+            Back
+          </button>
+
+          <button
+            type="button"
+            className="primary-button"
+            onClick={onContinue}
+          >
+            Continue Core Review
+          </button>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function DeepDiveScreen({
+  question,
+  answers,
+  value,
+  onAnswer,
+  onNext,
+  onFinish,
+  index,
+  total,
+  meta
+}) {
+  const followUps =
+    getActiveFollowUps(question, answers);
+
+  const primaryComplete = questionComplete(
+    question,
+    value,
+    answers
+  );
+
+  const followUpsComplete = followUps.every(
+    (followUp) =>
+      questionComplete(
+        followUp,
+        answers[followUp.id],
+        answers
+      )
+  );
+
+  const complete =
+    primaryComplete && followUpsComplete;
+
+  return (
+    <main className="deep-dive-shell">
+      <section className="deep-dive-card">
+        <div className="deep-dive-topline">
+          <div>
+            <div className="depth-label">
+              OPTIONAL DEEP DIVE
+            </div>
+            <div className="deep-dive-area">
+              {meta?.label || "Additional evidence"}
+            </div>
+          </div>
+
+          <div className="deep-dive-count">
+            {index + 1} of {total}
+          </div>
+        </div>
+
+        <h1>{question.title}</h1>
+
+        {question.help && (
+          <p className="question-help">
+            {question.help}
+          </p>
+        )}
+
+        <AnswerInput
+          question={question}
+          answers={answers}
+          value={value}
+          onChange={(newValue) =>
+            onAnswer(question.id, newValue)
+          }
+        />
+
+        {primaryComplete &&
+          followUps.map((followUp) => (
+            <div
+              className="inline-followup"
+              key={followUp.id}
+            >
+              <div className="inline-followup-label">
+                Add supporting evidence
+              </div>
+
+              <h2>{followUp.title}</h2>
+
+              {followUp.help && (
+                <p className="question-help">
+                  {followUp.help}
+                </p>
+              )}
+
+              <AnswerInput
+                question={{
+                  ...followUp,
+                  stage: question.stage
+                }}
+                answers={answers}
+                value={answers[followUp.id]}
+                onChange={(newValue) =>
+                  onAnswer(
+                    followUp.id,
+                    newValue
+                  )
+                }
+              />
+            </div>
+          ))}
+
+        <div className="deep-dive-note">
+          This is optional. You can return to the Core Review
+          at any time; unanswered depth is not treated as a
+          weakness.
+        </div>
+
+        <div className="checkpoint-actions">
+          <button
+            type="button"
+            className="back-button"
+            onClick={onFinish}
+          >
+            Return to Core Review
+          </button>
+
+          <button
+            type="button"
+            className="primary-button"
+            disabled={!complete}
+            onClick={onNext}
+          >
+            {index + 1 < total
+              ? "Continue Deep Dive"
+              : "Finish Deep Dive"}
+          </button>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+// --------------------------------------------------
 // COMPLETE SCREEN
 // --------------------------------------------------
 
