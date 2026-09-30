@@ -73,16 +73,23 @@ Professional services are a separate optional next step. They may investigate fi
 9. Completion screen leads to the diagnostic.
 10. User receives the five-part diagnostic report.
 
-### Locked journey-design rules after first end-to-end user test
-- Preserve the approved diagnostic depth, but reduce user effort. The objective is to remove unnecessary burden, not diagnostic intelligence.
-- Implement the approved 17 diagnostic areas plus the optional final-context question as **18 primary screens maximum**. Related subquestions and adaptive verification belong on the same primary screen through progressive reveal rather than becoming separate full-page screens.
-- Continue using the six sections. Show **Section N of 6** plus an honest overall percentage based on completion of the 18 primary screens. Do not use “Question X of Y.”
-- At major section transitions, give the user concise, evidence-bounded feedback about what SAGE has now mapped or established from their answers. This feedback must not become an unsupported diagnosis.
-- Adaptive follow-ups remain governed by stop / verify / clarify: stop when a gap is established; verify meaningful claimed strengths; ask only what is needed to resolve ambiguity.
-- Step-objective verification must sample only a few representative important process steps rather than requiring the user to map every selected step.
-- The experience should feel progressively rewarding: the user should see both how far they have progressed and what SAGE has learned.
+### Locked journey-design rules after end-to-end user testing
+- Preserve the **full approved diagnostic question bank**. Do not delete valuable diagnostic content merely to shorten the journey.
+- Do **not** restore the original questionnaire as one mandatory sequence. The original forced sequence was too burdensome.
+- Divide the experience into a **Core Review + optional Deep Dives**:
+  - the Core Review collects the minimum evidence needed for a legitimate first diagnostic;
+  - Deep Dives preserve additional verification, cause/evidence, buyer-progression, process-variation, testing, and execution questions that can materially make a finding more specific or better supported.
+- Deep Dives are voluntary. At selected section checkpoints, users may **Continue** or **Go deeper in this area**. The interface must explain the value of the additional effort.
+- Skipping a Deep Dive is never evidence of weakness. SAGE must not convert “not investigated” into a deficiency. Where appropriate, the report should state that additional evidence could sharpen that area.
+- The first report must remain genuinely useful from Core Review answers alone.
+- From the report, users should be able to return to relevant optional depth, provide more evidence, and regenerate a richer diagnostic without losing existing answers.
+- Continue using the six sections. Show **Section N of 6** plus an honest Core Review completion percentage. Optional Deep Dives do not make the user's required progress move backward.
+- At major section transitions, provide concise, evidence-bounded feedback about what SAGE has mapped or established so far.
+- Adaptive questioning remains governed by stop / verify / clarify. Verification that is not essential to the first responsible finding belongs in optional depth.
+- Step-objective verification samples only a few representative important process steps rather than requiring mapping of every selected step.
+- The experience should make the exchange explicit: more evidence can produce a more specific and better-supported report, but the user controls how deep to go.
 
-The first production test established that the previous 22-core-screen implementation plus separate follow-up screens was too long and overwhelming. Do not restore that interaction pattern.
+The first production version (22 core screens plus follow-ups) and the later 18-screen version were both judged too overwhelming. The solution is progressive disclosure and user control—not discarding the diagnostic intelligence.
 
 ## 5. Current V1 diagnostic scope
 
@@ -173,7 +180,9 @@ V1 does **not**:
 - Progress must communicate both the current section and overall completion percentage.
 - Related verification should use progressive reveal within the current screen where practical, rather than repeatedly sending the user to another page.
 - Section-transition feedback should provide a small payoff during the journey without pretending that the final diagnostic has already been completed.
-- The final diagnostic experience should be conclusion-first and visually dramatic: surface the reconstructed sales system and 3–5 priority findings before detailed substantiation.
+- The final diagnostic experience should be conclusion-first and visually dramatic: lead with a **Sales System at a Glance** visual and the 3–5 priority findings before detailed substantiation.
+- The at-a-glance visual communicates diagnostic conditions by area (for example Incomplete, Unverified, Unknown, Execution Exposure, or supported/established where evidence warrants). It must not become a numeric score, grade, benchmark, traffic-light game, or disguised rating.
+- Where skipped optional depth could materially sharpen an area, the report may offer **Go deeper in this area** and return the user to the relevant optional questions.
 - The client-facing print/PDF version requires a dedicated document layout; it must not rely on simply printing the web-card presentation.
 - Use ordinary business language in the interface. Cross-Through terminology belongs primarily in analysis/report guidance, not as required user vocabulary.
 - SAGE should be used lightly as the product/guide identity; no fake-human chatter or cute AI personality.
