@@ -96,6 +96,7 @@ function evaluateAdditionalStrengths(answers) {
   if (
     answers.resolution ===
       "We deliberately identify and resolve remaining issues" &&
+    hasAnswer(answers.readiness_evidence) &&
     ![
       "The salesperson judges that they are ready",
       "We have no consistent indicator"
@@ -519,6 +520,102 @@ function selectPriorityFindings(findings) {
   }
 
   return selected;
+}
+
+const strengthDomains = {
+  operational_process_strength: "process",
+  preference_strength: "buyer",
+  value_strength: "buyer",
+  resolution_strength: "buyer",
+  testing_strength: "improvement",
+  execution_strength: "execution"
+};
+
+const systemMapAreas = [
+  {
+    id: "sources",
+    label: "Opportunity Creation",
+    domains: ["sources"]
+  },
+  {
+    id: "process",
+    label: "Sales Process",
+    domains: ["process"]
+  },
+  {
+    id: "buyer",
+    label: "Buyer Progression",
+    domains: ["buyer", "performance"]
+  },
+  {
+    id: "improvement",
+    label: "Evidence & Improvement",
+    domains: ["improvement"]
+  },
+  {
+    id: "execution",
+    label: "Execution",
+    domains: ["execution"]
+  }
+];
+
+function buildSystemMap(
+  attentionFindings,
+  strengths
+) {
+  return systemMapAreas.map((area) => {
+    const attention = attentionFindings
+      .filter((finding) =>
+        area.domains.includes(
+          findingDomains[finding.id]
+        )
+      )
+      .sort(
+        (a, b) =>
+          (b.effectivePriority ||
+            b.priority ||
+            0) -
+          (a.effectivePriority ||
+            a.priority ||
+            0)
+      );
+
+    if (attention.length > 0) {
+      return {
+        id: area.id,
+        label: area.label,
+        status: attention[0].type,
+        message: attention[0].title,
+        findingId: attention[0].id
+      };
+    }
+
+    const supported = strengths.find(
+      (finding) =>
+        area.domains.includes(
+          strengthDomains[finding.id]
+        )
+    );
+
+    if (supported) {
+      return {
+        id: area.id,
+        label: area.label,
+        status: "Supported",
+        message: supported.title,
+        findingId: supported.id
+      };
+    }
+
+    return {
+      id: area.id,
+      label: area.label,
+      status: "No material issue identified",
+      message:
+        "The information provided did not establish a material issue in this area.",
+      findingId: null
+    };
+  });
 }
 
 // --------------------------------------------------
@@ -969,6 +1066,11 @@ export function buildDiagnostic(answers) {
   return {
     currentSystem:
       buildCurrentSystem(answers),
+
+    systemMap: buildSystemMap(
+      attentionFindings,
+      strengths
+    ),
 
     strengths,
 
