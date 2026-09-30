@@ -506,19 +506,21 @@ function Intro({ onContinue, onBack }) {
         <h1>First, let's make your sales system visible.</h1>
 
         <p>
-          SAGE will ask about how sales begin, how opportunities
-          move, how buyers progress, how you determine what is
-          working, and how consistently the system is executed.
+          The Core Review asks only what SAGE needs to build a
+          useful first diagnostic of how sales begin, move, and
+          convert into buyer decisions.
         </p>
 
         <p>
-          Some answers may trigger a short follow-up. Those
-          follow-ups help distinguish established practices from
-          assumptions, uncertainty, or incomplete information.
+          At selected checkpoints, you can continue immediately
+          or go deeper. Optional questions add evidence and can
+          make parts of your diagnostic more specific. You can
+          also return to them after seeing your results.
         </p>
 
         <div className="intro-promise">
           No reports to upload. No CRM access. No spreadsheets.
+          You control how deep the review goes.
         </div>
 
         <div className="question-actions">
