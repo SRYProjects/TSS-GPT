@@ -309,21 +309,35 @@ export function getDeepDiveStatus(
   stageId,
   answers
 ) {
-  const available = getDeepDiveQuestions(
-    stageId,
-    answers
-  );
+  const questionsForStage =
+    getDeepDiveQuestions(stageId, answers);
 
-  const answered = available.filter((question) =>
-    hasValue(answers[question.id])
+  const requiredIds = [];
+
+  questionsForStage.forEach((question) => {
+    requiredIds.push(question.id);
+
+    if (
+      question.followUp &&
+      question.followUp.when(answers)
+    ) {
+      requiredIds.push(question.followUp.id);
+    }
+  });
+
+  const uniqueIds = [...new Set(requiredIds)];
+
+  const answered = uniqueIds.filter((id) =>
+    hasValue(answers[id])
   );
 
   return {
-    available: available.length,
+    available: uniqueIds.length,
     answered: answered.length,
-    remaining: available.length - answered.length,
+    remaining:
+      uniqueIds.length - answered.length,
     complete:
-      available.length > 0 &&
-      answered.length === available.length
+      uniqueIds.length > 0 &&
+      answered.length === uniqueIds.length
   };
 }
