@@ -305,6 +305,58 @@ export function getDeepDiveQuestions(
     );
 }
 
+function clearQuestionBranch(
+  clean,
+  question
+) {
+  if (!question) return;
+
+  delete clean[question.id];
+
+  if (question.followUp) {
+    clearQuestionBranch(
+      clean,
+      question.followUp
+    );
+  }
+
+  if (question.nextFollowUp) {
+    clearQuestionBranch(
+      clean,
+      question.nextFollowUp
+    );
+  }
+}
+
+export function sanitizeDiagnosticAnswers(
+  answers
+) {
+  const clean = { ...answers };
+
+  questions.forEach((question) => {
+    const followUp = question.followUp;
+
+    if (!followUp) return;
+
+    if (!followUp.when(clean)) {
+      clearQuestionBranch(clean, followUp);
+      return;
+    }
+
+    if (
+      followUp.nextFollowUp &&
+      !hasValue(clean[followUp.id])
+    ) {
+      clearQuestionBranch(
+        clean,
+        followUp.nextFollowUp
+      );
+    }
+  });
+
+  return clean;
+}
+
 export function getDeepDiveStatus(
   stageId,
   answers
