@@ -320,6 +320,24 @@ Production visual/regression review of the redesigned report:
 9. then continue controlled analytics/privacy verification.
 
 
+## 2026-10-01 public-goal treatment locked
+
+Owner supplied the final landing mission concept. Implemented without reinterpretation:
+
+- Public goal changed from **10,000** to **1,000**.
+- Copy:
+  - **Help us reach our goal of 1,000.**
+  - **Get your FREE sales improvement report.**
+  - **Be one of the first 1,000 companies to improve their sales with SAGE.**
+- Live truthful completion count appears inside a segmented progress ring as **X of 1,000**.
+- The remaining count appears directly below as **X to go!**
+- Worker public-stats endpoint now returns goal `1000`.
+- No seeded or fabricated completion count is introduced; the displayed count remains the live D1 value.
+
+### Immediate verification
+
+Confirm the deployed landing block visually matches the supplied concept in hierarchy, spacing, ring treatment, live count, and remaining-count display.
+
 ## Exact next step
 
 **Activate the privacy-first SAGE growth backend, then verify it in production.**
