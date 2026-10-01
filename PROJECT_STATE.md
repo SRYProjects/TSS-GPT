@@ -245,14 +245,30 @@ Implemented from live owner review:
 - Reduced the visual size of the final report share panel.
 - Increased the visual size/emphasis of Build Path action numbers.
 
+## 2026-10-01 full landing-page redesign deployed
+
+- Replaced the abstract Opportunity / Process / Buyer / Sale hero graphic with a realistic **SAGE diagnostic preview** showing diagnostic conditions, a priority finding, and a build path. No score/grade was introduced.
+- Rebuilt the landing page as stacked full-width landscape sections:
+  1. hero;
+  2. public 1,000-company mission band;
+  3. Why SAGE / three benefits;
+  4. How It Works / three-step journey.
+- Integrated the live D1 counter into the dedicated mission band.
+- Added a subtle landscape treatment using CSS only; no external image dependency.
+- Added a second Get Started CTA at the end of the page.
+- Preserved Share SAGE and the existing diagnostic flow.
+
 ### Exact next step
 
 **Production-test the current V1 journey after the 2026-10-01 UX corrections.**
 
-1. Verify the redesigned Landing page:
-   - primary hero remains clean and premium;
-   - the 1,000-company mission reads as a distinct section rather than an attached card;
-   - counter/ring remains truthful and visually subordinate to the main Get Started action.
+1. Verify the deployed full landscape Landing page:
+   - hero product preview is clear and persuasive;
+   - mission band feels intentional and distinct;
+   - live counter/ring renders correctly;
+   - benefits and How It Works sections read cleanly;
+   - both Get Started CTAs work;
+   - mobile layout remains coherent.
 2. Start a fresh **Core Review** and verify every transition opens at the top of the new screen.
 3. Re-test the clarified **How Sales Move** questions:
    - sales-path clarity;
