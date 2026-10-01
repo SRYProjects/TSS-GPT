@@ -2653,7 +2653,13 @@ textarea:focus-visible {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  padding: 11px;
+}
+
+.growth-counter-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
   background:
     conic-gradient(
       var(--teal) 0deg,
