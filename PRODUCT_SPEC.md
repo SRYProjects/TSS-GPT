@@ -161,6 +161,15 @@ The report has five numbered sections:
 
 The report must begin with the user's reconstructed current sales system before interpreting gaps, priorities, strengths, or recommended actions. The at-a-glance diagnostic map may follow that reconstruction as an interpretive visual.
 
+Presentation rules:
+- The report headline is **Your Sales System Diagnostic** with the plain-language explanation **Here’s how your sales system currently works—and where improvement matters most.**
+- **Sales System at a Glance** remains a concise diagnostic-condition summary, not a place for long substantiation.
+- Highest-priority findings should be grouped by the kind of work they imply when supported: structural conditions to **Establish first**, followed by conditions to **Verify / improve next**. This grouping is sequencing guidance, not a severity score.
+- **What SAGE Found** is the evidence layer. Detailed findings use progressive disclosure/accordions so the report remains scannable while preserving the full evidence, significance, direction, and evidence-of-improvement content.
+- **What Appears Solid** is deliberately compact and should not visually compete with priority work.
+- **Your Cross-Through Build Path** is the strongest closing section. Each action should state the action, why it matters, what better looks like when evidence is available, and the relevant Cross-Through guide topic.
+- Keep the report in the established dark visual system; do not introduce high-contrast white cards as the primary presentation surface.
+
 The diagnostic provides direction, not a substitute for building and managing the sales system.
 
 ## 8. Explicit V1 exclusions
@@ -193,6 +202,7 @@ V1 does **not**:
 - SAGE should be used lightly as the product/guide identity; no fake-human chatter or cute AI personality.
 - Current landing headline: **“Improve your sales by improving how you sell.”**
 - Current supporting proposition: the business already has a sales system; SAGE helps it understand what is working, what is missing, and where improvement matters.
+- Public-goal copy: **“Improve your sales. Get your FREE Sales System Review and help us reach our goal of helping 10,000 businesses improve how they sell!”**
 - Current light product label: **Sales System Guide**.
 
 ## 10. Data and persistence
