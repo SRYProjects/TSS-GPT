@@ -277,6 +277,49 @@ After deployment, visually verify:
 4. two-column tablet and one-column mobile reflow.
 
 
+
+## 2026-10-01 diagnostic report redesign
+
+Implemented the approved report redesign after comparing the live SAGE report with the alternate partner concept.
+
+### Landing
+- Replaced the public-goal copy with the approved exact wording:
+  **“Improve your sales. Get your FREE Sales System Review and help us reach our goal of helping 10,000 businesses improve how they sell!”**
+- Removed the separate **Create your plan for free!** reinforcement because the new mission copy now contains the complete user action and benefit.
+
+### Report
+- New report opening:
+  - **Your Sales System Diagnostic**
+  - **Here’s how your sales system currently works—and where improvement matters most.**
+- Preserved **Your Current Sales System** as section 1.
+- Preserved the dark visual system; no white diagnostic cards.
+- Retained the readable 3 + 2 **Sales System at a Glance** composition as the concise condition summary.
+- Rebuilt section 2 as **Where Attention Matters Most**:
+  - structural findings group under **Establish first**;
+  - verification/performance/execution findings group under **Verify / improve next**;
+  - priority presentation is intentionally concise so it does not duplicate the detailed evidence section.
+- Rebuilt section 3 as **What SAGE Found** using collapsed disclosure rows. Full evidence, why-it-matters, direction, evidence-of-improvement, and Cross-Through references remain available on expansion.
+- Rebuilt section 4 **What Appears Solid** as a compact confirmation list rather than competing full finding cards.
+- Strengthened section 5 **Your Cross-Through Build Path**:
+  - larger numbered actions;
+  - why the action matters;
+  - what better looks like when the finding supplies evidence of improvement;
+  - Cross-Through guide reference.
+- Enriched build-path objects deterministically from the priority findings; no AI-generated or invented rationale was added.
+
+### Immediate next step
+Production visual/regression review of the redesigned report:
+1. landing mission copy and hierarchy;
+2. report opening and current-system-first flow;
+3. 3 + 2 at-a-glance readability;
+4. priority grouping;
+5. accordion usability;
+6. compact strengths;
+7. build-path ending;
+8. desktop/mobile responsiveness;
+9. then continue controlled analytics/privacy verification.
+
+
 ## Exact next step
 
 **Activate the privacy-first SAGE growth backend, then verify it in production.**
