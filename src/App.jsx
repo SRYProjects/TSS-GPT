@@ -1,4 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
+import AdminDashboard from "./AdminDashboard";
+import {
+  getPublicStats,
+  resetReviewId,
+  shareSage,
+  trackEvent
+} from "./telemetry";
 import { stages } from "./diagnosticConfig";
 import { buildDiagnostic } from "./diagnosticEngine";
 import {
@@ -457,6 +464,98 @@ function SystemVisual() {
 // LANDING
 // --------------------------------------------------
 
+function ShareSageButton({
+  className = "share-link",
+  label = "Share SAGE"
+}) {
+  const [feedback, setFeedback] = useState("");
+
+  async function handleShare() {
+    const result = await shareSage();
+
+    if (result.method === "copy") {
+      setFeedback("Link copied");
+    } else if (result.method === "manual") {
+      setFeedback("Ready to copy");
+    } else {
+      setFeedback("");
+    }
+  }
+
+  return (
+    <div className="share-control">
+      <button
+        type="button"
+        className={className}
+        onClick={handleShare}
+      >
+        <span aria-hidden="true">↗</span>
+        {label}
+      </button>
+      {feedback && (
+        <span className="share-feedback">
+          {feedback}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function GrowthCounter() {
+  const [stats, setStats] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+
+    getPublicStats().then((result) => {
+      if (active && result) {
+        setStats(result);
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const completed =
+    typeof stats?.completedReviews === "number"
+      ? stats.completedReviews
+      : null;
+
+  const goal = stats?.goal || 10000;
+
+  return (
+    <div className="growth-counter">
+      <div className="growth-counter-kicker">
+        OUR PUBLIC GOAL
+      </div>
+
+      {completed !== null ? (
+        <>
+          <strong>
+            {completed.toLocaleString()} Sales System{" "}
+            {completed === 1 ? "Review" : "Reviews"} completed
+          </strong>
+          <span>
+            Help us reach {goal.toLocaleString()}.
+          </span>
+        </>
+      ) : (
+        <>
+          <strong>
+            10,000 Sales System Reviews
+          </strong>
+          <span>
+            Help us make B2B selling more deliberate,
+            one clear sales-system picture at a time.
+          </span>
+        </>
+      )}
+    </div>
+  );
+}
+
 function Landing({ onStart }) {
   return (
     <main className="landing-shell">
@@ -479,17 +578,23 @@ function Landing({ onStart }) {
           The sales success you want starts with how you sell.
         </p>
 
-        <button
-          type="button"
-          className="primary-button landing-cta"
-          onClick={onStart}
-        >
-          Get Started
-        </button>
+        <div className="landing-actions">
+          <button
+            type="button"
+            className="primary-button landing-cta"
+            onClick={onStart}
+          >
+            Get Started
+          </button>
+
+          <ShareSageButton />
+        </div>
 
         <div className="landing-note">
           Free Sales System Review · No CRM connection required
         </div>
+
+        <GrowthCounter />
       </section>
 
       <section className="landing-visual">
@@ -2466,6 +2571,26 @@ function DiagnosticReport({
         buildPath={diagnostic.buildPath}
       />
 
+      <section className="report-share-panel">
+        <div>
+          <div className="depth-label">
+            PASS THE PERSPECTIVE FORWARD
+          </div>
+          <h2>
+            A fresh view can change the sales conversation.
+          </h2>
+          <p>
+            SAGE is free to use. Put this sales-system view
+            in another sales leader's hands.
+          </p>
+        </div>
+
+        <ShareSageButton
+          className="secondary-accent-button"
+          label="Share SAGE"
+        />
+      </section>
+
       <div className="report-footer-actions">
         <button
           type="button"
@@ -2491,7 +2616,18 @@ function DiagnosticReport({
 // MAIN APP
 // --------------------------------------------------
 
-export default function App() {
+function SiteFooter() {
+  return (
+    <footer className="site-footer">
+      <span>
+        SAGE · The Sales Success
+      </span>
+      <a href="/admin">Admin</a>
+    </footer>
+  );
+}
+
+function SageApp() {
   const [screen, setScreen] = useState("landing");
 
   const [answers, setAnswers] = useState(() => {
@@ -2547,6 +2683,10 @@ export default function App() {
   );
 
   useEffect(() => {
+    trackEvent("landing_view");
+  }, []);
+
+  useEffect(() => {
     try {
       window.localStorage.setItem(
         "sage-diagnostic-answers",
@@ -2593,6 +2733,16 @@ export default function App() {
     const first = flow[0];
 
     if (first) {
+      trackEvent("review_started", {
+        createReview: true
+      });
+
+      trackEvent("section_reached", {
+        stageId: first.stage,
+        sectionIndex: getStageIndex(first.stage) + 1,
+        createReview: true
+      });
+
       setCurrentQuestionId(first.id);
       setHistory([]);
       setScreen("questions");
@@ -2611,6 +2761,12 @@ export default function App() {
     fromQuestionId,
     nextTarget
   ) {
+    trackEvent("section_completed", {
+      stageId,
+      sectionIndex: getStageIndex(stageId) + 1,
+      createReview: true
+    });
+
     setSectionReviewStage(stageId);
     setReviewFromQuestionId(fromQuestionId);
     setAfterSectionReview(nextTarget);
@@ -2697,8 +2853,25 @@ export default function App() {
 
   function continueAfterSectionReview() {
     if (afterSectionReview === "complete") {
+      trackEvent("review_completed", {
+        createReview: true
+      });
       setScreen("complete");
     } else {
+      const nextQuestion = flow.find(
+        (question) =>
+          question.id === afterSectionReview
+      );
+
+      if (nextQuestion) {
+        trackEvent("section_reached", {
+          stageId: nextQuestion.stage,
+          sectionIndex:
+            getStageIndex(nextQuestion.stage) + 1,
+          createReview: true
+        });
+      }
+
       setScreen("questions");
     }
 
@@ -2725,6 +2898,12 @@ export default function App() {
           !hasValue(answers[question.id])
       ) || deepQuestions[0];
 
+    trackEvent("deep_dive_started", {
+      stageId,
+      sectionIndex: getStageIndex(stageId) + 1,
+      createReview: true
+    });
+
     setDeepDiveStage(stageId);
     setDeepDiveQuestionId(
       firstUnanswered.id
@@ -2735,6 +2914,14 @@ export default function App() {
   }
 
   function finishDeepDive() {
+    trackEvent("deep_dive_completed", {
+      stageId: deepDiveStage || "",
+      sectionIndex: deepDiveStage
+        ? getStageIndex(deepDiveStage) + 1
+        : null,
+      createReview: true
+    });
+
     if (deepDiveReturn === "report") {
       const cleanAnswers =
         sanitizeDiagnosticAnswers(answers);
@@ -2791,6 +2978,10 @@ export default function App() {
   }
 
   function createDiagnostic() {
+    trackEvent("report_viewed", {
+      createReview: true
+    });
+
     const cleanAnswers =
       sanitizeDiagnosticAnswers(answers);
 
@@ -2818,6 +3009,7 @@ export default function App() {
       window.localStorage.removeItem(
         "sage-diagnostic-answers"
       );
+      resetReviewId();
     } catch {
       // Continue even if storage is unavailable.
     }
@@ -2986,6 +3178,29 @@ export default function App() {
     <div className="app">
       <Header onHome={goHome} />
       {content}
+      <SiteFooter />
     </div>
   );
+}
+
+function AdminApp() {
+  return (
+    <div className="app">
+      <Header
+        onHome={() => {
+          window.location.href = "/";
+        }}
+      />
+      <AdminDashboard />
+      <SiteFooter />
+    </div>
+  );
+}
+
+export default function App() {
+  if (window.location.pathname === "/admin") {
+    return <AdminApp />;
+  }
+
+  return <SageApp />;
 }
