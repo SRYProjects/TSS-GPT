@@ -1789,9 +1789,9 @@ textarea:focus-visible {
 
 .build-path-item {
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
+  grid-template-columns: 54px minmax(0, 1fr);
   align-items: start;
-  gap: 15px;
+  gap: 16px;
   padding: 18px;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -1799,15 +1799,15 @@ textarea:focus-visible {
 }
 
 .build-path-number {
-  width: 37px;
-  height: 37px;
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(85, 216, 196, 0.25);
+  border: 1px solid rgba(85, 216, 196, 0.32);
   border-radius: 50%;
-  color: var(--accent);
-  font-size: 11px;
-  font-weight: 800;
+  color: var(--accent-bright);
+  font-size: 16px;
+  font-weight: 900;
 }
 
 .build-path-item h3 {
@@ -2226,9 +2226,10 @@ textarea:focus-visible {
 
 .share-control {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   flex-wrap: wrap;
+  position: relative;
 }
 
 .share-link {
@@ -2256,6 +2257,63 @@ textarea:focus-visible {
   font-weight: 700;
 }
 
+.share-options {
+  width: min(430px, calc(100vw - 44px));
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #12191c;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+  display: grid;
+  gap: 10px;
+}
+
+.share-link-display {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 9px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.share-link-display span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-soft);
+  font-size: 0.8rem;
+}
+
+.share-link-display button,
+.share-option-buttons button {
+  appearance: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--text);
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.share-link-display button:hover,
+.share-option-buttons button:hover {
+  border-color: rgba(85, 216, 196, 0.45);
+  color: var(--teal);
+}
+
+.share-option-buttons {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
 .growth-counter {
   margin-top: 28px;
   padding: 22px 24px;
@@ -2278,13 +2336,6 @@ textarea:focus-visible {
 .growth-counter-copy {
   display: grid;
   gap: 7px;
-}
-
-.growth-counter-kicker {
-  color: var(--teal);
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
 }
 
 .growth-counter-title {
@@ -2356,25 +2407,28 @@ textarea:focus-visible {
 }
 
 .report-share-panel {
-  margin-top: 28px;
-  padding: 26px 28px;
-  border: 1px solid rgba(85, 216, 196, 0.26);
-  border-radius: 18px;
-  background: rgba(85, 216, 196, 0.06);
+  margin-top: 20px;
+  padding: 18px 20px;
+  border: 1px solid rgba(85, 216, 196, 0.22);
+  border-radius: 14px;
+  background: rgba(85, 216, 196, 0.045);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 28px;
+  gap: 18px;
   align-items: center;
 }
 
 .report-share-panel h2 {
-  margin: 7px 0 8px;
+  margin: 5px 0 6px;
+  font-size: 1.05rem;
 }
 
 .report-share-panel p {
   margin: 0;
   color: var(--muted);
-  max-width: 680px;
+  max-width: 620px;
+  font-size: 0.88rem;
+  line-height: 1.5;
 }
 
 .site-footer {
