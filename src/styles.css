@@ -247,17 +247,26 @@ textarea:focus-visible {
 
 .landing-shell {
   width: min(calc(100% - 48px), var(--max-width));
-  min-height: calc(100vh - 89px);
   margin: 0 auto;
+  padding: 64px 0 88px;
+}
+
+.landing-hero {
+  min-height: calc(100vh - 230px);
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr);
   align-items: center;
   gap: 80px;
-  padding: 78px 0 100px;
 }
 
 .landing-copy {
   max-width: 680px;
+}
+
+.landing-mission {
+  margin-top: 58px;
+  padding-top: 34px;
+  border-top: 1px solid var(--line);
 }
 
 .landing-copy h1 {
@@ -2120,7 +2129,7 @@ textarea:focus-visible {
 }
 
 @media (max-width: 1000px) {
-  .landing-shell {
+  .landing-hero {
     grid-template-columns: 1fr;
     gap: 55px;
   }
@@ -2190,8 +2199,16 @@ textarea:focus-visible {
   }
 
   .landing-shell {
+    padding: 46px 0 72px;
+  }
+
+  .landing-hero {
     min-height: auto;
-    padding: 58px 0 80px;
+  }
+
+  .landing-mission {
+    margin-top: 46px;
+    padding-top: 28px;
   }
 
   .landing-copy h1 {
@@ -2599,8 +2616,8 @@ textarea:focus-visible {
 }
 
 .growth-counter {
-  margin-top: 28px;
-  padding: 24px 28px;
+  margin-top: 0;
+  padding: 26px 30px;
   border: 1px solid rgba(85, 216, 196, 0.32);
   border-radius: 20px;
   background:
@@ -2618,7 +2635,7 @@ textarea:focus-visible {
   grid-template-columns: minmax(0, 1fr) 132px;
   gap: 28px;
   align-items: center;
-  max-width: 650px;
+  max-width: 760px;
 }
 
 .growth-counter-copy {
