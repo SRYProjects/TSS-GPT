@@ -151,13 +151,15 @@ SAGE must distinguish claims from evidence. Examples:
 
 ## 7. Required diagnostic output
 
-The report has five sections:
+The report has five numbered sections:
 
 1. **Your Current Sales System** — reconstruct important opportunity sources, major sales path(s), advancement context, and reported breakdown points without inventing missing information.
-2. **What Appears Solid** — only supported strengths.
+2. **Highest-Priority Findings** — normally 3–5; each should explain what was found, support, why it matters, direction, and evidence of improvement where available.
 3. **What Needs Attention** — all supported attention findings using the diagnostic classifications.
-4. **Highest-Priority Findings** — normally 3–5; each should explain what was found, support, why it matters, direction, and evidence of improvement where available.
+4. **What Appears Solid** — only supported strengths.
 5. **Your Cross-Through Build Path** — only next actions supported by the findings, with relevant Cross-Through guide topics.
+
+The report must begin with the user's reconstructed current sales system before interpreting gaps, priorities, strengths, or recommended actions. The at-a-glance diagnostic map may follow that reconstruction as an interpretive visual.
 
 The diagnostic provides direction, not a substitute for building and managing the sales system.
 
@@ -256,7 +258,7 @@ Locked direction:
 - Use **Sales System Reviews completed**, not “sales plans created.”
 - Provide **Share SAGE** on the landing page and again after the diagnostic has delivered value.
 - Sharing language should create intrigue and invite a fresh perspective; it must not imply that another business owner does not understand selling or is doing something wrong.
-- Native Web Share is preferred where available, with copy-link/manual fallback.
+- Sharing must be explicit rather than silently copying a link. When the user chooses **Share SAGE**, show the SAGE URL and clear sharing choices such as Copy link, Email, LinkedIn, X, and the native device share sheet where supported.
 - Preserve infrastructure for future aggregate-insight publishing and tracked professional/partner distribution without exposing diagnostic answers.
 
 ### Privacy model
