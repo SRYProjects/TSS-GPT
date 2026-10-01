@@ -180,8 +180,9 @@ export const questions = [
     id: "process_clarity",
     stage: "move",
     title:
-      "Once a potential buyer engages, how clearly can you describe what normally happens between that point and a sale?",
-    help: "We're interested in what actually happens—not an ideal process on paper.",
+      "After a potential buyer shows real interest, how clearly can you describe what usually happens from there until they buy—or the opportunity ends?",
+    help:
+      "Think about what actually happens in your business, whether or not you have ever formally mapped a sales process.",
     type: "single",
     options: [
       "We have a clear, deliberate process",
@@ -195,8 +196,10 @@ export const questions = [
   {
     id: "process_steps",
     stage: "move",
-    title: "What usually happens?",
-    help: "Select the major steps that commonly occur.",
+    title:
+      "After a buyer shows real interest, what usually happens before the opportunity is won or lost?",
+    help:
+      "Select the major activities that commonly happen in your business. These may include contact, learning about the buyer, meetings, quotes, proposals, follow-up, negotiation, or an order.",
     type: "multi",
     options: processStepOptions,
     followUp: {
@@ -239,9 +242,9 @@ export const questions = [
     id: "step_objectives",
     stage: "move",
     title:
-      "Do the important steps in your sales process have a specific result they are expected to produce?",
+      "For the major sales activities you just identified, have you defined what each one should accomplish before the opportunity moves forward?",
     help:
-      "For example, a meeting might need to establish fit and agreement on a next step—not merely “have a good meeting.”",
+      "We mean the result of that activity—not the final sale. For example, a meeting might need to establish fit and agreement on the next step.",
     type: "single",
     options: [
       "Yes, for essentially every important step",
@@ -267,9 +270,9 @@ export const questions = [
     id: "step_evidence",
     stage: "move",
     title:
-      "How do you determine whether each important step actually accomplished what it needed to?",
+      "How do you know whether those sales activities achieved the result you expected?",
     help:
-      "Think about observable buyer response, measurable results, or other reliable evidence.",
+      "Think about observable buyer response, a clear next commitment, measurable results, or other reliable evidence.",
     type: "single",
     options: [
       "We use defined evidence or measures",
@@ -284,9 +287,9 @@ export const questions = [
     id: "buyer_understanding",
     stage: "buyer",
     title:
-      "How deliberately do you establish what a buyer needs to understand before they should choose you?",
+      "Before a buyer chooses you, have you defined what they need to understand or conclude about your company or offer?",
     help:
-      "Consider relevance, differentiation, value, evidence, risk, and alternatives.",
+      "For example: why you are relevant, how you differ, whether the value is sufficient, what evidence supports your claims, and what risks or alternatives they are weighing.",
     type: "single",
     options: [
       "We have deliberately worked this out",
