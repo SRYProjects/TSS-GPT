@@ -208,7 +208,12 @@ V1 does **not**:
   - **Be one of the first 1,000 companies to improve their sales with SAGE.**
   - Show the truthful live completion count inside the progress ring and the truthful remaining count as **X to go!**
 - Current light product label: **Sales System Guide**.
-- Landing-page structure: keep the primary value proposition and sales-system visual together as the hero; present the public 1,000-company mission as a separate section below the hero rather than attaching another card inside the primary two-column composition.
+- Landing-page structure is a stacked sequence of full-width landscape sections:
+  1. **Hero** — primary value proposition + CTA + realistic SAGE diagnostic/product preview.
+  2. **Public Goal** — separate full-width 1,000-company mission band with live progress ring and remaining count.
+  3. **Why SAGE** — three benefits: see the current sales system, find where attention matters most, know what to work on next.
+  4. **How It Works** — answer a short review, see the diagnostic, go deeper where needed.
+- The hero visual should preview the actual product payoff rather than use an abstract sales-system diagram. It may show concise diagnostic-condition cards, a priority finding, and build-path actions. Do not introduce a score/grade or fake product capability.
 - Every screen/question transition must position the new screen at the top of the viewport; users must never inherit the prior page's scroll position.
 - Core-review language must remain understandable to an established business whose sales activity is informal or undocumented. Do not assume the user already thinks in formal “sales process steps.” Clarify the circumstance and distinguish the result of an individual sales activity from the final sale.
 
