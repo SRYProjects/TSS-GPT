@@ -238,13 +238,16 @@ async function adminMetrics(request, env) {
     referrersResult,
     shareResult,
     sourceResult,
+    deviceResult,
     dailyResult
   ] = await env.DB.batch([
     env.DB.prepare(
       `SELECT
+        COUNT(DISTINCT CASE WHEN event_type = 'landing_view' THEN session_id END) AS landing_sessions,
         COUNT(DISTINCT CASE WHEN event_type = 'review_started' THEN review_id END) AS review_starts,
         COUNT(DISTINCT CASE WHEN event_type = 'review_completed' THEN review_id END) AS completed_reviews,
         COUNT(DISTINCT CASE WHEN event_type = 'report_viewed' THEN review_id END) AS report_views,
+        COUNT(DISTINCT CASE WHEN event_type = 'deep_dive_started' THEN review_id || ':' || stage_id END) AS deep_dives,
         COUNT(CASE WHEN event_type = 'share' THEN 1 END) AS shares
        FROM sage_events`
     ),
@@ -295,6 +298,13 @@ async function adminMetrics(request, env) {
        LIMIT 20`
     ),
     env.DB.prepare(
+      `SELECT device, COUNT(DISTINCT session_id) AS sessions
+       FROM sage_events
+       WHERE device <> ''
+       GROUP BY device
+       ORDER BY sessions DESC`
+    ),
+    env.DB.prepare(
       `SELECT
         date(created_at) AS day,
         COUNT(DISTINCT CASE WHEN event_type = 'review_started' THEN review_id END) AS starts,
@@ -317,6 +327,9 @@ async function adminMetrics(request, env) {
 
   return json({
     overview: {
+      landingSessions: Number(
+        overview.landing_sessions || 0
+      ),
       reviewStarts: starts,
       completedReviews: completed,
       completionRate:
@@ -326,6 +339,9 @@ async function adminMetrics(request, env) {
       reportViews: Number(
         overview.report_views || 0
       ),
+      deepDives: Number(
+        overview.deep_dives || 0
+      ),
       shares: Number(overview.shares || 0)
     },
     funnel: funnelResult.results || [],
@@ -334,6 +350,7 @@ async function adminMetrics(request, env) {
     referrers: referrersResult.results || [],
     shareChannels: shareResult.results || [],
     sourceTags: sourceResult.results || [],
+    devices: deviceResult.results || [],
     daily: dailyResult.results || []
   });
 }
