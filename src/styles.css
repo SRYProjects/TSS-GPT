@@ -2599,65 +2599,92 @@ textarea:focus-visible {
 }
 
 .growth-counter {
-  margin-top: 28px;
-  padding: 22px 24px;
-  border: 1px solid rgba(85, 216, 196, 0.3);
-  border-radius: 18px;
+  margin-top: 30px;
+  padding: 34px 40px;
+  border: 1px solid rgba(85, 216, 196, 0.34);
+  border-radius: 26px;
   background:
     radial-gradient(
-      circle at 88% 20%,
-      rgba(85, 216, 196, 0.11),
-      transparent 34%
+      circle at 88% 22%,
+      rgba(85, 216, 196, 0.12),
+      transparent 35%
     ),
-    rgba(85, 216, 196, 0.055);
+    linear-gradient(
+      145deg,
+      rgba(85, 216, 196, 0.055),
+      rgba(255, 255, 255, 0.012)
+    );
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 26px;
+  gap: 42px;
   align-items: center;
-  max-width: 640px;
+  max-width: 760px;
 }
 
 .growth-counter-copy {
   display: grid;
-  gap: 7px;
+  gap: 12px;
 }
 
-.growth-counter-message {
+.growth-counter-headline {
   color: var(--text);
-  font-size: 1.08rem;
-  font-weight: 700;
-  line-height: 1.58;
-  max-width: 470px;
+  font-size: clamp(1.75rem, 3vw, 2.45rem);
+  font-weight: 820;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.growth-counter-line {
+  color: var(--text-soft);
+  font-size: clamp(1.08rem, 1.8vw, 1.45rem);
+  line-height: 1.48;
 }
 
 .growth-counter-meter {
   display: grid;
   justify-items: center;
-  gap: 7px;
-  min-width: 116px;
+  gap: 12px;
+  min-width: 170px;
 }
 
 .growth-counter-ring {
   --goal-progress: 0deg;
-  width: 108px;
-  height: 108px;
+  position: relative;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  padding: 5px;
+  padding: 11px;
   background:
     conic-gradient(
       var(--teal) 0deg,
       var(--teal) var(--goal-progress),
-      rgba(255, 255, 255, 0.11) var(--goal-progress),
-      rgba(255, 255, 255, 0.11) 360deg
+      rgba(255, 255, 255, 0.12) var(--goal-progress),
+      rgba(255, 255, 255, 0.12) 360deg
     );
-  box-shadow: 0 0 0 1px rgba(85, 216, 196, 0.12);
+  -webkit-mask:
+    radial-gradient(circle at center, transparent 0 58px, #000 59px),
+    repeating-conic-gradient(#000 0 16deg, transparent 16deg 20deg);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(circle at center, transparent 0 58px, #000 59px),
+    repeating-conic-gradient(#000 0 16deg, transparent 16deg 20deg);
+  mask-composite: intersect;
+}
+
+.growth-counter-ring::after {
+  content: "";
+  position: absolute;
+  inset: 17px;
+  border-radius: 50%;
+  background: #101719;
+  z-index: 0;
 }
 
 .growth-counter-ring-inner {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 17px;
+  z-index: 1;
   border-radius: 50%;
-  background: #101719;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2667,23 +2694,22 @@ textarea:focus-visible {
 
 .growth-counter-ring-inner strong {
   color: var(--text);
-  font-size: 1.65rem;
+  font-size: 2.45rem;
   line-height: 1;
+  font-weight: 500;
 }
 
 .growth-counter-ring-inner span {
-  margin-top: 5px;
+  margin-top: 7px;
   color: var(--muted);
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
-.growth-counter-meter small {
-  color: var(--teal);
-  font-size: 0.76rem;
-  font-weight: 900;
+.growth-counter-remaining {
+  color: var(--text-soft);
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
 .report-share-panel {
