@@ -208,6 +208,9 @@ V1 does **not**:
   - **Be one of the first 1,000 companies to improve their sales with SAGE.**
   - Show the truthful live completion count inside the progress ring and the truthful remaining count as **X to go!**
 - Current light product label: **Sales System Guide**.
+- Landing-page structure: keep the primary value proposition and sales-system visual together as the hero; present the public 1,000-company mission as a separate section below the hero rather than attaching another card inside the primary two-column composition.
+- Every screen/question transition must position the new screen at the top of the viewport; users must never inherit the prior page's scroll position.
+- Core-review language must remain understandable to an established business whose sales activity is informal or undocumented. Do not assume the user already thinks in formal “sales process steps.” Clarify the circumstance and distinguish the result of an individual sales activity from the final sale.
 
 ## 10. Data and persistence
 
