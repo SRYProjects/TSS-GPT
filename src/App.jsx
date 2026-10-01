@@ -533,17 +533,16 @@ function GrowthCounter() {
     <div className="growth-counter">
       <div className="growth-counter-copy">
         <div className="growth-counter-kicker">
-          OUR 10,000-REVIEW GOAL
+          OUR GOAL
         </div>
 
         <strong className="growth-counter-title">
-          Help us improve how businesses sell.
+          Create your plan for free!
         </strong>
 
         <span className="growth-counter-message">
-          Complete your free Sales System Review. Our goal is
-          10,000 completed reviews—helping businesses improve
-          their sales by improving how they sell.
+          Help us reach our goal of helping 10,000 businesses
+          improve their sales by improving how they sell!
         </span>
       </div>
 
