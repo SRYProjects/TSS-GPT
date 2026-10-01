@@ -3,7 +3,7 @@ import AdminDashboard from "./AdminDashboard";
 import {
   getPublicStats,
   resetReviewId,
-  shareSage,
+  shareMessage,
   trackEvent
 } from "./telemetry";
 import { stages } from "./diagnosticConfig";
@@ -468,17 +468,61 @@ function ShareSageButton({
   className = "share-link",
   label = "Share SAGE"
 }) {
+  const [expanded, setExpanded] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const shareUrl = "https://thesalessuccess.app/";
 
-  async function handleShare() {
-    const result = await shareSage();
+  function recordShare(channel) {
+    trackEvent("share", {
+      shareChannel: channel
+    });
+  }
 
-    if (result.method === "copy") {
-      setFeedback("Link copied");
-    } else if (result.method === "manual") {
-      setFeedback("Ready to copy");
-    } else {
-      setFeedback("");
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      recordShare("copy");
+      setFeedback("Link copied to your clipboard.");
+    } catch {
+      window.prompt("Copy this SAGE link:", shareUrl);
+      recordShare("manual");
+      setFeedback("Copy the link shown above.");
+    }
+  }
+
+  function openShareWindow(channel, url) {
+    recordShare(channel);
+    window.open(
+      url,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+
+  function shareByEmail() {
+    recordShare("email");
+    window.location.href =
+      "mailto:?subject=" +
+      encodeURIComponent("SAGE — Free Sales System Review") +
+      "&body=" +
+      encodeURIComponent(`${shareMessage}\n\n${shareUrl}`);
+  }
+
+  async function shareMore() {
+    if (!navigator.share) return;
+
+    try {
+      await navigator.share({
+        title: "SAGE — Free Sales System Review",
+        text: shareMessage,
+        url: shareUrl
+      });
+      recordShare("native");
+      setFeedback("Shared.");
+    } catch (error) {
+      if (error?.name !== "AbortError") {
+        setFeedback("Choose one of the sharing options below.");
+      }
     }
   }
 
@@ -487,15 +531,72 @@ function ShareSageButton({
       <button
         type="button"
         className={className}
-        onClick={handleShare}
+        onClick={() => {
+          setExpanded((value) => !value);
+          setFeedback("");
+        }}
+        aria-expanded={expanded}
       >
         <span aria-hidden="true">↗</span>
         {label}
       </button>
-      {feedback && (
-        <span className="share-feedback">
-          {feedback}
-        </span>
+
+      {expanded && (
+        <div className="share-options">
+          <div className="share-link-display">
+            <span>{shareUrl}</span>
+            <button type="button" onClick={copyLink}>
+              Copy link
+            </button>
+          </div>
+
+          <div className="share-option-buttons">
+            <button type="button" onClick={shareByEmail}>
+              Email
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                openShareWindow(
+                  "linkedin",
+                  `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                    shareUrl
+                  )}`
+                )
+              }
+            >
+              LinkedIn
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                openShareWindow(
+                  "x",
+                  `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `${shareMessage} ${shareUrl}`
+                  )}`
+                )
+              }
+            >
+              X
+            </button>
+
+            {typeof navigator !== "undefined" &&
+              navigator.share && (
+                <button type="button" onClick={shareMore}>
+                  More…
+                </button>
+              )}
+          </div>
+
+          {feedback && (
+            <span className="share-feedback" role="status">
+              {feedback}
+            </span>
+          )}
+        </div>
       )}
     </div>
   );
@@ -532,10 +633,6 @@ function GrowthCounter() {
   return (
     <div className="growth-counter">
       <div className="growth-counter-copy">
-        <div className="growth-counter-kicker">
-          OUR GOAL
-        </div>
-
         <strong className="growth-counter-title">
           Create your plan for free!
         </strong>
@@ -2106,7 +2203,7 @@ function FindingCard({ finding, priority = false }) {
 function CurrentSystemSection({ system }) {
   return (
     <section className="report-section">
-      <div className="report-section-number">04</div>
+      <div className="report-section-number">01</div>
 
       <div className="report-section-content">
         <div className="eyebrow">
@@ -2194,7 +2291,7 @@ function CurrentSystemSection({ system }) {
 function StrengthsSection({ strengths }) {
   return (
     <section className="report-section">
-      <div className="report-section-number">03</div>
+      <div className="report-section-number">04</div>
 
       <div className="report-section-content">
         <div className="eyebrow">
@@ -2231,7 +2328,7 @@ function StrengthsSection({ strengths }) {
 function AttentionSection({ findings }) {
   return (
     <section className="report-section">
-      <div className="report-section-number">02</div>
+      <div className="report-section-number">03</div>
 
       <div className="report-section-content">
         <div className="eyebrow">
@@ -2267,7 +2364,7 @@ function AttentionSection({ findings }) {
 function PrioritySection({ findings }) {
   return (
     <section className="report-section">
-      <div className="report-section-number">01</div>
+      <div className="report-section-number">02</div>
 
       <div className="report-section-content">
         <div className="eyebrow">
@@ -2552,11 +2649,15 @@ function DiagnosticReport({
         <h1>See where attention matters.</h1>
 
         <p>
-          SAGE found the conditions below from the evidence
-          you provided. Start with the at-a-glance view and
-          priority findings; the supporting detail follows.
+          Start with the sales system SAGE reconstructed from
+          your answers. Then see what the evidence says about
+          where attention matters and what to work on next.
         </p>
       </section>
+
+      <CurrentSystemSection
+        system={diagnostic.currentSystem}
+      />
 
       <SystemMapSection
         systemMap={diagnostic.systemMap || []}
@@ -2579,10 +2680,6 @@ function DiagnosticReport({
 
       <StrengthsSection
         strengths={diagnostic.strengths}
-      />
-
-      <CurrentSystemSection
-        system={diagnostic.currentSystem}
       />
 
       <BuildPathSection
