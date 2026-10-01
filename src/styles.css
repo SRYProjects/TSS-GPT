@@ -3092,84 +3092,72 @@ textarea:focus-visible {
 }
 
 .growth-counter {
-  margin-top: 0;
-  padding: 26px 30px;
-  border: 1px solid rgba(85, 216, 196, 0.32);
-  border-radius: 20px;
-  background:
-    radial-gradient(
-      circle at 88% 22%,
-      rgba(85, 216, 196, 0.1),
-      transparent 34%
-    ),
-    linear-gradient(
-      145deg,
-      rgba(85, 216, 196, 0.045),
-      rgba(255, 255, 255, 0.01)
-    );
+  position: relative;
+  z-index: 2;
+  min-height: 165px;
+  padding: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 132px;
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 56px;
   align-items: center;
-  max-width: 760px;
 }
 
 .growth-counter-copy {
   display: grid;
-  gap: 9px;
+  gap: 7px;
+  max-width: 760px;
 }
 
 .growth-counter-headline {
   color: var(--text);
-  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
-  font-weight: 800;
-  line-height: 1.12;
-  letter-spacing: -0.025em;
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  font-weight: 780;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
 }
 
 .growth-counter-line {
   color: var(--text-soft);
-  font-size: clamp(0.98rem, 1.35vw, 1.08rem);
+  font-size: clamp(1rem, 1.65vw, 1.3rem);
   line-height: 1.5;
 }
 
 .growth-counter-meter {
   display: grid;
   justify-items: center;
-  gap: 9px;
-  min-width: 118px;
+  gap: 10px;
 }
 
 .growth-counter-ring {
   --goal-progress: 0deg;
   position: relative;
-  width: 116px;
-  height: 116px;
+  width: 138px;
+  height: 138px;
   border-radius: 50%;
   background:
     conic-gradient(
       var(--teal) 0deg,
       var(--teal) var(--goal-progress),
-      rgba(255, 255, 255, 0.12) var(--goal-progress),
-      rgba(255, 255, 255, 0.12) 360deg
+      rgba(255, 255, 255, 0.13) var(--goal-progress),
+      rgba(255, 255, 255, 0.13) 360deg
     );
   box-shadow:
     0 0 0 1px rgba(85, 216, 196, 0.08),
-    0 0 28px rgba(85, 216, 196, 0.055);
+    0 0 34px rgba(85, 216, 196, 0.08);
 }
 
 .growth-counter-ring::after {
   content: "";
   position: absolute;
-  inset: 9px;
+  inset: 10px;
   border-radius: 50%;
-  background: #101719;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+  background: rgba(8, 17, 22, 0.96);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
 .growth-counter-ring-inner {
   position: absolute;
-  inset: 9px;
+  inset: 10px;
   z-index: 1;
   border-radius: 50%;
   display: flex;
@@ -3181,59 +3169,48 @@ textarea:focus-visible {
 
 .growth-counter-ring-inner strong {
   color: var(--text);
-  font-size: 1.9rem;
+  font-size: 2.35rem;
   line-height: 1;
   font-weight: 500;
 }
 
 .growth-counter-ring-inner span {
-  margin-top: 5px;
+  margin-top: 6px;
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 700;
 }
 
 .growth-counter-remaining {
   color: var(--text-soft);
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 750;
 }
 
-@media (max-width: 620px) {
-  .growth-counter {
-    grid-template-columns: minmax(0, 1fr) 112px;
-    gap: 18px;
-    padding: 22px;
-  }
-
-  .growth-counter-headline {
-    font-size: 1.3rem;
-  }
-
-  .growth-counter-line {
-    font-size: 0.96rem;
-  }
-
-  .growth-counter-ring {
-    width: 102px;
-    height: 102px;
-  }
-
-  .growth-counter-ring-inner strong {
-    font-size: 1.65rem;
-  }
-}
-
-@media (max-width: 460px) {
+@media (max-width: 760px) {
   .growth-counter {
     grid-template-columns: 1fr;
+    gap: 26px;
   }
 
   .growth-counter-meter {
     justify-self: start;
     grid-template-columns: auto auto;
     align-items: center;
-    gap: 14px;
+    gap: 18px;
+  }
+
+  .growth-counter-headline {
+    font-size: clamp(1.8rem, 9vw, 2.55rem);
+  }
+
+  .growth-counter-ring {
+    width: 112px;
+    height: 112px;
+  }
+
+  .growth-counter-ring-inner strong {
+    font-size: 1.9rem;
   }
 }
 
