@@ -247,7 +247,51 @@ Not locked:
 - packaging of paid services;
 - exact future AI architecture.
 
-## 14. Superseded/rejected directions
+## 14. Growth, sharing, and privacy-first usage analytics
+
+Locked direction:
+- SAGE should be designed to spread because the free diagnostic can provide standalone value to B2B businesses.
+- The landing page should show a truthful live count of **Sales System Reviews completed** and a public goal of reaching **10,000 Sales System Reviews**.
+- Never seed, inflate, or imply a number of businesses/users that the system cannot verify.
+- Use **Sales System Reviews completed**, not “sales plans created.”
+- Provide **Share SAGE** on the landing page and again after the diagnostic has delivered value.
+- Sharing language should create intrigue and invite a fresh perspective; it must not imply that another business owner does not understand selling or is doing something wrong.
+- Native Web Share is preferred where available, with copy-link/manual fallback.
+- Preserve infrastructure for future aggregate-insight publishing and tracked professional/partner distribution without exposing diagnostic answers.
+
+### Privacy model
+
+The user's diagnostic answers remain in the browser under the existing local-persistence model.
+
+The shared backend may receive only anonymous product-usage events and minimal non-content metadata needed to operate the counter and understand the funnel. It must not receive:
+- diagnostic answer text or selections;
+- company or contact names;
+- email addresses;
+- CRM/customer data;
+- raw IP addresses;
+- precise location.
+
+Allowed anonymous telemetry includes:
+- random anonymous session/review identifiers;
+- event type;
+- section/stage identifier and ordinal;
+- coarse country/region derived at the Cloudflare edge;
+- coarse device class;
+- referring hostname;
+- explicitly sanitized campaign/source tag;
+- share channel;
+- timestamp.
+
+The anonymous event structure should support future aggregate sales-system research only if a later product decision explicitly authorizes additional non-sensitive categorical collection. Do not silently begin sending diagnostic answers.
+
+### Admin analytics
+
+- Provide an **Admin** link in the site footer.
+- Admin analytics must be access-controlled and must never expose diagnostic answers.
+- Useful V1 measures include landing sessions, review starts, review completion, report views, Deep Dive usage, shares, section funnel progression, coarse geography, device mix, referring hosts, and tracked source tags.
+- Admin authentication secrets must be stored as Cloudflare Worker secrets, never committed to GitHub or shipped to the browser.
+
+## 15. Superseded/rejected directions
 
 Do not revive these without an explicit product decision:
 - the original fixed 13-question assessment;
@@ -261,7 +305,7 @@ Do not revive these without an explicit product decision:
 - requiring CRM/document uploads or a heavy data-intake process;
 - using AI/API/database infrastructure merely because it may be useful later.
 
-## 15. Unresolved items
+## 16. Unresolved items
 
 These are not locked and must not be guessed:
 - how the Cross-Through guide will be delivered/accessed from the app;
