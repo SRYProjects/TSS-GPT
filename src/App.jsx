@@ -634,8 +634,9 @@ function GrowthCounter() {
     <div className="growth-counter">
       <div className="growth-counter-copy">
         <strong className="growth-counter-message">
-          Help us reach our goal of helping 10,000 businesses
-          improve their sales by improving how they sell!
+          Improve your sales. Get your FREE Sales System Review
+          and help us reach our goal of helping 10,000 businesses
+          improve how they sell!
         </strong>
       </div>
 
@@ -690,19 +691,13 @@ function Landing({ onStart }) {
         </p>
 
         <div className="landing-actions">
-          <div className="landing-primary-action">
-            <button
-              type="button"
-              className="primary-button landing-cta"
-              onClick={onStart}
-            >
-              Get Started
-            </button>
-
-            <strong className="landing-free-plan">
-              Create your plan for free!
-            </strong>
-          </div>
+          <button
+            type="button"
+            className="primary-button landing-cta"
+            onClick={onStart}
+          >
+            Get Started
+          </button>
 
           <ShareSageButton />
         </div>
@@ -2292,7 +2287,7 @@ function CurrentSystemSection({ system }) {
 
 function StrengthsSection({ strengths }) {
   return (
-    <section className="report-section">
+    <section className="report-section strengths-section">
       <div className="report-section-number">04</div>
 
       <div className="report-section-content">
@@ -2301,7 +2296,7 @@ function StrengthsSection({ strengths }) {
         </div>
 
         <h2>
-          Practices supported by your answers
+          What does not need immediate attention
         </h2>
 
         {strengths.length === 0 ? (
@@ -2313,13 +2308,28 @@ function StrengthsSection({ strengths }) {
             evidence to establish them here.
           </div>
         ) : (
-          <div className="finding-grid">
-            {strengths.map((finding) => (
-              <FindingCard
-                key={finding.id}
-                finding={finding}
-              />
-            ))}
+          <div className="strength-list">
+            {strengths.map((finding) => {
+              const clean = cleanReportFinding(finding);
+
+              return (
+                <div
+                  className="strength-row status-card status-solid"
+                  key={finding.id}
+                >
+                  <span
+                    className="status-dot"
+                    aria-hidden="true"
+                  />
+                  <div>
+                    <strong>{clean.title}</strong>
+                    {clean.support && (
+                      <p>{clean.support}</p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
@@ -2329,17 +2339,22 @@ function StrengthsSection({ strengths }) {
 
 function AttentionSection({ findings }) {
   return (
-    <section className="report-section">
+    <section className="report-section findings-detail-section">
       <div className="report-section-number">03</div>
 
       <div className="report-section-content">
         <div className="eyebrow">
-          WHAT NEEDS ATTENTION
+          WHAT SAGE FOUND
         </div>
 
         <h2>
-          Conditions that deserve examination
+          The evidence behind the diagnosis
         </h2>
+
+        <p className="section-intro">
+          Open any finding for the evidence, significance,
+          direction, and evidence of improvement.
+        </p>
 
         {findings.length === 0 ? (
           <div className="report-empty">
@@ -2349,13 +2364,77 @@ function AttentionSection({ findings }) {
             the system will remain effective.
           </div>
         ) : (
-          <div className="finding-grid">
-            {findings.map((finding) => (
-              <FindingCard
-                key={finding.id}
-                finding={finding}
-              />
-            ))}
+          <div className="finding-accordion-list">
+            {findings.map((finding) => {
+              const clean = cleanReportFinding(finding);
+              const statusClass =
+                statusClassName(clean.type);
+
+              return (
+                <details
+                  className={
+                    "finding-accordion status-card status-" +
+                    statusClass
+                  }
+                  key={finding.id}
+                >
+                  <summary>
+                    <span className="finding-type">
+                      <span
+                        className="status-dot"
+                        aria-hidden="true"
+                      />
+                      {clean.type}
+                    </span>
+
+                    <strong>{clean.title}</strong>
+
+                    <span
+                      className="finding-expand"
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
+                  </summary>
+
+                  <div className="finding-accordion-body">
+                    {clean.support && (
+                      <div className="finding-block">
+                        <strong>What we found</strong>
+                        <p>{clean.support}</p>
+                      </div>
+                    )}
+
+                    {clean.why && (
+                      <div className="finding-block">
+                        <strong>Why it matters</strong>
+                        <p>{clean.why}</p>
+                      </div>
+                    )}
+
+                    {clean.direction && (
+                      <div className="finding-block">
+                        <strong>Direction</strong>
+                        <p>{clean.direction}</p>
+                      </div>
+                    )}
+
+                    {clean.improvementEvidence && (
+                      <div className="finding-block">
+                        <strong>Evidence of improvement</strong>
+                        <p>{clean.improvementEvidence}</p>
+                      </div>
+                    )}
+
+                    {clean.guideTopic && (
+                      <div className="guide-reference">
+                        Cross-Through Guide: {clean.guideTopic}
+                      </div>
+                    )}
+                  </div>
+                </details>
+              );
+            })}
           </div>
         )}
       </div>
@@ -2363,18 +2442,90 @@ function AttentionSection({ findings }) {
   );
 }
 
-function PrioritySection({ findings }) {
+function PrioritySummaryCard({ finding, number }) {
+  const clean = cleanReportFinding(finding);
+  const statusClass = statusClassName(clean.type);
+
   return (
-    <section className="report-section">
+    <article
+      className={
+        "priority-summary-card status-card status-" +
+        statusClass
+      }
+    >
+      <div
+        className="status-accent-line"
+        aria-hidden="true"
+      />
+
+      <div className="priority-summary-topline">
+        <span className="priority-summary-number">
+          {String(number).padStart(2, "0")}
+        </span>
+
+        <span className="finding-type">
+          <span
+            className="status-dot"
+            aria-hidden="true"
+          />
+          {clean.type}
+        </span>
+      </div>
+
+      <h3>{clean.title}</h3>
+
+      {clean.direction && (
+        <p>{clean.direction}</p>
+      )}
+    </article>
+  );
+}
+
+function PrioritySection({ findings }) {
+  const establishTypes = new Set([
+    "Incomplete",
+    "Disconnected",
+    "Unknown"
+  ]);
+
+  const establish = findings.filter((finding) =>
+    establishTypes.has(finding.type)
+  );
+
+  const verifyImprove = findings.filter(
+    (finding) => !establishTypes.has(finding.type)
+  );
+
+  const groups = [
+    {
+      id: "establish",
+      label: "ESTABLISH FIRST",
+      title:
+        "Build or clarify what the system still lacks.",
+      findings: establish
+    },
+    {
+      id: "verify",
+      label: "VERIFY / IMPROVE NEXT",
+      title:
+        "Test what exists and strengthen what is not working reliably.",
+      findings: verifyImprove
+    }
+  ].filter((group) => group.findings.length > 0);
+
+  let runningNumber = 0;
+
+  return (
+    <section className="report-section priority-section">
       <div className="report-section-number">02</div>
 
       <div className="report-section-content">
         <div className="eyebrow">
-          HIGHEST-PRIORITY FINDINGS
+          WHERE ATTENTION MATTERS MOST
         </div>
 
         <h2>
-          Where attention matters most
+          Start with the few issues that matter most.
         </h2>
 
         {findings.length === 0 ? (
@@ -2385,21 +2536,31 @@ function PrioritySection({ findings }) {
             action.
           </div>
         ) : (
-          <div className="priority-list">
-            {findings.map((finding, index) => (
-              <div
-                className="priority-wrapper"
-                key={finding.id}
+          <div className="priority-groups">
+            {groups.map((group) => (
+              <section
+                className="priority-group"
+                key={group.id}
               >
-                <div className="priority-number">
-                  {String(index + 1).padStart(2, "0")}
+                <div className="priority-group-heading">
+                  <span>{group.label}</span>
+                  <h3>{group.title}</h3>
                 </div>
 
-                <FindingCard
-                  finding={finding}
-                  priority
-                />
-              </div>
+                <div className="priority-summary-grid">
+                  {group.findings.map((finding) => {
+                    runningNumber += 1;
+
+                    return (
+                      <PrioritySummaryCard
+                        key={finding.id}
+                        finding={finding}
+                        number={runningNumber}
+                      />
+                    );
+                  })}
+                </div>
+              </section>
             ))}
           </div>
         )}
@@ -2410,7 +2571,7 @@ function PrioritySection({ findings }) {
 
 function BuildPathSection({ buildPath }) {
   return (
-    <section className="report-section">
+    <section className="report-section build-path-section">
       <div className="report-section-number">05</div>
 
       <div className="report-section-content">
@@ -2431,7 +2592,7 @@ function BuildPathSection({ buildPath }) {
         ) : (
           <div className="build-path-list">
             {buildPath.map((step, index) => (
-              <div
+              <article
                 className="build-path-item"
                 key={step.id}
               >
@@ -2439,14 +2600,28 @@ function BuildPathSection({ buildPath }) {
                   {index + 1}
                 </div>
 
-                <div>
+                <div className="build-path-copy">
                   <h3>{step.title}</h3>
-                  <p>
-                    Cross-Through Guide:{" "}
-                    {step.guideTopic}
-                  </p>
+
+                  {step.why && (
+                    <div className="build-path-detail">
+                      <strong>Why this matters</strong>
+                      <p>{step.why}</p>
+                    </div>
+                  )}
+
+                  {step.improvementEvidence && (
+                    <div className="build-path-detail">
+                      <strong>What better looks like</strong>
+                      <p>{step.improvementEvidence}</p>
+                    </div>
+                  )}
+
+                  <div className="build-path-guide">
+                    Cross-Through Guide: {step.guideTopic}
+                  </div>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         )}
@@ -2648,12 +2823,11 @@ function DiagnosticReport({
           SAGE SALES SYSTEM DIAGNOSTIC
         </div>
 
-        <h1>See where attention matters.</h1>
+        <h1>Your Sales System Diagnostic</h1>
 
         <p>
-          Start with the sales system SAGE reconstructed from
-          your answers. Then see what the evidence says about
-          where attention matters and what to work on next.
+          Here’s how your sales system currently works—and
+          where improvement matters most.
         </p>
       </section>
 
