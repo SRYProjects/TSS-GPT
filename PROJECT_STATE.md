@@ -56,6 +56,12 @@ SAGE has moved from prototype/testing into the live adaptive V1 interface.
 - Eligible SAGE Update checkpoints now present the optional Deep Dive as an explicit next-step choice.
 - The report now includes a centralized **Want a sharper diagnosis?** panel for adding evidence by area, in addition to area-level deep-dive controls.
 - Diagnostic condition cards now use a consistent colored top accent and dot alongside the written status label so Solid / Incomplete / Unverified / Unknown / other conditions are immediately scannable.
+- Landing page growth layer is implemented: public 10,000-review mission, live completed-review counter when backend analytics are available, and Share SAGE.
+- Report includes a second Share SAGE invitation after diagnostic value has been delivered.
+- Privacy-first telemetry client and Worker API are implemented for anonymous funnel events only; diagnostic answers remain browser-local.
+- Footer includes Admin access; the admin dashboard is implemented for anonymous growth/funnel/location/device/referral/share metrics.
+- D1 schema migration is committed at `migrations/0001_sage_analytics.sql`.
+- Worker API entry point is committed at `worker/index.js` and `/api/*` is routed through it.
 
 ### Tested and confirmed
 Infrastructure/deployment:
@@ -83,6 +89,11 @@ Live adaptive UI:
 - The current browser printout is not client-ready and needs dedicated document design/formatting.
 
 ### Not yet tested/confirmed
+- D1 analytics database creation/binding and production migration;
+- `ADMIN_TOKEN` Worker secret configuration;
+- live completed-review counter and anonymous event ingestion after D1 is bound;
+- Admin dashboard authentication and metrics after the secret is configured;
+- Share SAGE native-share and copy fallback across desktop/mobile;
 - the new 12-screen Core Review end-to-end in production;
 - section checkpoint → Continue behavior across all six sections;
 - each optional Deep Dive and early return to the Core Review;
@@ -156,6 +167,8 @@ These are implementation risks to verify, not settled product changes:
 7. **Automated tests:** there is no formal test runner/script in `package.json`; prior diagnostic testing used manual fixtures and production testing.
 8. **Current-system reconstruction:** the report summarizes the primary path and flags alternate-path information but does not yet present a rich alternate-path visualization.
 9. **Print/PDF remains unfinished.** The web report has been reorganized, but the client-facing document layout has not yet been redesigned.
+10. **Growth backend is staged but not yet live.** The API, schema, counter, telemetry, and admin UI are committed, but D1 must be created/bound and the admin secret configured before analytics can function. Until then, the public landing mission still renders but the live count is unavailable.
+11. **Privacy boundary is locked.** Anonymous telemetry must never be expanded to diagnostic answers, identity, email, raw IP, or precise location without an explicit new product decision.
 
 ## Recent meaningful commits
 
@@ -204,24 +217,31 @@ Canonical documentation commits follow these.
 
 ## Exact next step
 
-**Verify the strengthened Deep Dive choices and diagnostic status hierarchy in production.**
+**Activate the privacy-first SAGE growth backend, then verify it in production.**
 
-Use **Our overall sales operation** again and confirm:
-1. eligible SAGE Update breaks clearly present **Go deeper** as an optional choice;
-2. continuing the Core Review remains equally clear and frictionless;
-3. the report visibly presents the centralized **Want a sharper diagnosis?** evidence panel;
-4. Solid / Incomplete / Unverified / Unknown / other diagnostic conditions are immediately distinguishable through the new colored line + dot while retaining the written label;
-5. choosing one report evidence option enters the correct Deep Dive and returns to an updated report without losing existing answers.
+1. Create a Cloudflare D1 database named **`sage-analytics`**.
+2. Bind it to Worker **`tss-gpt`** with variable name **`DB`**.
+3. Add a strong encrypted Worker secret named **`ADMIN_TOKEN`**.
+4. Apply `migrations/0001_sage_analytics.sql` to the production D1 database.
+5. Add the resulting D1 database ID to `wrangler.jsonc` so the GitHub deployment configuration remains authoritative.
+6. Verify:
+   - landing page shows the real completed-review count;
+   - starting/progressing/completing a review creates anonymous funnel events only;
+   - Share SAGE works and records only the share channel;
+   - `/admin` rejects an incorrect key and loads metrics with the correct key;
+   - no diagnostic answers, identity, email, raw IP, or precise location appear in D1.
+7. Then resume the previously scheduled Core Review / Deep Dive production test.
 
 ## Short remaining V1 roadmap
 
-1. Production-test the Core Review, one skipped-depth path, and one report-driven Deep Dive.
-2. Fix any functional/diagnostic defects found in that test.
-3. Refine report density and at-a-glance language from real-use feedback.
-4. Create the dedicated client-ready print/PDF layout.
-5. Test responsive/mobile behavior and remaining adaptive branches.
-6. Decide launch items: Cross-Through guide access, final report naming, and professional-help CTA.
-7. Run final V1 regression and deployment check.
+1. Activate and production-test the anonymous growth counter / telemetry / admin backend.
+2. Production-test the Core Review, one skipped-depth path, and one report-driven Deep Dive.
+3. Fix any functional/diagnostic defects found in that test.
+4. Refine report density and at-a-glance language from real-use feedback.
+5. Create the dedicated client-ready print/PDF layout.
+6. Test responsive/mobile behavior and remaining adaptive branches.
+7. Decide launch items: Cross-Through guide access, final report naming, and professional-help CTA.
+8. Run final V1 regression and deployment check.
 
 ## End-of-session protocol
 
