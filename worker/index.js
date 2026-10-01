@@ -218,7 +218,7 @@ async function publicStats(env) {
 
   return json({
     completedReviews: Number(row?.count || 0),
-    goal: 10000
+    goal: 1000
   });
 }
 
