@@ -57,18 +57,22 @@ function deviceClass(request) {
 }
 
 function timingSafeTextEqual(a, b) {
-  const encoder = new TextEncoder();
-  const aBytes = encoder.encode(a || "");
-  const bBytes = encoder.encode(b || "");
+  const left = String(a || "");
+  const right = String(b || "");
 
-  if (aBytes.byteLength !== bBytes.byteLength) {
+  if (left.length !== right.length) {
     return false;
   }
 
-  return crypto.subtle.timingSafeEqual(
-    aBytes,
-    bBytes
-  );
+  let difference = 0;
+
+  for (let index = 0; index < left.length; index += 1) {
+    difference |=
+      left.charCodeAt(index) ^
+      right.charCodeAt(index);
+  }
+
+  return difference === 0;
 }
 
 function adminAuthorized(request, env) {
