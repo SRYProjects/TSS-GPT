@@ -312,7 +312,7 @@ function getSectionFeedback(stageId, answers) {
 
   if (stageId === "move") {
     const processText = processSteps.length
-      ? `${processSteps.length} major process steps are now mapped.`
+      ? `${processSteps.length} major process ${processSteps.length === 1 ? "step is" : "steps are"} now mapped.`
       : "The major process path is not yet clearly established.";
 
     const outcomeText =
@@ -686,46 +686,50 @@ function GrowthCounter() {
 function Landing({ onStart }) {
   return (
     <main className="landing-shell">
-      <section className="landing-copy">
-        <div className="eyebrow">
-          STOP GOING THROUGH THE MOTIONS
+      <section className="landing-hero">
+        <div className="landing-copy">
+          <div className="eyebrow">
+            STOP GOING THROUGH THE MOTIONS
+          </div>
+
+          <h1>
+            Improve your sales by improving how you sell.
+          </h1>
+
+          <p className="landing-lead">
+            You already have a sales system. SAGE helps you
+            understand it, see what's working, uncover what's
+            missing, and determine where improvement matters.
+          </p>
+
+          <p className="landing-statement">
+            The sales success you want starts with how you sell.
+          </p>
+
+          <div className="landing-actions">
+            <button
+              type="button"
+              className="primary-button landing-cta"
+              onClick={onStart}
+            >
+              Get Started
+            </button>
+
+            <ShareSageButton />
+          </div>
+
+          <div className="landing-note">
+            Free Sales System Review · No CRM connection required
+          </div>
         </div>
 
-        <h1>
-          Improve your sales by improving how you sell.
-        </h1>
-
-        <p className="landing-lead">
-          You already have a sales system. SAGE helps you
-          understand it, see what's working, uncover what's
-          missing, and determine where improvement matters.
-        </p>
-
-        <p className="landing-statement">
-          The sales success you want starts with how you sell.
-        </p>
-
-        <div className="landing-actions">
-          <button
-            type="button"
-            className="primary-button landing-cta"
-            onClick={onStart}
-          >
-            Get Started
-          </button>
-
-          <ShareSageButton />
+        <div className="landing-visual">
+          <SystemVisual />
         </div>
-
-        <div className="landing-note">
-          Free Sales System Review · No CRM connection required
-        </div>
-
-        <GrowthCounter />
       </section>
 
-      <section className="landing-visual">
-        <SystemVisual />
+      <section className="landing-mission" aria-label="SAGE public goal">
+        <GrowthCounter />
       </section>
     </main>
   );
@@ -2991,6 +2995,23 @@ function SageApp() {
   useEffect(() => {
     trackEvent("landing_view");
   }, []);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "auto"
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [
+    screen,
+    currentQuestionId,
+    sectionReviewStage,
+    deepDiveQuestionId
+  ]);
 
   useEffect(() => {
     try {
