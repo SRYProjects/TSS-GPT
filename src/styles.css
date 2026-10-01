@@ -2258,14 +2258,26 @@ textarea:focus-visible {
 
 .growth-counter {
   margin-top: 28px;
-  padding: 18px 20px;
-  border: 1px solid rgba(85, 216, 196, 0.24);
-  border-left: 4px solid var(--teal);
-  border-radius: 14px;
-  background: rgba(85, 216, 196, 0.055);
+  padding: 22px 24px;
+  border: 1px solid rgba(85, 216, 196, 0.3);
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      circle at 88% 20%,
+      rgba(85, 216, 196, 0.11),
+      transparent 34%
+    ),
+    rgba(85, 216, 196, 0.055);
   display: grid;
-  gap: 5px;
-  max-width: 560px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 26px;
+  align-items: center;
+  max-width: 640px;
+}
+
+.growth-counter-copy {
+  display: grid;
+  gap: 7px;
 }
 
 .growth-counter-kicker {
@@ -2275,14 +2287,72 @@ textarea:focus-visible {
   letter-spacing: 0.12em;
 }
 
-.growth-counter strong {
+.growth-counter-title {
   color: var(--text);
-  font-size: 1.08rem;
+  font-size: 1.2rem;
+  line-height: 1.25;
 }
 
-.growth-counter span {
+.growth-counter-message {
   color: var(--muted);
   line-height: 1.5;
+  max-width: 430px;
+}
+
+.growth-counter-meter {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  min-width: 116px;
+}
+
+.growth-counter-ring {
+  --goal-progress: 0deg;
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  padding: 5px;
+  background:
+    conic-gradient(
+      var(--teal) 0deg,
+      var(--teal) var(--goal-progress),
+      rgba(255, 255, 255, 0.11) var(--goal-progress),
+      rgba(255, 255, 255, 0.11) 360deg
+    );
+  box-shadow: 0 0 0 1px rgba(85, 216, 196, 0.12);
+}
+
+.growth-counter-ring-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #101719;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.growth-counter-ring-inner strong {
+  color: var(--text);
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.growth-counter-ring-inner span {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.growth-counter-meter small {
+  color: var(--teal);
+  font-size: 0.76rem;
+  font-weight: 900;
 }
 
 .report-share-panel {
@@ -2478,6 +2548,20 @@ textarea:focus-visible {
 
   .growth-counter {
     margin-top: 22px;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .growth-counter-meter {
+    grid-template-columns: auto auto;
+    align-items: center;
+    justify-content: start;
+    gap: 14px;
+  }
+
+  .growth-counter-ring {
+    width: 92px;
+    height: 92px;
   }
 
   .site-footer {
