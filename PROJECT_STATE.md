@@ -245,128 +245,26 @@ Implemented from live owner review:
 - Reduced the visual size of the final report share panel.
 - Increased the visual size/emphasis of Build Path action numbers.
 
-### Exact next step after deployment
+### Exact next step
 
-Re-test the landing page and final report in production, specifically:
-1. landing mission hierarchy after removing **OUR GOAL**;
-2. Share SAGE choices and channel behavior;
-3. final report order and numbering;
-4. Build Path action-number prominence;
-5. then continue the controlled analytics/privacy verification already scheduled.
+**Production-test the current V1 journey after the 2026-10-01 UX corrections.**
 
+1. Verify the redesigned Landing page:
+   - primary hero remains clean and premium;
+   - the 1,000-company mission reads as a distinct section rather than an attached card;
+   - counter/ring remains truthful and visually subordinate to the main Get Started action.
+2. Start a fresh **Core Review** and verify every transition opens at the top of the new screen.
+3. Re-test the clarified **How Sales Move** questions:
+   - sales-path clarity;
+   - major activities between buyer interest and win/loss;
+   - expected result of each activity;
+   - evidence that the activity achieved its intended result.
+4. Re-test the clarified first **Buyer Progression** question.
+5. Complete the Core Review without Deep Dives and evaluate the redesigned report as a coherent story.
+6. Then run one report-driven Deep Dive and verify that added evidence regenerates and sharpens the diagnostic correctly.
+7. After product-flow approval, verify anonymous D1/Admin telemetry and privacy boundaries and remove controlled test events.
 
-
-## 2026-10-01 landing hierarchy and readability refinement
-
-Implemented after visual review of the deployed landing mission block and Sales System at a Glance cards:
-
-- Separated **Create your plan for free!** from the public 10,000-business mission. It now reinforces the primary Get Started action instead of competing inside the mission card.
-- The public goal card now contains only the mission statement plus the live completed-review counter.
-- Reworked the five-card Sales System at a Glance layout from a cramped five-across row to a centered **3 + 2** desktop composition.
-- Increased map-card title, status, body, and deep-dive control typography substantially.
-- Increased card spacing and breathing room so readability improves without turning the report into oversized blocks.
-- Responsive behavior now moves to two columns on narrower screens and one column on mobile.
-- Readability target is now based on comfortable web body text rather than preserving five cards in one row at the expense of legibility.
-
-### Immediate verification
-
-After deployment, visually verify:
-1. landing CTA / free-plan promise / public-goal hierarchy;
-2. the 3 + 2 map composition at common desktop widths;
-3. body-text comfort and card height;
-4. two-column tablet and one-column mobile reflow.
-
-
-
-## 2026-10-01 diagnostic report redesign
-
-Implemented the approved report redesign after comparing the live SAGE report with the alternate partner concept.
-
-### Landing
-- Replaced the public-goal copy with the approved exact wording:
-  **“Improve your sales. Get your FREE Sales System Review and help us reach our goal of helping 10,000 businesses improve how they sell!”**
-- Removed the separate **Create your plan for free!** reinforcement because the new mission copy now contains the complete user action and benefit.
-
-### Report
-- New report opening:
-  - **Your Sales System Diagnostic**
-  - **Here’s how your sales system currently works—and where improvement matters most.**
-- Preserved **Your Current Sales System** as section 1.
-- Preserved the dark visual system; no white diagnostic cards.
-- Retained the readable 3 + 2 **Sales System at a Glance** composition as the concise condition summary.
-- Rebuilt section 2 as **Where Attention Matters Most**:
-  - structural findings group under **Establish first**;
-  - verification/performance/execution findings group under **Verify / improve next**;
-  - priority presentation is intentionally concise so it does not duplicate the detailed evidence section.
-- Rebuilt section 3 as **What SAGE Found** using collapsed disclosure rows. Full evidence, why-it-matters, direction, evidence-of-improvement, and Cross-Through references remain available on expansion.
-- Rebuilt section 4 **What Appears Solid** as a compact confirmation list rather than competing full finding cards.
-- Strengthened section 5 **Your Cross-Through Build Path**:
-  - larger numbered actions;
-  - why the action matters;
-  - what better looks like when the finding supplies evidence of improvement;
-  - Cross-Through guide reference.
-- Enriched build-path objects deterministically from the priority findings; no AI-generated or invented rationale was added.
-
-### Immediate next step
-Production visual/regression review of the redesigned report:
-1. landing mission copy and hierarchy;
-2. report opening and current-system-first flow;
-3. 3 + 2 at-a-glance readability;
-4. priority grouping;
-5. accordion usability;
-6. compact strengths;
-7. build-path ending;
-8. desktop/mobile responsiveness;
-9. then continue controlled analytics/privacy verification.
-
-
-## 2026-10-01 public-goal treatment locked
-
-Owner supplied the final landing mission concept. Implemented without reinterpretation:
-
-- Public goal changed from **10,000** to **1,000**.
-- Copy:
-  - **Help us reach our goal of 1,000.**
-  - **Get your FREE sales improvement report.**
-  - **Be one of the first 1,000 companies to improve their sales with SAGE.**
-- Live truthful completion count appears inside a segmented progress ring as **X of 1,000**.
-- The remaining count appears directly below as **X to go!**
-- Worker public-stats endpoint now returns goal `1000`.
-- No seeded or fabricated completion count is introduced; the displayed count remains the live D1 value.
-
-### Immediate verification
-
-Confirm the deployed landing block visually matches the supplied concept in hierarchy, spacing, ring treatment, live count, and remaining-count display.
-
-## 2026-10-01 landing mission correction
-
-Corrected the deployed mission block after visual inspection:
-
-- Reduced the mission block from oversized hero-like typography to compact supporting-card scale.
-- Replaced the CSS mask-composited segmented ring, which failed to render reliably in production, with a simple conic progress ring and inner circle.
-- Preserved the approved 1,000-company copy and live **X of 1,000 / X to go!** logic.
-- Added responsive sizing so the ring remains visible beside the copy on normal desktop/tablet widths and stacks only on narrow mobile screens.
-
-### Immediate verification
-
-Verify the deployed landing block at desktop width first: typography should no longer dominate the page and the progress ring must be visible.
-
-## Exact next step
-
-**Activate the privacy-first SAGE growth backend, then verify it in production.**
-
-1. Create a Cloudflare D1 database named **`sage-analytics`**.
-2. Bind it to Worker **`tss-gpt`** with variable name **`DB`**.
-3. Add a strong encrypted Worker secret named **`ADMIN_TOKEN`**.
-4. Apply `migrations/0001_sage_analytics.sql` to the production D1 database.
-5. Add the resulting D1 database ID to `wrangler.jsonc` so the GitHub deployment configuration remains authoritative.
-6. Verify:
-   - landing page shows the real completed-review count;
-   - starting/progressing/completing a review creates anonymous funnel events only;
-   - Share SAGE works and records only the share channel;
-   - `/admin` rejects an incorrect key and loads metrics with the correct key;
-   - no diagnostic answers, identity, email, raw IP, or precise location appear in D1.
-7. Then resume the previously scheduled Core Review / Deep Dive production test.
+The growth backend itself is already activated: D1, production binding, migration, live stats endpoint, and admin token/dashboard are configured. Do not repeat backend activation.
 
 ## Short remaining V1 roadmap
 
