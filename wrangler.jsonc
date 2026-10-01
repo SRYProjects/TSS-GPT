@@ -9,5 +9,12 @@
     "run_worker_first": [
       "/api/*"
     ]
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sage-analytics",
+      "database_id": "b8b99a88-7004-4a8a-ab7a-bcf1814923ab"
+    }
+  ]
 }
