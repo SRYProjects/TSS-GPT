@@ -255,6 +255,28 @@ Re-test the landing page and final report in production, specifically:
 5. then continue the controlled analytics/privacy verification already scheduled.
 
 
+
+## 2026-10-01 landing hierarchy and readability refinement
+
+Implemented after visual review of the deployed landing mission block and Sales System at a Glance cards:
+
+- Separated **Create your plan for free!** from the public 10,000-business mission. It now reinforces the primary Get Started action instead of competing inside the mission card.
+- The public goal card now contains only the mission statement plus the live completed-review counter.
+- Reworked the five-card Sales System at a Glance layout from a cramped five-across row to a centered **3 + 2** desktop composition.
+- Increased map-card title, status, body, and deep-dive control typography substantially.
+- Increased card spacing and breathing room so readability improves without turning the report into oversized blocks.
+- Responsive behavior now moves to two columns on narrower screens and one column on mobile.
+- Readability target is now based on comfortable web body text rather than preserving five cards in one row at the expense of legibility.
+
+### Immediate verification
+
+After deployment, visually verify:
+1. landing CTA / free-plan promise / public-goal hierarchy;
+2. the 3 + 2 map composition at common desktop widths;
+3. body-text comfort and card height;
+4. two-column tablet and one-column mobile reflow.
+
+
 ## Exact next step
 
 **Activate the privacy-first SAGE growth backend, then verify it in production.**
