@@ -338,6 +338,19 @@ Owner supplied the final landing mission concept. Implemented without reinterpre
 
 Confirm the deployed landing block visually matches the supplied concept in hierarchy, spacing, ring treatment, live count, and remaining-count display.
 
+## 2026-10-01 landing mission correction
+
+Corrected the deployed mission block after visual inspection:
+
+- Reduced the mission block from oversized hero-like typography to compact supporting-card scale.
+- Replaced the CSS mask-composited segmented ring, which failed to render reliably in production, with a simple conic progress ring and inner circle.
+- Preserved the approved 1,000-company copy and live **X of 1,000 / X to go!** logic.
+- Added responsive sizing so the ring remains visible beside the copy on normal desktop/tablet widths and stacks only on narrow mobile screens.
+
+### Immediate verification
+
+Verify the deployed landing block at desktop width first: typography should no longer dominate the page and the progress ring must be visible.
+
 ## Exact next step
 
 **Activate the privacy-first SAGE growth backend, then verify it in production.**
