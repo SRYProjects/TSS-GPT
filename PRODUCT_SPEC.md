@@ -202,7 +202,11 @@ V1 does **not**:
 - SAGE should be used lightly as the product/guide identity; no fake-human chatter or cute AI personality.
 - Current landing headline: **“Improve your sales by improving how you sell.”**
 - Current supporting proposition: the business already has a sales system; SAGE helps it understand what is working, what is missing, and where improvement matters.
-- Public-goal copy: **“Improve your sales. Get your FREE Sales System Review and help us reach our goal of helping 10,000 businesses improve how they sell!”**
+- Public-goal treatment is locked to:
+  - **Help us reach our goal of 1,000.**
+  - **Get your FREE sales improvement report.**
+  - **Be one of the first 1,000 companies to improve their sales with SAGE.**
+  - Show the truthful live completion count inside the progress ring and the truthful remaining count as **X to go!**
 - Current light product label: **Sales System Guide**.
 
 ## 10. Data and persistence
@@ -263,7 +267,7 @@ Not locked:
 
 Locked direction:
 - SAGE should be designed to spread because the free diagnostic can provide standalone value to B2B businesses.
-- The landing page should show a truthful live count of **Sales System Reviews completed** and a public goal of reaching **10,000 Sales System Reviews**.
+- The landing page should show a truthful live completion count and a public goal of reaching **1,000 companies**.
 - Never seed, inflate, or imply a number of businesses/users that the system cannot verify.
 - Use **Sales System Reviews completed**, not “sales plans created.”
 - Provide **Share SAGE** on the landing page and again after the diagnostic has delivered value.
