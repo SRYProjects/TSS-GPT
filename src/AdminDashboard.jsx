@@ -157,6 +157,10 @@ export default function AdminDashboard() {
         <>
           <section className="admin-metrics">
             <MetricCard
+              label="Landing sessions"
+              value={overview.landingSessions || 0}
+            />
+            <MetricCard
               label="Review starts"
               value={overview.reviewStarts || 0}
             />
@@ -171,6 +175,10 @@ export default function AdminDashboard() {
             <MetricCard
               label="Reports viewed"
               value={overview.reportViews || 0}
+            />
+            <MetricCard
+              label="Deep Dives"
+              value={overview.deepDives || 0}
             />
             <MetricCard
               label="Shares"
@@ -218,6 +226,12 @@ export default function AdminDashboard() {
               title="Tracked links"
               rows={data.sourceTags}
               labelKey="source_tag"
+              valueKey="sessions"
+            />
+            <DataList
+              title="Device mix"
+              rows={data.devices}
+              labelKey="device"
               valueKey="sessions"
             />
           </section>
