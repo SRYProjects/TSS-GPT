@@ -524,34 +524,53 @@ function GrowthCounter() {
       : null;
 
   const goal = stats?.goal || 10000;
+  const progress =
+    completed !== null && goal > 0
+      ? Math.min(360, (completed / goal) * 360)
+      : 0;
 
   return (
     <div className="growth-counter">
-      <div className="growth-counter-kicker">
-        OUR PUBLIC GOAL
+      <div className="growth-counter-copy">
+        <div className="growth-counter-kicker">
+          OUR 10,000-REVIEW GOAL
+        </div>
+
+        <strong className="growth-counter-title">
+          Help us improve how businesses sell.
+        </strong>
+
+        <span className="growth-counter-message">
+          Complete your free Sales System Review. Our goal is
+          10,000 completed reviews—helping businesses improve
+          their sales by improving how they sell.
+        </span>
       </div>
 
-      {completed !== null ? (
-        <>
-          <strong>
-            {completed.toLocaleString()} Sales System{" "}
-            {completed === 1 ? "Review" : "Reviews"} completed
-          </strong>
-          <span>
-            Help us reach {goal.toLocaleString()}.
-          </span>
-        </>
-      ) : (
-        <>
-          <strong>
-            10,000 Sales System Reviews
-          </strong>
-          <span>
-            Help us make B2B selling more deliberate,
-            one clear sales-system picture at a time.
-          </span>
-        </>
-      )}
+      <div className="growth-counter-meter">
+        <div
+          className="growth-counter-ring"
+          style={{ "--goal-progress": `${progress}deg` }}
+          aria-label={
+            completed !== null
+              ? `${completed.toLocaleString()} of ${goal.toLocaleString()} Sales System Reviews completed`
+              : `Goal: ${goal.toLocaleString()} Sales System Reviews`
+          }
+        >
+          <div className="growth-counter-ring-inner">
+            <strong>
+              {completed !== null
+                ? completed.toLocaleString()
+                : "—"}
+            </strong>
+            <span>completed</span>
+          </div>
+        </div>
+
+        <small>
+          of {goal.toLocaleString()}
+        </small>
+      </div>
     </div>
   );
 }
