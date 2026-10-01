@@ -999,7 +999,14 @@ function buildPathFromFindings(
     if (!step || seen.has(step.id)) return;
 
     seen.add(step.id);
-    steps.push(step);
+    steps.push({
+      ...step,
+      findingType: item.type,
+      why: item.why || "",
+      direction: item.direction || "",
+      improvementEvidence:
+        item.improvementEvidence || ""
+    });
   });
 
   return steps;
