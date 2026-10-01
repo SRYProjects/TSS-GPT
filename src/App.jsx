@@ -633,14 +633,10 @@ function GrowthCounter() {
   return (
     <div className="growth-counter">
       <div className="growth-counter-copy">
-        <strong className="growth-counter-title">
-          Create your plan for free!
-        </strong>
-
-        <span className="growth-counter-message">
+        <strong className="growth-counter-message">
           Help us reach our goal of helping 10,000 businesses
           improve their sales by improving how they sell!
-        </span>
+        </strong>
       </div>
 
       <div className="growth-counter-meter">
@@ -694,13 +690,19 @@ function Landing({ onStart }) {
         </p>
 
         <div className="landing-actions">
-          <button
-            type="button"
-            className="primary-button landing-cta"
-            onClick={onStart}
-          >
-            Get Started
-          </button>
+          <div className="landing-primary-action">
+            <button
+              type="button"
+              className="primary-button landing-cta"
+              onClick={onStart}
+            >
+              Get Started
+            </button>
+
+            <strong className="landing-free-plan">
+              Create your plan for free!
+            </strong>
+          </div>
 
           <ShareSageButton />
         </div>
