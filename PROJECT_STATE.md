@@ -215,6 +215,17 @@ Canonical documentation commits follow these.
 - The new Core Review + Deep Dive architecture and at-a-glance report are committed to `main`; production verification is the next step.
 - The dedicated client-ready print/PDF redesign remains intentionally unfinished until this interaction/report direction is validated.
 
+## 2026-10-01 growth-backend activation checkpoint
+
+- Created production D1 database `sage-analytics` and verified the `sage_events` table exists.
+- Bound D1 to the Worker as `DB` in `wrangler.jsonc`.
+- Added `ADMIN_TOKEN` as a Production runtime secret; removed the unnecessary build-secret copy.
+- Verified the live `/api/stats` endpoint returns the real completed-review count and 10,000 goal.
+- Verified `/admin` accepts the production admin token and loads the analytics dashboard.
+- Revised the landing-page goal treatment to a prominent ring/counter while keeping Get Started primary.
+- Current approved landing goal copy: **“Create your plan for free! Help us reach our goal of helping 10,000 businesses improve their sales by improving how they sell!”**
+- Remaining backend verification: run a controlled anonymous journey, confirm funnel/share events and privacy boundaries in D1/Admin, then remove test events so launch analytics contain real-user data only.
+
 ## Exact next step
 
 **Activate the privacy-first SAGE growth backend, then verify it in production.**
