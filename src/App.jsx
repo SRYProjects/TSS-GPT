@@ -624,7 +624,11 @@ function GrowthCounter() {
       ? stats.completedReviews
       : null;
 
-  const goal = stats?.goal || 10000;
+  const goal = stats?.goal || 1000;
+  const remaining =
+    completed !== null
+      ? Math.max(0, goal - completed)
+      : null;
   const progress =
     completed !== null && goal > 0
       ? Math.min(360, (completed / goal) * 360)
@@ -633,11 +637,18 @@ function GrowthCounter() {
   return (
     <div className="growth-counter">
       <div className="growth-counter-copy">
-        <strong className="growth-counter-message">
-          Improve your sales. Get your FREE Sales System Review
-          and help us reach our goal of helping 10,000 businesses
-          improve how they sell!
+        <strong className="growth-counter-headline">
+          Help us reach our goal of {goal.toLocaleString()}.
         </strong>
+
+        <span className="growth-counter-line">
+          Get your FREE sales improvement report.
+        </span>
+
+        <span className="growth-counter-line">
+          Be one of the first {goal.toLocaleString()} companies
+          to improve their sales with SAGE.
+        </span>
       </div>
 
       <div className="growth-counter-meter">
@@ -646,8 +657,8 @@ function GrowthCounter() {
           style={{ "--goal-progress": `${progress}deg` }}
           aria-label={
             completed !== null
-              ? `${completed.toLocaleString()} of ${goal.toLocaleString()} Sales System Reviews completed`
-              : `Goal: ${goal.toLocaleString()} Sales System Reviews`
+              ? `${completed.toLocaleString()} of ${goal.toLocaleString()} completed`
+              : `Goal: ${goal.toLocaleString()}`
           }
         >
           <div className="growth-counter-ring-inner">
@@ -656,13 +667,17 @@ function GrowthCounter() {
                 ? completed.toLocaleString()
                 : "—"}
             </strong>
-            <span>completed</span>
+            <span>
+              of {goal.toLocaleString()}
+            </span>
           </div>
         </div>
 
-        <small>
-          of {goal.toLocaleString()}
-        </small>
+        <strong className="growth-counter-remaining">
+          {remaining !== null
+            ? `${remaining.toLocaleString()} to go!`
+            : "Join the goal"}
+        </strong>
       </div>
     </div>
   );
