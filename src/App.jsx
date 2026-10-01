@@ -421,48 +421,80 @@ function Header({ onHome }) {
 // LANDING VISUAL
 // --------------------------------------------------
 
-function SystemVisual() {
+function ProductPreview() {
   return (
-    <div className="system-visual" aria-hidden="true">
-      <div className="visual-label">YOUR SALES SYSTEM</div>
-
-      <div className="visual-flow">
-        <div className="visual-node">
-          <span>Opportunity</span>
-        </div>
-
-        <div className="visual-line" />
-
-        <div className="visual-node">
-          <span>Process</span>
-        </div>
-
-        <div className="visual-line" />
-
-        <div className="visual-node">
-          <span>Buyer</span>
-        </div>
-
-        <div className="visual-line" />
-
-        <div className="visual-node visual-node-accent">
-          <span>Sale</span>
-        </div>
+    <div className="product-preview" aria-hidden="true">
+      <div className="preview-chrome">
+        <span className="preview-brand">SAGE</span>
+        <span className="preview-dots">•••</span>
       </div>
 
-      <div className="visual-signals">
-        <span>Objectives</span>
-        <span>Evidence</span>
-        <span>Progression</span>
-        <span>Execution</span>
+      <div className="preview-body">
+        <div className="preview-kicker">
+          YOUR SALES SYSTEM
+        </div>
+
+        <div className="preview-heading-row">
+          <h2>Sales System at a Glance</h2>
+          <span>Diagnostic preview</span>
+        </div>
+
+        <div className="preview-status-grid">
+          <div className="preview-status preview-warning">
+            <span>Opportunity Creation</span>
+            <strong>UNVERIFIED</strong>
+          </div>
+
+          <div className="preview-status preview-danger">
+            <span>Sales Process</span>
+            <strong>INCOMPLETE</strong>
+          </div>
+
+          <div className="preview-status preview-danger">
+            <span>Buyer Progression</span>
+            <strong>INCOMPLETE</strong>
+          </div>
+        </div>
+
+        <div className="preview-priority">
+          <div>
+            <span className="preview-label">
+              WHERE ATTENTION MATTERS MOST
+            </span>
+            <strong>
+              Define what each important sales activity must accomplish.
+            </strong>
+          </div>
+          <span className="preview-arrow">→</span>
+        </div>
+
+        <div className="preview-build">
+          <div className="preview-build-heading">
+            <strong>Your Build Path</strong>
+            <span>What to work on next</span>
+          </div>
+
+          <div className="preview-build-steps">
+            <div>
+              <span>1</span>
+              <p>Define outcomes</p>
+            </div>
+            <i />
+            <div>
+              <span>2</span>
+              <p>Establish evidence</p>
+            </div>
+            <i />
+            <div>
+              <span>3</span>
+              <p>Test improvement</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-
-// --------------------------------------------------
-// LANDING
-// --------------------------------------------------
 
 function ShareSageButton({
   className = "share-link",
@@ -685,51 +717,174 @@ function GrowthCounter() {
 
 function Landing({ onStart }) {
   return (
-    <main className="landing-shell">
-      <section className="landing-hero">
-        <div className="landing-copy">
-          <div className="eyebrow">
-            STOP GOING THROUGH THE MOTIONS
+    <main className="landing-page">
+      <section className="landing-band landing-hero-band">
+        <div className="landing-section-inner landing-hero">
+          <div className="landing-copy">
+            <div className="eyebrow">
+              STOP GOING THROUGH THE MOTIONS
+            </div>
+
+            <h1>
+              Improve your sales by improving how you sell.
+            </h1>
+
+            <p className="landing-lead">
+              You already have a sales system. SAGE helps you
+              understand it, see what's working, uncover what's
+              missing, and determine where improvement matters.
+            </p>
+
+            <p className="landing-statement">
+              The sales success you want starts with how you sell.
+            </p>
+
+            <div className="landing-actions">
+              <button
+                type="button"
+                className="primary-button landing-cta"
+                onClick={onStart}
+              >
+                Get Started
+                <span aria-hidden="true">→</span>
+              </button>
+
+              <ShareSageButton />
+            </div>
+
+            <div className="landing-note">
+              Free Sales System Review · No CRM connection required
+            </div>
           </div>
 
-          <h1>
-            Improve your sales by improving how you sell.
-          </h1>
+          <div className="landing-visual">
+            <ProductPreview />
+          </div>
+        </div>
+      </section>
 
-          <p className="landing-lead">
-            You already have a sales system. SAGE helps you
-            understand it, see what's working, uncover what's
-            missing, and determine where improvement matters.
-          </p>
+      <section
+        className="landing-band landing-goal-band"
+        aria-label="SAGE public goal"
+      >
+        <div className="landing-goal-landscape" aria-hidden="true">
+          <span className="goal-peak goal-peak-one" />
+          <span className="goal-peak goal-peak-two" />
+          <span className="goal-peak goal-peak-three" />
+          <span className="goal-flag">◆</span>
+        </div>
 
-          <p className="landing-statement">
-            The sales success you want starts with how you sell.
-          </p>
+        <div className="landing-section-inner">
+          <GrowthCounter />
+        </div>
+      </section>
 
-          <div className="landing-actions">
+      <section className="landing-band landing-benefits-band">
+        <div className="landing-section-inner">
+          <div className="landing-section-heading">
+            <div>
+              <div className="eyebrow">WHY SAGE</div>
+              <h2>Get clarity. Make progress. Sell smarter.</h2>
+            </div>
+
+            <p>
+              SAGE gives you a clear view of your sales system
+              and a practical path to improvement—without the
+              guesswork.
+            </p>
+          </div>
+
+          <div className="landing-benefits-grid">
+            <article className="landing-benefit-card">
+              <span className="landing-benefit-icon">◎</span>
+              <div>
+                <h3>See your current sales system</h3>
+                <p>
+                  Understand what's working, what's missing,
+                  and how your sales operation actually works.
+                </p>
+              </div>
+            </article>
+
+            <article className="landing-benefit-card">
+              <span className="landing-benefit-icon">▥</span>
+              <div>
+                <h3>Find where attention matters most</h3>
+                <p>
+                  Surface the few conditions that deserve
+                  attention before you spend time fixing the wrong things.
+                </p>
+              </div>
+            </article>
+
+            <article className="landing-benefit-card">
+              <span className="landing-benefit-icon">↗</span>
+              <div>
+                <h3>Know what to work on next</h3>
+                <p>
+                  Leave with an ordered build path tied directly
+                  to what SAGE found in your sales system.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-band landing-how-band">
+        <div className="landing-section-inner">
+          <div className="eyebrow">HOW IT WORKS</div>
+          <h2>From insight to improvement in three steps.</h2>
+
+          <div className="landing-steps">
+            <div className="landing-step">
+              <span>1</span>
+              <div>
+                <h3>Answer a short review</h3>
+                <p>
+                  Describe how your business currently sells.
+                  No CRM connection or uploads required.
+                </p>
+              </div>
+            </div>
+
+            <div className="landing-step-connector">→</div>
+
+            <div className="landing-step">
+              <span>2</span>
+              <div>
+                <h3>See your diagnostic</h3>
+                <p>
+                  See your current system, supported findings,
+                  priorities, and what appears solid.
+                </p>
+              </div>
+            </div>
+
+            <div className="landing-step-connector">→</div>
+
+            <div className="landing-step">
+              <span>3</span>
+              <div>
+                <h3>Go deeper where needed</h3>
+                <p>
+                  Add evidence selectively and sharpen the parts
+                  of the diagnosis that matter to you.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="landing-bottom-cta">
             <button
               type="button"
-              className="primary-button landing-cta"
+              className="primary-button"
               onClick={onStart}
             >
               Get Started
             </button>
-
-            <ShareSageButton />
-          </div>
-
-          <div className="landing-note">
-            Free Sales System Review · No CRM connection required
           </div>
         </div>
-
-        <div className="landing-visual">
-          <SystemVisual />
-        </div>
-      </section>
-
-      <section className="landing-mission" aria-label="SAGE public goal">
-        <GrowthCounter />
       </section>
     </main>
   );
