@@ -226,6 +226,35 @@ Canonical documentation commits follow these.
 - Current approved landing goal copy: **“Create your plan for free! Help us reach our goal of helping 10,000 businesses improve their sales by improving how they sell!”**
 - Remaining backend verification: run a controlled anonymous journey, confirm funnel/share events and privacy boundaries in D1/Admin, then remove test events so launch analytics contain real-user data only.
 
+
+## 2026-10-01 report/share refinement
+
+Implemented from live owner review:
+
+- Removed the redundant **OUR GOAL** label from the landing mission block.
+- Preserved the approved mission copy: **“Create your plan for free! Help us reach our goal of helping 10,000 businesses improve their sales by improving how they sell!”**
+- Moved **Your Current Sales System** to numbered report section 1 so the diagnostic begins with the reconstructed system before interpretation.
+- Renumbered the remaining report sections accordingly:
+  1. Your Current Sales System
+  2. Highest-Priority Findings
+  3. What Needs Attention
+  4. What Appears Solid
+  5. Your Cross-Through Build Path
+- Reworked Share SAGE so clicking it reveals the visible SAGE URL plus explicit **Copy link / Email / LinkedIn / X / More…** sharing choices rather than silently relying on clipboard behavior.
+- Kept anonymous share telemetry channel-only.
+- Reduced the visual size of the final report share panel.
+- Increased the visual size/emphasis of Build Path action numbers.
+
+### Exact next step after deployment
+
+Re-test the landing page and final report in production, specifically:
+1. landing mission hierarchy after removing **OUR GOAL**;
+2. Share SAGE choices and channel behavior;
+3. final report order and numbering;
+4. Build Path action-number prominence;
+5. then continue the controlled analytics/privacy verification already scheduled.
+
+
 ## Exact next step
 
 **Activate the privacy-first SAGE growth backend, then verify it in production.**
