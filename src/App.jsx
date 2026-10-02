@@ -6,7 +6,7 @@ import {
   shareMessage,
   trackEvent
 } from "./telemetry";
-import { stages } from "./diagnosticConfig";
+import { guideTopics, stages } from "./diagnosticConfig";
 import { buildDiagnostic } from "./diagnosticEngine";
 import {
   deepDiveMeta,
@@ -366,6 +366,65 @@ function getSectionFeedback(stageId, answers) {
   }
 
   return null;
+}
+
+const checkpointFindingIds = {
+  begin: [
+    "unknown_source_contribution",
+    "partial_source_objectives",
+    "undefined_source_objectives",
+    "defined_source_objectives"
+  ],
+  move: [
+    "unmapped_process",
+    "unknown_process",
+    "variable_process",
+    "no_step_objectives",
+    "informal_step_objectives",
+    "partial_step_objectives"
+  ],
+  buyer: [
+    "buyer_requirements_undefined",
+    "buyer_progression_individual",
+    "value_assumed",
+    "value_undefined",
+    "value_unknown",
+    "resolution_incomplete",
+    "resolution_unknown"
+  ],
+  improve: [
+    "cause_assumption",
+    "activity_response"
+  ],
+  execution: [
+    "execution_variation",
+    "execution_unknown"
+  ]
+};
+
+function getCheckpointFinding(stageId, answers) {
+  const ids = checkpointFindingIds[stageId] || [];
+
+  if (ids.length === 0) return null;
+
+  const diagnostic = buildDiagnostic(
+    sanitizeDiagnosticAnswers(answers)
+  );
+
+  const attention = diagnostic.attentionFindings
+    .filter((finding) => ids.includes(finding.id))
+    .sort(
+      (a, b) =>
+        (b.priority || 0) - (a.priority || 0)
+    );
+
+  if (attention.length > 0) {
+    return attention[0];
+  }
+
+  return diagnostic.strengths.find((finding) =>
+    ids.includes(finding.id)
+  ) || null;
 }
 
 function getStageIndex(stageId) {
@@ -849,10 +908,11 @@ function Landing({ onStart }) {
             <div className="landing-step">
               <span>1</span>
               <div>
-                <h3>Answer a short review</h3>
+                <h3>Answer a focused review</h3>
                 <p>
-                  Describe how your business currently sells.
-                  No CRM connection or uploads required.
+                  Give SAGE the essential facts about how your
+                  business currently sells. No CRM connection
+                  or uploads required.
                 </p>
               </div>
             </div>
@@ -862,10 +922,11 @@ function Landing({ onStart }) {
             <div className="landing-step">
               <span>2</span>
               <div>
-                <h3>See your diagnostic</h3>
+                <h3>Get findings as you go</h3>
                 <p>
-                  See your current system, supported findings,
-                  priorities, and what appears solid.
+                  As soon as SAGE has enough evidence to support
+                  an insight, it shows you what it found and why
+                  it matters.
                 </p>
               </div>
             </div>
@@ -875,10 +936,11 @@ function Landing({ onStart }) {
             <div className="landing-step">
               <span>3</span>
               <div>
-                <h3>Go deeper where needed</h3>
+                <h3>See the full diagnostic</h3>
                 <p>
-                  Add evidence selectively and sharpen the parts
-                  of the diagnosis that matter to you.
+                  Get the complete picture, priorities, and build
+                  path—then go deeper only where added evidence is
+                  worth your time.
                 </p>
               </div>
             </div>
@@ -903,7 +965,98 @@ function Landing({ onStart }) {
 // INTRO
 // --------------------------------------------------
 
-function Intro({ onContinue, onBack }) {
+function CrossThroughExplainer({ onBack, onBegin }) {
+  return (
+    <main className="method-shell">
+      <section className="method-card">
+        <div className="eyebrow">
+          THE LENS BEHIND SAGE
+        </div>
+
+        <h1>How SAGE evaluates a sales system.</h1>
+
+        <p className="method-lead">
+          Cross-Through is the sales-improvement methodology behind
+          SAGE. It does not prescribe one universal funnel. It examines
+          whether the way you sell creates the conditions required for
+          opportunities and buyers to progress.
+        </p>
+
+        <div className="method-grid">
+          <article>
+            <span>01</span>
+            <h2>Seller actions need a purpose.</h2>
+            <p>
+              Presence, Presentation, and Confirmation describe the
+              work used to create and advance buyer interest. Important
+              activities should have a defined result—not merely exist
+              because they are customary sales steps.
+            </p>
+          </article>
+
+          <article>
+            <span>02</span>
+            <h2>Buyers have to progress.</h2>
+            <p>
+              Cross-Through looks for movement from awareness to
+              engagement, alignment to favor, resolution to perceived
+              value, and decision to perceived benefit.
+            </p>
+          </article>
+
+          <article>
+            <span>03</span>
+            <h2>Evidence matters more than assumption.</h2>
+            <p>
+              SAGE distinguishes what the business believes is working
+              from what buyer response, results, or other evidence
+              actually support.
+            </p>
+          </article>
+
+          <article>
+            <span>04</span>
+            <h2>Design and execution are different problems.</h2>
+            <p>
+              A sound sales system can be worked poorly, and consistent
+              execution cannot rescue a system whose critical outcomes
+              were never established. SAGE separates those conditions.
+            </p>
+          </article>
+        </div>
+
+        <div className="method-bottom">
+          <strong>What this means for your review</strong>
+          <p>
+            SAGE will ask only enough to establish an initial finding.
+            Verification and deeper investigation are optional when
+            they are not required for a responsible first diagnosis.
+          </p>
+        </div>
+
+        <div className="question-actions">
+          <button
+            type="button"
+            className="back-button"
+            onClick={onBack}
+          >
+            Back
+          </button>
+
+          <button
+            type="button"
+            className="primary-button"
+            onClick={onBegin}
+          >
+            Begin Review
+          </button>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function Intro({ onContinue, onBack, onMethod }) {
   return (
     <main className="intro-shell">
       <section className="intro-card">
@@ -914,22 +1067,31 @@ function Intro({ onContinue, onBack }) {
         <h1>First, let's make your sales system visible.</h1>
 
         <p>
-          The Core Review asks only what SAGE needs to build a
-          useful first diagnostic of how sales begin, move, and
-          convert into buyer decisions.
+          Sales improvement requires change in how you sell. SAGE
+          looks at what your business actually does, compares it with
+          how sales occur—what has to happen for opportunities and
+          buyers to progress—and shows you what appears established,
+          uncertain, or in need of work.
         </p>
 
         <p>
-          At selected checkpoints, you can continue immediately
-          or go deeper. Optional questions add evidence and can
-          make parts of your diagnostic more specific. You can
-          also return to them after seeing your results.
+          The Core Review is now eight focused screens. SAGE will show
+          you supported findings as soon as it has enough information,
+          rather than making you wait until the end for value.
         </p>
 
         <div className="intro-promise">
           No reports to upload. No CRM access. No spreadsheets.
-          You control how deep the review goes.
+          Deeper investigation is optional.
         </div>
+
+        <button
+          type="button"
+          className="method-link"
+          onClick={onMethod}
+        >
+          See the Cross-Through system behind SAGE →
+        </button>
 
         <div className="question-actions">
           <button
@@ -2028,6 +2190,11 @@ function SectionReviewScreen({
     answers
   );
 
+  const insight = getCheckpointFinding(
+    stageId,
+    answers
+  );
+
   return (
     <main className="checkpoint-shell">
       <section className="checkpoint-card">
@@ -2049,6 +2216,30 @@ function SectionReviewScreen({
           {feedback?.text ||
             "SAGE has enough information to continue the Core Review."}
         </p>
+
+        {insight && (
+          <div
+            className={
+              "checkpoint-insight status-card status-" +
+              statusClassName(insight.type)
+            }
+          >
+            <div
+              className="status-accent-line"
+              aria-hidden="true"
+            />
+            <div className="checkpoint-insight-label">
+              INSIGHT SO FAR · {insight.type}
+            </div>
+            <h2>{insight.title}</h2>
+            {insight.support && <p>{insight.support}</p>}
+            {insight.why && (
+              <p className="checkpoint-insight-why">
+                <strong>Why it matters:</strong> {insight.why}
+              </p>
+            )}
+          </div>
+        )}
 
         {meta && depth.available > 0 && (
           <div className="depth-choice">
@@ -3532,6 +3723,16 @@ function SageApp() {
       <Intro
         onContinue={beginQuestions}
         onBack={() => setScreen("landing")}
+        onMethod={() => setScreen("method")}
+      />
+    );
+  }
+
+  if (screen === "method") {
+    content = (
+      <CrossThroughExplainer
+        onBack={() => setScreen("intro")}
+        onBegin={beginQuestions}
       />
     );
   }
