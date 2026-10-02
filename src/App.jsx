@@ -301,7 +301,9 @@ function getSectionFeedback(stageId, answers) {
         : answers.source_evidence ===
             "We rely mostly on experience or judgment"
           ? "Source performance currently relies more on judgment than recorded evidence."
-          : "SAGE has also captured how source performance is evaluated.";
+          : hasValue(answers.source_evidence)
+            ? "SAGE has also captured how source performance is evaluated."
+            : "SAGE already has enough to identify whether important opportunity sources have clearly defined intended results.";
 
     return {
       kicker: "Opportunity picture mapped",
@@ -356,7 +358,9 @@ function getSectionFeedback(stageId, answers) {
         : answers.testing ===
             "We rarely test changes in a structured way"
           ? "Structured testing of sales changes is currently limited."
-          : "SAGE has captured how sales changes are evaluated.";
+          : hasValue(answers.testing)
+            ? "SAGE has captured how sales changes are evaluated."
+            : "SAGE has captured how the business responds when sales results are weaker than expected.";
 
     return {
       kicker: "Improvement discipline mapped",
