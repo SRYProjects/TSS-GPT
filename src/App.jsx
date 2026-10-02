@@ -397,7 +397,7 @@ function statusClassName(status) {
 // HEADER
 // --------------------------------------------------
 
-function Header({ onHome }) {
+function Header({ onHome, showLandingNav = false }) {
   return (
     <header className="site-header">
       <button
@@ -413,6 +413,14 @@ function Header({ onHome }) {
           <small>Sales System Guide</small>
         </span>
       </button>
+
+      {showLandingNav && (
+        <nav className="landing-nav" aria-label="Landing page sections">
+          <a href="#benefits">Benefits</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#mission">Our Mission</a>
+        </nav>
+      )}
     </header>
   );
 }
@@ -764,6 +772,7 @@ function Landing({ onStart }) {
       </section>
 
       <section
+        id="mission"
         className="landing-band landing-goal-band"
         aria-label="SAGE public goal"
       >
@@ -779,7 +788,7 @@ function Landing({ onStart }) {
         </div>
       </section>
 
-      <section className="landing-band landing-benefits-band">
+      <section id="benefits" className="landing-band landing-benefits-band">
         <div className="landing-section-inner">
           <div className="landing-section-heading">
             <div>
@@ -831,7 +840,7 @@ function Landing({ onStart }) {
         </div>
       </section>
 
-      <section className="landing-band landing-how-band">
+      <section id="how-it-works" className="landing-band landing-how-band">
         <div className="landing-section-inner">
           <div className="eyebrow">HOW IT WORKS</div>
           <h2>From insight to improvement in three steps.</h2>
@@ -3658,7 +3667,10 @@ function SageApp() {
 
   return (
     <div className="app">
-      <Header onHome={goHome} />
+      <Header
+        onHome={goHome}
+        showLandingNav={screen === "landing"}
+      />
       {content}
       <SiteFooter />
     </div>
