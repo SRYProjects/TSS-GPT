@@ -1125,7 +1125,9 @@ function Intro({ onContinue, onBack, onMethod }) {
 
 function StageProgress({
   currentStage,
-  progressPercent
+  progressPercent,
+  currentStep,
+  totalSteps
 }) {
   const currentIndex = getStageIndex(currentStage);
 
@@ -1134,7 +1136,7 @@ function StageProgress({
       <div className="overall-progress">
         <div className="overall-progress-copy">
           <span>
-            Section {currentIndex + 1} of {stages.length}
+            Step {currentStep} of {totalSteps} · {stages[currentIndex]?.label || "Review"}
           </span>
           <strong>{progressPercent}% complete</strong>
         </div>
@@ -1956,6 +1958,8 @@ function QuestionScreen({
   onNext,
   onBack,
   progressPercent,
+  currentStep,
+  totalSteps,
   sectionFeedback
 }) {
   const value = answers[question.id];
@@ -2004,6 +2008,8 @@ function QuestionScreen({
       <StageProgress
         currentStage={question.stage}
         progressPercent={progressPercent}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
       />
 
       <div className="question-layout">
@@ -3927,6 +3933,8 @@ function SageApp() {
         progressPercent={getProgressPercent(
           currentIndex
         )}
+        currentStep={currentIndex + 1}
+        totalSteps={flow.length}
       />
     );
   }
