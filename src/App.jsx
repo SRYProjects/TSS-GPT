@@ -2577,7 +2577,7 @@ function FindingCard({ finding, priority = false }) {
 
 function CurrentSystemSection({ system }) {
   return (
-    <section className="report-section">
+    <section id="report-current" className="report-section">
       <div className="report-section-number">01</div>
 
       <div className="report-section-content">
@@ -2665,7 +2665,7 @@ function CurrentSystemSection({ system }) {
 
 function StrengthsSection({ strengths }) {
   return (
-    <section className="report-section strengths-section">
+    <section id="report-strengths" className="report-section strengths-section">
       <div className="report-section-number">04</div>
 
       <div className="report-section-content">
@@ -2717,7 +2717,7 @@ function StrengthsSection({ strengths }) {
 
 function AttentionSection({ findings }) {
   return (
-    <section className="report-section findings-detail-section">
+    <section id="report-attention" className="report-section findings-detail-section">
       <div className="report-section-number">03</div>
 
       <div className="report-section-content">
@@ -2894,7 +2894,7 @@ function PrioritySection({ findings }) {
   let runningNumber = 0;
 
   return (
-    <section className="report-section priority-section">
+    <section id="report-priorities" className="report-section priority-section">
       <div className="report-section-number">02</div>
 
       <div className="report-section-content">
@@ -2949,7 +2949,7 @@ function PrioritySection({ findings }) {
 
 function BuildPathSection({ buildPath }) {
   return (
-    <section className="report-section build-path-section">
+    <section id="report-build" className="report-section build-path-section">
       <div className="report-section-number">05</div>
 
       <div className="report-section-content">
@@ -3033,7 +3033,7 @@ function SystemMapSection({
   };
 
   return (
-    <section className="system-map-section">
+    <section id="report-map" className="system-map-section">
       <div className="eyebrow">
         YOUR SALES SYSTEM AT A GLANCE
       </div>
@@ -3188,6 +3188,153 @@ function ReportDepthPanel({
 // REPORT
 // --------------------------------------------------
 
+function scrollToReportSection(id) {
+  const target = document.getElementById(id);
+
+  if (!target) return;
+
+  target.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+function ReportNavigation() {
+  const items = [
+    ["report-overview", "Overview"],
+    ["report-current", "Your Current System"],
+    ["report-priorities", "Priority Findings"],
+    ["report-attention", "What Needs Attention"],
+    ["report-strengths", "What Appears Solid"],
+    ["report-build", "Your Build Path"]
+  ];
+
+  return (
+    <aside className="report-navigation">
+      <div className="report-navigation-label">
+        YOUR DIAGNOSTIC
+      </div>
+
+      <nav aria-label="Sales system diagnostic sections">
+        {items.map(([id, label]) => (
+          <button
+            type="button"
+            key={id}
+            onClick={() => scrollToReportSection(id)}
+          >
+            <span aria-hidden="true">○</span>
+            {label}
+          </button>
+        ))}
+      </nav>
+    </aside>
+  );
+}
+
+function ReportOverview({ diagnostic }) {
+  const priorities = diagnostic.priorityFindings || [];
+  const attention = diagnostic.attentionFindings || [];
+  const strengths = diagnostic.strengths || [];
+  const buildPath = diagnostic.buildPath || [];
+  const firstPriority = priorities[0];
+  const firstStep = buildPath[0];
+
+  const cards = [
+    {
+      id: "report-current",
+      label: "YOUR SALES SYSTEM",
+      title: "The system SAGE reconstructed",
+      text:
+        "See the opportunity sources, major sales path, buyer context, and other operating conditions established from your answers.",
+      count: null
+    },
+    {
+      id: "report-strengths",
+      label: "WHAT APPEARS ESTABLISHED",
+      title:
+        strengths.length > 0
+          ? strengths.length +
+            " supported " +
+            (strengths.length === 1
+              ? "practice"
+              : "practices")
+          : "No practice was fully established",
+      text:
+        strengths.length > 0
+          ? "These practices have enough supporting evidence to stand apart from the issues requiring attention."
+          : "That does not mean strengths are absent; it means this review did not receive enough evidence to classify one as solid.",
+      count: strengths.length
+    },
+    {
+      id: "report-attention",
+      label: "WHERE IMPROVEMENT MATTERS",
+      title:
+        attention.length > 0
+          ? attention.length +
+            " supported " +
+            (attention.length === 1
+              ? "finding"
+              : "findings")
+          : "No material issue established",
+      text:
+        firstPriority?.title ||
+        "SAGE did not manufacture a deficiency where the supplied evidence did not support one.",
+      count: attention.length
+    },
+    {
+      id: "report-build",
+      label: "WHERE TO START",
+      title:
+        firstStep?.title ||
+        firstPriority?.direction ||
+        "Continue verifying the system",
+      text:
+        firstStep?.why ||
+        firstPriority?.why ||
+        "The review did not establish a corrective action that should take precedence over continued evidence and testing.",
+      count: priorities.length
+    }
+  ];
+
+  return (
+    <section id="report-overview" className="report-overview">
+      <div className="eyebrow">EXECUTIVE OVERVIEW</div>
+
+      <div className="report-overview-heading">
+        <div>
+          <h2>Here’s what SAGE found.</h2>
+          <p>
+            Your business already has a sales system. This
+            diagnostic shows what the available evidence says
+            about how deliberately it is defined, how well its
+            critical parts are supported, and where improvement
+            deserves attention.
+          </p>
+        </div>
+      </div>
+
+      <div className="report-overview-grid">
+        {cards.map((card) => (
+          <button
+            type="button"
+            className="report-overview-card"
+            key={card.id}
+            onClick={() => scrollToReportSection(card.id)}
+          >
+            <div className="report-overview-card-topline">
+              <span>{card.label}</span>
+              <span aria-hidden="true">→</span>
+            </div>
+
+            <h3>{card.title}</h3>
+            <p>{card.text}</p>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function DiagnosticReport({
   diagnostic,
   answers,
@@ -3196,86 +3343,96 @@ function DiagnosticReport({
 }) {
   return (
     <main className="report-shell">
-      <section className="report-hero">
-        <div className="eyebrow">
-          SAGE SALES SYSTEM DIAGNOSTIC
-        </div>
+      <div className="report-layout">
+        <ReportNavigation />
 
-        <h1>Your Sales System Diagnostic</h1>
+        <div className="report-main">
+          <section className="report-hero">
+            <div className="eyebrow">
+              SAGE SALES SYSTEM DIAGNOSTIC
+            </div>
 
-        <p>
-          Here’s how your sales system currently works—and
-          where improvement matters most.
-        </p>
-      </section>
+            <h1>Your Sales System Diagnostic</h1>
 
-      <CurrentSystemSection
-        system={diagnostic.currentSystem}
-      />
+            <p>
+              See what the available evidence says about the
+              sales system you already have—what appears
+              established, what is incomplete or unverified,
+              and where improvement matters most.
+            </p>
+          </section>
 
-      <SystemMapSection
-        systemMap={diagnostic.systemMap || []}
-        answers={answers}
-        onGoDeeper={onGoDeeper}
-      />
+          <ReportOverview diagnostic={diagnostic} />
 
-      <ReportDepthPanel
-        answers={answers}
-        onGoDeeper={onGoDeeper}
-      />
+          <CurrentSystemSection
+            system={diagnostic.currentSystem}
+          />
 
-      <PrioritySection
-        findings={diagnostic.priorityFindings}
-      />
+          <SystemMapSection
+            systemMap={diagnostic.systemMap || []}
+            answers={answers}
+            onGoDeeper={onGoDeeper}
+          />
 
-      <AttentionSection
-        findings={diagnostic.attentionFindings}
-      />
+          <ReportDepthPanel
+            answers={answers}
+            onGoDeeper={onGoDeeper}
+          />
 
-      <StrengthsSection
-        strengths={diagnostic.strengths}
-      />
+          <PrioritySection
+            findings={diagnostic.priorityFindings}
+          />
 
-      <BuildPathSection
-        buildPath={diagnostic.buildPath}
-      />
+          <AttentionSection
+            findings={diagnostic.attentionFindings}
+          />
 
-      <section className="report-share-panel">
-        <div>
-          <div className="depth-label">
-            PASS THE PERSPECTIVE FORWARD
+          <StrengthsSection
+            strengths={diagnostic.strengths}
+          />
+
+          <BuildPathSection
+            buildPath={diagnostic.buildPath}
+          />
+
+          <section className="report-share-panel">
+            <div>
+              <div className="depth-label">
+                PASS THE PERSPECTIVE FORWARD
+              </div>
+              <h2>
+                A fresh view can change the sales conversation.
+              </h2>
+              <p>
+                SAGE is free to use. Put this sales-system view
+                in another sales leader's hands.
+              </p>
+            </div>
+
+            <ShareSageButton
+              className="secondary-accent-button"
+              label="Share SAGE"
+            />
+          </section>
+
+          <div className="report-footer-actions">
+            <button
+              type="button"
+              className="back-button"
+              onClick={() => window.print()}
+            >
+              Print / Save PDF
+            </button>
+
+            <button
+              type="button"
+              className="primary-button"
+              onClick={onRestart}
+            >
+              Start a New Review
+            </button>
           </div>
-          <h2>
-            A fresh view can change the sales conversation.
-          </h2>
-          <p>
-            SAGE is free to use. Put this sales-system view
-            in another sales leader's hands.
-          </p>
         </div>
-
-        <ShareSageButton
-          className="secondary-accent-button"
-          label="Share SAGE"
-        />
-      </section>
-
-      <div className="report-footer-actions">
-        <button
-          type="button"
-          className="back-button"
-          onClick={() => window.print()}
-        >
-          Print / Save PDF
-        </button>
-
-        <button
-          type="button"
-          className="primary-button"
-          onClick={onRestart}
-        >
-          Start a New Review
-        </button>
       </div>
     </main>
   );
