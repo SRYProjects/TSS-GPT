@@ -47,10 +47,10 @@ SAGE has moved from prototype/testing into the live adaptive V1 interface.
 - Browser-local answer persistence via `localStorage`.
 - Browser Print / Save PDF action.
 - Responsive dark navy/charcoal + teal visual system.
-- 12-screen **Core Review** that preserves a useful first diagnostic while reducing mandatory burden.
+- 8-screen **Core Review** that asks only for evidence needed for a legitimate first diagnostic; deeper verification now sits behind findings or in optional Deep Dives.
 - Optional section-level **Deep Dives** that preserve the original diagnostic question bank and supporting verification without forcing every user through it.
 - Users can return from the report to unanswered Deep Dives and regenerate the diagnostic with added evidence.
-- Section checkpoints explain what SAGE has mapped and let the user continue or go deeper.
+- Section checkpoints now deliver progressive diagnostic value: when the evidence supports a finding, SAGE shows the finding and why it matters before asking the user to continue or go deeper.
 - Report now leads with a non-scored **Sales System at a Glance** visual and highest-priority findings before supporting detail.
 - Adaptive-answer sanitization prevents hidden stale follow-up answers from affecting the diagnostic after a branching answer changes.
 - Eligible SAGE Update checkpoints now present the optional Deep Dive as an explicit next-step choice.
@@ -158,7 +158,7 @@ No backend database, authentication, CRM integration, or production AI/API is pr
 
 These are implementation risks to verify, not settled product changes:
 
-1. **The Core Review + Deep Dive architecture is newly committed and requires production testing.** The full question bank is preserved, but only 12 primary screens are mandatory.
+1. **The revised progressive-value Core Review + Deep Dive architecture requires production testing.** The full question bank is preserved, but only 8 primary screens are mandatory; source-performance verification, process-order verification, step evidence, stall analysis, testing verification, and other supporting evidence now live in optional depth where appropriate.
 2. **Deep Dive report regeneration must be verified.** A user should be able to add evidence from the report and return to an updated diagnostic without losing existing answers.
 3. **At-a-glance map language requires real-use validation.** It communicates diagnostic conditions, not scores; confirm that “No material issue identified” is not interpreted as a rating or guarantee.
 4. **“Other” handling:** several answer sets contain “Other,” but the interface does not always collect explanatory text. Evaluate during testing before expanding scope.
@@ -279,6 +279,32 @@ Implemented from live owner review:
 - Commit: `b25b915b` — **Fix Sales Begin deep dive eligibility**.
 - No product decision changed; this is a functional correction aligning Deep Dive eligibility with the current questionnaire copy.
 
+## 2026-10-02 progressive-value redesign
+
+Early user feedback indicated that the review still felt too long and that withholding the methodology/report value until the end reduced perceived return on effort.
+
+Implemented and locked:
+- Reduced the mandatory Core Review from **12 screens to 8 focused screens**.
+- Moved nonessential verification and investigation into optional Deep Dives rather than requiring it before an initial finding.
+- Added **progressive findings** at section checkpoints. When current answers support a responsible finding, SAGE now shows the finding, its supporting evidence, and why it matters before the user continues.
+- Rewrote the introduction to make SAGE's diagnostic logic explicit: it examines what the business actually does against what must occur for opportunities and buyers to progress.
+- Added an optional **Cross-Through explainer** accessible from the introduction. It explains Presence / Presentation / Confirmation, the four buyer-progression relationships, evidence vs. assumption, and system-vs.-execution without forcing methodology training on users.
+- Updated the landing **How It Works** sequence to promise findings during the review rather than value only at the final report.
+- Preserved the full approved question bank through optional depth.
+- Corrected checkpoint copy so it does not claim optional evidence has been captured when the user has not supplied it.
+
+Implementation commits:
+- `0520a37c` — **Shorten SAGE core review to essential questions**
+- `90e1c796` / `eb066256` — **Deliver SAGE insights during the review / Polish progressive diagnostic flow**
+- `4c46e6d6` — **Style progressive findings and method explainer**
+- `6fa26561` — **Align checkpoint copy with shorter core review**
+- `1630b6be` — **Lock progressive-value SAGE experience**
+
+Testing status:
+- Repository logic and branch relationships were audited against the current diagnostic configuration.
+- A local build could not be run from this environment because external GitHub/package network access is unavailable.
+- The new 8-screen journey, progressive findings, Cross-Through explainer, and moved Deep Dives require a fresh production/browser regression before they are considered confirmed.
+
 ## 2026-10-02 current checkpoint
 
 - Full landscape landing-page redesign is deployed to `main`.
@@ -293,14 +319,14 @@ Implemented from live owner review:
 
 ### Exact next step
 
-Run a fresh production regression from the landing page through one **Core Review** with no Deep Dives:
+Run a fresh production regression of the **new progressive-value experience**:
 
-1. Confirm the landing page renders correctly at desktop width, especially header navigation, hero preview, mission band, benefits, How It Works, and both Get Started CTAs.
-2. Confirm every page transition opens at the top of the viewport.
-3. Re-test the revised **How Sales Move** and first **Buyer Progression** questions for clarity.
-4. Complete the Core Review and evaluate the redesigned final report as one coherent story.
-5. Then run one report-driven Deep Dive and verify the report regenerates correctly from the added evidence; include **How Sales Begin** if practical to confirm the corrected source-objective/source-evidence eligibility.
-6. After product-flow approval, verify anonymous D1/Admin telemetry and privacy boundaries, then remove controlled test events.
+1. Confirm the introduction clearly explains how SAGE evaluates the business and that the optional **Cross-Through system** explainer opens, reads clearly, returns correctly, and never blocks the review.
+2. Complete the new **8-screen Core Review** without any Deep Dives. Confirm the reduced burden feels materially shorter and that every transition opens at the top.
+3. At each section checkpoint, verify that SAGE shows a real supported finding when one exists, does not overstate evidence, and does not merely repeat the user's answer.
+4. Confirm the final diagnostic remains coherent and useful despite the reduced mandatory evidence.
+5. From the report, run at least one **How Sales Begin** and one other Deep Dive. Verify moved questions appear correctly, additional evidence regenerates the report, and no Core Review answers are lost.
+6. If the experience passes, verify anonymous D1/Admin telemetry and privacy boundaries, then remove controlled test events.
 
 ## Short remaining V1 roadmap
 
