@@ -77,15 +77,17 @@ Professional services are a separate optional next step. They may investigate fi
 - Preserve the **full approved diagnostic question bank**. Do not delete valuable diagnostic content merely to shorten the journey.
 - Do **not** restore the original questionnaire as one mandatory sequence. The original forced sequence was too burdensome.
 - Divide the experience into a **Core Review + optional Deep Dives**:
-  - the Core Review collects the minimum evidence needed for a legitimate first diagnostic;
+  - the Core Review collects only the evidence needed for a legitimate first diagnostic;
+  - the current Core Review is **8 focused screens**;
+  - verification that is not necessary to support an initial finding moves behind that finding or into optional depth;
   - Deep Dives preserve additional verification, cause/evidence, buyer-progression, process-variation, testing, and execution questions that can materially make a finding more specific or better supported.
 - Deep Dives are voluntary. At selected section checkpoints, users may **Continue** or **Go deeper in this area**. The interface must explain the value of the additional effort.
 - Skipping a Deep Dive is never evidence of weakness. SAGE must not convert “not investigated” into a deficiency. Where appropriate, the report should state that additional evidence could sharpen that area.
 - The first report must remain genuinely useful from Core Review answers alone.
 - From the report, users should be able to return to relevant optional depth, provide more evidence, and regenerate a richer diagnostic without losing existing answers.
 - Continue using the six sections. Show **Section N of 6** plus an honest Core Review completion percentage. Optional Deep Dives do not make the user's required progress move backward.
-- At major section transitions, provide concise, evidence-bounded feedback about what SAGE has mapped or established so far. These **SAGE Update** breaks are a valued part of the experience and should be preserved.
-- Optional Deep Dives must be visually unmistakable at eligible SAGE Update checkpoints, with an explicit choice between continuing the Core Review and going deeper.
+- At major section transitions, provide **real diagnostic value**, not merely progress acknowledgment. As soon as the available answers support a responsible finding, show the user the finding, the evidence supporting it, and why it matters. These progressive insights should make SAGE earn the next question rather than withholding value until the final report.
+- Optional Deep Dives must be visually unmistakable at eligible checkpoints, with an explicit choice between continuing the Core Review and going deeper. Deeper verification should normally follow an initial finding rather than precede it when the verification is not required to make that finding responsibly.
 - The report must also surface a conspicuous, centralized opportunity to add evidence by area; do not rely only on small links inside individual cards.
 - Wherever SAGE declares a diagnostic condition such as **Solid, Incomplete, Disconnected, Unverified, Unknown, Performance Problem, or Execution Exposure**, pair the text with a consistent visual status indicator (colored accent line and dot). Color is supplemental to the written label, never a score.
 - Adaptive questioning remains governed by stop / verify / clarify. Verification that is not essential to the first responsible finding belongs in optional depth.
@@ -199,6 +201,8 @@ V1 does **not**:
 - Where skipped optional depth could materially sharpen an area, the report may offer **Go deeper in this area** and return the user to the relevant optional questions.
 - The client-facing print/PDF version requires a dedicated document layout; it must not rely on simply printing the web-card presentation.
 - Use ordinary business language in the interface. Cross-Through terminology belongs primarily in analysis/report guidance, not as required user vocabulary.
+- Do not hide the existence of the methodology. Before the review begins, explain the diagnostic lens in plain language: sales improvement requires changing how the business sells; SAGE examines what the business actually does against the conditions required for opportunities and buyers to progress, then identifies what appears established, uncertain, or in need of work.
+- Provide an optional **Cross-Through explainer** from the review introduction for users who want to understand the methodology. It must never block the review. The explainer may introduce Presence, Presentation, Confirmation, the four buyer Cross-Through relationships, evidence vs. assumption, and system-vs.-execution discipline without turning the diagnostic into methodology training.
 - SAGE should be used lightly as the product/guide identity; no fake-human chatter or cute AI personality.
 - Current landing headline: **“Improve your sales by improving how you sell.”**
 - Current supporting proposition: the business already has a sales system; SAGE helps it understand what is working, what is missing, and where improvement matters.
