@@ -224,15 +224,15 @@ function deepDiveQuestionApplies(
 
   if (question.id === "source_objective_verification") {
     return [
-      "Yes, for each important source",
-      "For the most important sources"
+      "Each important activity has a specific intended result",
+      "Some do, but others are less clearly defined"
     ].includes(answers.source_objectives);
   }
 
   if (question.id === "source_evidence_verification") {
     return [
-      "Yes, we track meaningful results for each important source",
-      "We track results for some sources"
+      "We track the result of each important source",
+      "We track some sources but not others"
     ].includes(answers.source_evidence);
   }
 
