@@ -305,6 +305,40 @@ Testing status:
 - A local build could not be run from this environment because external GitHub/package network access is unavailable.
 - The new 8-screen journey, progressive findings, Cross-Through explainer, and moved Deep Dives require a fresh production/browser regression before they are considered confirmed.
 
+## 2026-10-02 executive-report redesign
+
+Locked and implemented from owner review of the earlier Sales Opportunity Finder concept:
+
+- Added a new **Executive Overview** at the top of the SAGE diagnostic report.
+- Overview cards summarize:
+  - the reconstructed sales system;
+  - what appears established from evidence;
+  - where improvement matters;
+  - where to start.
+- Added persistent desktop report navigation with compact small-screen fallback:
+  - Overview
+  - Your Current System
+  - Priority Findings
+  - What Needs Attention
+  - What Appears Solid
+  - Your Build Path
+- Overview cards are navigational and open the relevant detailed report section rather than replacing evidence.
+- Widened the report layout to accommodate navigation without compressing diagnostic content.
+- Preserved the existing Sales System at a Glance, optional Deep Dive panel, evidence accordions, and Cross-Through Build Path.
+- Changed review progress from section-only language to explicit **Step X of 8 · Section Name** plus percentage so the finite effort is unmistakable.
+- Refined user-facing language to avoid implying established sellers need SAGE to “understand how you sell.” SAGE now frames its role as evaluating the sales system already in place for deliberate definition, evidence, completeness, connection, execution, and improvement opportunity.
+
+Implementation commits:
+- `3d55e8d8` — **Add navigable SAGE diagnostic overview**
+- `9572ddc1` — **Style diagnostic overview and report navigation**
+- `e46b16f6` — **Show finite eight-step review progress**
+- `0f7bdc60` — **Refine SAGE system-evaluation language**
+- `e0424389` — **Lock executive diagnostic report architecture**
+
+Testing status:
+- Repository implementation was inspected after the changes.
+- Browser/production regression remains required for desktop sticky navigation, small-screen horizontal navigation, overview-card scrolling, the 8-step progress display, and report print behavior.
+
 ## 2026-10-02 current checkpoint
 
 - Full landscape landing-page redesign is deployed to `main`.
@@ -319,14 +353,15 @@ Testing status:
 
 ### Exact next step
 
-Run a fresh production regression of the **new progressive-value experience**:
+Run a fresh production regression of the **8-step progressive-value review and redesigned report**:
 
-1. Confirm the introduction clearly explains how SAGE evaluates the business and that the optional **Cross-Through system** explainer opens, reads clearly, returns correctly, and never blocks the review.
-2. Complete the new **8-screen Core Review** without any Deep Dives. Confirm the reduced burden feels materially shorter and that every transition opens at the top.
-3. At each section checkpoint, verify that SAGE shows a real supported finding when one exists, does not overstate evidence, and does not merely repeat the user's answer.
-4. Confirm the final diagnostic remains coherent and useful despite the reduced mandatory evidence.
-5. From the report, run at least one **How Sales Begin** and one other Deep Dive. Verify moved questions appear correctly, additional evidence regenerates the report, and no Core Review answers are lost.
-6. If the experience passes, verify anonymous D1/Admin telemetry and privacy boundaries, then remove controlled test events.
+1. Complete the Core Review without Deep Dives. Confirm the header now makes the finite effort explicit as **Step X of 8 · Section Name** and that progress remains accurate.
+2. Confirm each progressive checkpoint delivers a supported insight when evidence permits and never overstates what has been established.
+3. Open the final diagnostic and evaluate the new **Executive Overview** as the first payoff: it should make the system, established practices, attention findings, and starting point immediately legible.
+4. Test every report-navigation item and every Executive Overview card. Confirm each moves to the intended detailed section and that sticky desktop navigation does not crowd or obscure content.
+5. Test the compact report navigation on a narrow/mobile viewport.
+6. Run at least one report-driven Deep Dive and verify the report regenerates without losing navigation, overview accuracy, or existing answers.
+7. Verify Print / Save PDF still excludes report navigation and remains functional; dedicated client-ready PDF design remains a separate roadmap item.
 
 ## Short remaining V1 roadmap
 
