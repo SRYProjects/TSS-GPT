@@ -6,7 +6,7 @@ import {
   shareMessage,
   trackEvent
 } from "./telemetry";
-import { guideTopics, stages } from "./diagnosticConfig";
+import { stages } from "./diagnosticConfig";
 import { buildDiagnostic } from "./diagnosticEngine";
 import {
   deepDiveMeta,
