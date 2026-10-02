@@ -278,12 +278,12 @@ textarea:focus-visible {
 }
 
 .landing-hero {
-  min-height: 650px;
-  padding: 70px 0 78px;
+  min-height: 720px;
+  padding: 78px 0 90px;
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(520px, 1.1fr);
+  grid-template-columns: minmax(0, 0.92fr) minmax(580px, 1.08fr);
   align-items: center;
-  gap: 64px;
+  gap: 72px;
 }
 
 .landing-copy {
@@ -291,26 +291,26 @@ textarea:focus-visible {
 }
 
 .landing-copy h1 {
-  max-width: 660px;
+  max-width: 700px;
   margin: 0;
-  font-size: clamp(48px, 5vw, 72px);
-  line-height: 0.99;
-  letter-spacing: -0.048em;
+  font-size: clamp(58px, 5.8vw, 84px);
+  line-height: 0.97;
+  letter-spacing: -0.052em;
   font-weight: 770;
 }
 
 .landing-lead {
-  max-width: 610px;
-  margin: 28px 0 0;
+  max-width: 640px;
+  margin: 30px 0 0;
   color: var(--text-soft);
-  font-size: 18px;
-  line-height: 1.68;
+  font-size: 20px;
+  line-height: 1.62;
 }
 
 .landing-statement {
-  margin: 24px 0 0;
+  margin: 25px 0 0;
   color: var(--text);
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
 }
 
@@ -332,9 +332,9 @@ textarea:focus-visible {
 }
 
 .landing-note {
-  margin-top: 14px;
+  margin-top: 15px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .landing-visual {
@@ -347,8 +347,8 @@ textarea:focus-visible {
    ========================================================= */
 
 .product-preview {
-  width: min(100%, 620px);
-  min-height: 430px;
+  width: min(100%, 700px);
+  min-height: 500px;
   overflow: hidden;
   border: 1px solid rgba(85, 216, 196, 0.33);
   border-radius: 20px;
@@ -367,8 +367,8 @@ textarea:focus-visible {
 }
 
 .preview-chrome {
-  height: 46px;
-  padding: 0 16px;
+  height: 50px;
+  padding: 0 18px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -388,13 +388,13 @@ textarea:focus-visible {
 }
 
 .preview-body {
-  padding: 24px;
+  padding: 28px;
 }
 
 .preview-kicker,
 .preview-label {
   color: var(--accent);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -411,13 +411,13 @@ textarea:focus-visible {
 .preview-heading-row h2 {
   margin: 0;
   color: var(--text);
-  font-size: 22px;
-  line-height: 1.15;
+  font-size: 27px;
+  line-height: 1.12;
 }
 
 .preview-heading-row > span {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .preview-status-grid {
@@ -427,8 +427,8 @@ textarea:focus-visible {
 }
 
 .preview-status {
-  min-height: 82px;
-  padding: 13px;
+  min-height: 96px;
+  padding: 15px;
   border: 1px solid var(--border);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.018);
@@ -439,12 +439,12 @@ textarea:focus-visible {
 
 .preview-status span {
   color: var(--text-soft);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.25;
 }
 
 .preview-status strong {
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.08em;
 }
 
@@ -476,11 +476,11 @@ textarea:focus-visible {
 
 .preview-priority strong {
   display: block;
-  max-width: 430px;
-  margin-top: 8px;
+  max-width: 470px;
+  margin-top: 9px;
   color: var(--text);
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 17px;
+  line-height: 1.42;
 }
 
 .preview-arrow {
@@ -506,12 +506,12 @@ textarea:focus-visible {
 
 .preview-build-heading strong {
   color: var(--text);
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .preview-build-heading span {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .preview-build-steps {
@@ -542,10 +542,10 @@ textarea:focus-visible {
 }
 
 .preview-build-steps p {
-  margin: 7px 0 0;
-  color: var(--muted);
-  font-size: 9px;
-  line-height: 1.35;
+  margin: 8px 0 0;
+  color: var(--text-soft);
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 .preview-build-steps i {
@@ -563,7 +563,7 @@ textarea:focus-visible {
    ========================================================= */
 
 .landing-goal-band {
-  min-height: 255px;
+  min-height: 285px;
   overflow: hidden;
   background:
     radial-gradient(
@@ -579,7 +579,7 @@ textarea:focus-visible {
 }
 
 .landing-goal-band .landing-section-inner {
-  padding: 44px 0;
+  padding: 52px 0;
 }
 
 .landing-goal-landscape {
@@ -646,7 +646,7 @@ textarea:focus-visible {
    ========================================================= */
 
 .landing-benefits-band {
-  padding: 62px 0 66px;
+  padding: 78px 0 82px;
   background:
     linear-gradient(
       180deg,
@@ -664,9 +664,9 @@ textarea:focus-visible {
 
 .landing-section-heading h2,
 .landing-how-band h2 {
-  margin: 8px 0 0;
+  margin: 9px 0 0;
   color: var(--text);
-  font-size: clamp(30px, 4vw, 46px);
+  font-size: clamp(38px, 4.4vw, 54px);
   line-height: 1.05;
   letter-spacing: -0.035em;
 }
@@ -674,20 +674,20 @@ textarea:focus-visible {
 .landing-section-heading > p {
   margin: 0;
   color: var(--text-soft);
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: 18px;
+  line-height: 1.62;
 }
 
 .landing-benefits-grid {
-  margin-top: 30px;
+  margin-top: 36px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 13px;
 }
 
 .landing-benefit-card {
-  min-height: 160px;
-  padding: 22px;
+  min-height: 205px;
+  padding: 28px;
   border: 1px solid var(--border);
   border-radius: 14px;
   background:
@@ -703,8 +703,8 @@ textarea:focus-visible {
 }
 
 .landing-benefit-icon {
-  width: 48px;
-  height: 48px;
+  width: 58px;
+  height: 58px;
   display: grid;
   place-items: center;
   border: 1px solid rgba(85, 216, 196, 0.24);
@@ -715,16 +715,16 @@ textarea:focus-visible {
 }
 
 .landing-benefit-card h3 {
-  margin: 2px 0 8px;
+  margin: 2px 0 10px;
   color: var(--text);
-  font-size: 15px;
-  line-height: 1.35;
+  font-size: 19px;
+  line-height: 1.3;
 }
 
 .landing-benefit-card p {
   margin: 0;
-  color: var(--muted);
-  font-size: 12px;
+  color: var(--text-soft);
+  font-size: 15px;
   line-height: 1.58;
 }
 
@@ -733,7 +733,7 @@ textarea:focus-visible {
    ========================================================= */
 
 .landing-how-band {
-  padding: 56px 0 70px;
+  padding: 72px 0 86px;
   background:
     radial-gradient(
       circle at 50% 0,
@@ -743,7 +743,7 @@ textarea:focus-visible {
 }
 
 .landing-steps {
-  margin-top: 32px;
+  margin-top: 40px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr) 40px minmax(0, 1fr);
   gap: 18px;
@@ -752,13 +752,13 @@ textarea:focus-visible {
 
 .landing-step {
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
-  gap: 15px;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 18px;
 }
 
 .landing-step > span {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   display: grid;
   place-items: center;
   border: 1px solid var(--accent);
@@ -768,27 +768,33 @@ textarea:focus-visible {
 }
 
 .landing-step h3 {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   color: var(--text);
-  font-size: 15px;
+  font-size: 19px;
 }
 
 .landing-step p {
   margin: 0;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.55;
+  color: var(--text-soft);
+  font-size: 15px;
+  line-height: 1.58;
 }
 
 .landing-step-connector {
-  padding-top: 8px;
-  color: rgba(85, 216, 196, 0.5);
-  font-size: 22px;
+  padding-top: 12px;
+  color: rgba(85, 216, 196, 0.62);
+  font-size: 28px;
   text-align: center;
 }
 
 .landing-bottom-cta {
-  margin-top: 38px;
+  margin-top: 50px;
+}
+
+.landing-bottom-cta .primary-button {
+  min-width: 190px;
+  min-height: 56px;
+  font-size: 16px;
 }
 
 @media (max-width: 1050px) {
@@ -3097,8 +3103,8 @@ textarea:focus-visible {
   min-height: 165px;
   padding: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 220px;
-  gap: 56px;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: 72px;
   align-items: center;
 }
 
@@ -3110,7 +3116,7 @@ textarea:focus-visible {
 
 .growth-counter-headline {
   color: var(--text);
-  font-size: clamp(2rem, 4vw, 3.3rem);
+  font-size: clamp(2.5rem, 4.6vw, 3.8rem);
   font-weight: 780;
   line-height: 1.04;
   letter-spacing: -0.04em;
@@ -3118,7 +3124,7 @@ textarea:focus-visible {
 
 .growth-counter-line {
   color: var(--text-soft);
-  font-size: clamp(1rem, 1.65vw, 1.3rem);
+  font-size: clamp(1.2rem, 1.9vw, 1.55rem);
   line-height: 1.5;
 }
 
@@ -3131,8 +3137,8 @@ textarea:focus-visible {
 .growth-counter-ring {
   --goal-progress: 0deg;
   position: relative;
-  width: 138px;
-  height: 138px;
+  width: 164px;
+  height: 164px;
   border-radius: 50%;
   background:
     conic-gradient(
@@ -3169,21 +3175,21 @@ textarea:focus-visible {
 
 .growth-counter-ring-inner strong {
   color: var(--text);
-  font-size: 2.35rem;
+  font-size: 2.85rem;
   line-height: 1;
   font-weight: 500;
 }
 
 .growth-counter-ring-inner span {
-  margin-top: 6px;
+  margin-top: 7px;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.95rem;
   font-weight: 700;
 }
 
 .growth-counter-remaining {
   color: var(--text-soft);
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 750;
 }
 
