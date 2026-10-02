@@ -7,27 +7,15 @@ const coreScreenDefinitions = [
   },
   {
     questionId: "sales_sources",
-    embedded: ["top_sources"]
-  },
-  {
-    questionId: "source_objectives",
-    embedded: []
-  },
-  {
-    questionId: "source_evidence",
-    embedded: []
+    embedded: ["source_objectives"]
   },
   {
     questionId: "process_clarity",
-    embedded: []
-  },
-  {
-    questionId: "process_steps",
-    embedded: []
+    embedded: ["process_steps"]
   },
   {
     questionId: "step_objectives",
-    embedded: ["step_evidence"]
+    embedded: []
   },
   {
     questionId: "buyer_understanding",
@@ -38,12 +26,8 @@ const coreScreenDefinitions = [
     embedded: []
   },
   {
-    questionId: "stall_point",
-    embedded: []
-  },
-  {
     questionId: "weak_result_response",
-    embedded: ["testing"]
+    embedded: []
   },
   {
     questionId: "execution",
@@ -52,8 +36,7 @@ const coreScreenDefinitions = [
 ];
 
 const coreFollowUpIds = new Set([
-  "assessment_scope_detail",
-  "process_order"
+  "assessment_scope_detail"
 ]);
 
 export const deepDiveMeta = {
@@ -91,12 +74,15 @@ export const deepDiveMeta = {
 
 const deepDiveDefinitions = {
   begin: [
+    { id: "top_sources" },
     { id: "source_objective_verification" },
-    { id: "source_evidence_verification" }
+    { id: "source_evidence" }
   ],
   move: [
+    { id: "process_order" },
     { id: "different_path" },
-    { id: "step_objective_verification" }
+    { id: "step_objective_verification" },
+    { id: "step_evidence" }
   ],
   buyer: [
     { id: "buyer_preference" },
@@ -104,11 +90,10 @@ const deepDiveDefinitions = {
     { id: "readiness_evidence" },
     { id: "value_evidence" },
     { id: "resolution_details" },
-    { id: "stall_reason" },
-    { id: "stall_confidence" }
+    { id: "stall_point" }
   ],
   improve: [
-    { id: "testing_verification" }
+    { id: "testing" }
   ],
   execution: [
     { id: "execution_exposures" },
