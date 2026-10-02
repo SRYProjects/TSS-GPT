@@ -272,6 +272,13 @@ Implemented from live owner review:
 - Added a second Get Started CTA at the end of the page.
 - Preserved Share SAGE and the existing diagnostic flow.
 
+## 2026-10-02 regression-prep correction
+
+- Audited the Core Review / Deep Dive gating before the next production pass.
+- Fixed stale answer-string comparisons in `src/diagnosticExperience.js` that could incorrectly suppress the **How Sales Begin** source-objective and source-evidence Deep Dive questions after valid Core Review answers.
+- Commit: `b25b915b` — **Fix Sales Begin deep dive eligibility**.
+- No product decision changed; this is a functional correction aligning Deep Dive eligibility with the current questionnaire copy.
+
 ## 2026-10-02 current checkpoint
 
 - Full landscape landing-page redesign is deployed to `main`.
@@ -292,7 +299,7 @@ Run a fresh production regression from the landing page through one **Core Revie
 2. Confirm every page transition opens at the top of the viewport.
 3. Re-test the revised **How Sales Move** and first **Buyer Progression** questions for clarity.
 4. Complete the Core Review and evaluate the redesigned final report as one coherent story.
-5. Then run one report-driven Deep Dive and verify the report regenerates correctly from the added evidence.
+5. Then run one report-driven Deep Dive and verify the report regenerates correctly from the added evidence; include **How Sales Begin** if practical to confirm the corrected source-objective/source-evidence eligibility.
 6. After product-flow approval, verify anonymous D1/Admin telemetry and privacy boundaries, then remove controlled test events.
 
 ## Short remaining V1 roadmap
