@@ -801,9 +801,10 @@ function Landing({ onStart }) {
             </h1>
 
             <p className="landing-lead">
-              You already have a sales system. SAGE helps you
-              understand it, see what's working, uncover what's
-              missing, and determine where improvement matters.
+              You already have a sales system. SAGE evaluates
+              its critical parts, shows what appears established,
+              exposes what is incomplete or unverified, and
+              identifies where improvement matters.
             </p>
 
             <p className="landing-statement">
@@ -870,10 +871,10 @@ function Landing({ onStart }) {
             <article className="landing-benefit-card">
               <span className="landing-benefit-icon">◎</span>
               <div>
-                <h3>See your current sales system</h3>
+                <h3>Evaluate your current sales system</h3>
                 <p>
-                  Understand what's working, what's missing,
-                  and how your sales operation actually works.
+                  See which parts appear deliberately established,
+                  supported by evidence, incomplete, or uncertain.
                 </p>
               </div>
             </article>
@@ -914,9 +915,9 @@ function Landing({ onStart }) {
               <div>
                 <h3>Answer a focused review</h3>
                 <p>
-                  Give SAGE the essential facts about how your
-                  business currently sells. No CRM connection
-                  or uploads required.
+                  Give SAGE the essential facts about your
+                  current sales system. No CRM connection or
+                  uploads required.
                 </p>
               </div>
             </div>
@@ -2467,7 +2468,7 @@ function CompleteScreen({
         </div>
 
         <h1>
-          Now let's make sense of how you sell.
+          Now let's put the evidence together.
         </h1>
 
         <p>
