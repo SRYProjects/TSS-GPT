@@ -178,6 +178,25 @@ textarea:focus-visible {
   text-transform: uppercase;
 }
 
+.landing-nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.landing-nav a {
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.landing-nav a:hover {
+  color: var(--accent-bright);
+}
+
 /* =========================================================
    SHARED
    ========================================================= */
@@ -264,17 +283,49 @@ textarea:focus-visible {
 }
 
 .landing-hero-band {
+  overflow: hidden;
   background:
     radial-gradient(
-      circle at 77% 38%,
-      rgba(85, 216, 196, 0.075),
-      transparent 30%
+      circle at 76% 36%,
+      rgba(85, 216, 196, 0.13),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 54% 92%,
+      rgba(85, 216, 196, 0.055),
+      transparent 34%
     ),
     linear-gradient(
       180deg,
-      rgba(8, 19, 26, 0.22),
+      rgba(8, 19, 26, 0.3),
       rgba(5, 13, 18, 0.04)
     );
+}
+
+.landing-hero-band::before,
+.landing-hero-band::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  border: 1px solid rgba(85, 216, 196, 0.075);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.landing-hero-band::before {
+  width: 900px;
+  height: 500px;
+  right: -150px;
+  top: 90px;
+  transform: rotate(-8deg);
+}
+
+.landing-hero-band::after {
+  width: 1100px;
+  height: 420px;
+  left: 34%;
+  bottom: -260px;
+  transform: rotate(-6deg);
 }
 
 .landing-hero {
@@ -818,6 +869,10 @@ textarea:focus-visible {
 }
 
 @media (max-width: 820px) {
+  .landing-nav {
+    display: none;
+  }
+
   .landing-section-heading {
     grid-template-columns: 1fr;
     gap: 16px;
