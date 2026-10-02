@@ -245,6 +245,11 @@ Implemented from live owner review:
 - Reduced the visual size of the final report share panel.
 - Increased the visual size/emphasis of Build Path action numbers.
 
+## 2026-10-01 header nav correction
+
+- Fixed landing-only section links rendering with browser-default blue/purple underlined styles.
+- Explicitly styled normal, visited, hover, and active anchor states so the header remains consistent with the SAGE dark/teal visual system.
+
 ## 2026-10-01 dramatic landing refinement
 
 - Reworked the deployed landscape landing page to match the stronger approved visual direction rather than the flatter first implementation.
