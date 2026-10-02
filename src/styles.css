@@ -185,12 +185,15 @@ textarea:focus-visible {
   gap: 32px;
 }
 
-.landing-nav a {
+.landing-nav a,
+.landing-nav a:visited,
+.landing-nav a:hover,
+.landing-nav a:active {
   color: var(--text-soft);
   font-size: 13px;
   font-weight: 700;
+  line-height: 1;
   text-decoration: none;
-  transition: color 140ms ease;
 }
 
 .landing-nav a:hover {
