@@ -272,33 +272,32 @@ Implemented from live owner review:
 - Added a second Get Started CTA at the end of the page.
 - Preserved Share SAGE and the existing diagnostic flow.
 
+## 2026-10-02 current checkpoint
+
+- Full landscape landing-page redesign is deployed to `main`.
+- Hero now uses a realistic SAGE diagnostic preview rather than the former abstract sales-system graphic.
+- Landing page is structured as four horizontal sections: Hero, Public Goal, Why SAGE, and How It Works.
+- Public goal remains **1,000 companies** with a truthful live completion count and **X to go!**.
+- Landing typography and section scale were increased to match the stronger approved concept.
+- Landing-only navigation links (**Benefits / How It Works / Our Mission**) were corrected so normal, visited, hover, and active states no longer fall back to browser-default blue/purple underlined styles.
+- Global screen-transition top positioning is in place.
+- Clarified Core Review wording for informal/unmapped sales processes and corrected the singular/plural checkpoint bug.
+- Growth backend is already active and configured; do not repeat backend setup.
+
 ### Exact next step
 
-**Production-test the current V1 journey after the 2026-10-01 UX corrections.**
+Run a fresh production regression from the landing page through one **Core Review** with no Deep Dives:
 
-1. Verify the deployed full landscape Landing page:
-   - hero product preview is clear and persuasive;
-   - mission band feels intentional and distinct;
-   - live counter/ring renders correctly;
-   - benefits and How It Works sections read cleanly;
-   - both Get Started CTAs work;
-   - mobile layout remains coherent.
-2. Start a fresh **Core Review** and verify every transition opens at the top of the new screen.
-3. Re-test the clarified **How Sales Move** questions:
-   - sales-path clarity;
-   - major activities between buyer interest and win/loss;
-   - expected result of each activity;
-   - evidence that the activity achieved its intended result.
-4. Re-test the clarified first **Buyer Progression** question.
-5. Complete the Core Review without Deep Dives and evaluate the redesigned report as a coherent story.
-6. Then run one report-driven Deep Dive and verify that added evidence regenerates and sharpens the diagnostic correctly.
-7. After product-flow approval, verify anonymous D1/Admin telemetry and privacy boundaries and remove controlled test events.
-
-The growth backend itself is already activated: D1, production binding, migration, live stats endpoint, and admin token/dashboard are configured. Do not repeat backend activation.
+1. Confirm the landing page renders correctly at desktop width, especially header navigation, hero preview, mission band, benefits, How It Works, and both Get Started CTAs.
+2. Confirm every page transition opens at the top of the viewport.
+3. Re-test the revised **How Sales Move** and first **Buyer Progression** questions for clarity.
+4. Complete the Core Review and evaluate the redesigned final report as one coherent story.
+5. Then run one report-driven Deep Dive and verify the report regenerates correctly from the added evidence.
+6. After product-flow approval, verify anonymous D1/Admin telemetry and privacy boundaries, then remove controlled test events.
 
 ## Short remaining V1 roadmap
 
-1. Activate and production-test the anonymous growth counter / telemetry / admin backend.
+1. Production-test the anonymous growth counter / telemetry / admin backend.
 2. Production-test the Core Review, one skipped-depth path, and one report-driven Deep Dive.
 3. Fix any functional/diagnostic defects found in that test.
 4. Refine report density and at-a-glance language from real-use feedback.
