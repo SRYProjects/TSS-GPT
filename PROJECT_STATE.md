@@ -245,6 +245,15 @@ Implemented from live owner review:
 - Reduced the visual size of the final report share panel.
 - Increased the visual size/emphasis of Build Path action numbers.
 
+## 2026-10-01 dramatic landing refinement
+
+- Reworked the deployed landscape landing page to match the stronger approved visual direction rather than the flatter first implementation.
+- Increased hero headline, supporting copy, section headings, benefit-card copy, How It Works copy, mission typography, progress ring, and product-preview typography for comfortable reading.
+- Enlarged and strengthened the SAGE product preview so it functions as a persuasive product demonstration rather than decorative UI.
+- Increased spacing and section height to restore the dramatic landscape rhythm of the approved concept.
+- Added subtle teal hero arcs/glow and compact landing-only section navigation for **Benefits / How It Works / Our Mission**.
+- Did not add unsupported capabilities such as sign-in, scoring, or fabricated metrics.
+
 ## 2026-10-01 full landing-page redesign deployed
 
 - Replaced the abstract Opportunity / Process / Buyer / Sale hero graphic with a realistic **SAGE diagnostic preview** showing diagnostic conditions, a priority finding, and a build path. No score/grade was introduced.
