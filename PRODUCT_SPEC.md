@@ -201,11 +201,12 @@ V1 does **not**:
 - Where skipped optional depth could materially sharpen an area, the report may offer **Go deeper in this area** and return the user to the relevant optional questions.
 - The client-facing print/PDF version requires a dedicated document layout; it must not rely on simply printing the web-card presentation.
 - Use ordinary business language in the interface. Cross-Through terminology belongs primarily in analysis/report guidance, not as required user vocabulary.
+- Avoid framing the product as teaching an established seller to “understand how you sell.” That language can imply incompetence. SAGE assumes an existing sales system and evaluates how deliberately it is defined, how complete and connected it is, what evidence supports it, and where improvement deserves attention.
 - Do not hide the existence of the methodology. Before the review begins, explain the diagnostic lens in plain language: sales improvement requires changing how the business sells; SAGE examines what the business actually does against the conditions required for opportunities and buyers to progress, then identifies what appears established, uncertain, or in need of work.
 - Provide an optional **Cross-Through explainer** from the review introduction for users who want to understand the methodology. It must never block the review. The explainer may introduce Presence, Presentation, Confirmation, the four buyer Cross-Through relationships, evidence vs. assumption, and system-vs.-execution discipline without turning the diagnostic into methodology training.
 - SAGE should be used lightly as the product/guide identity; no fake-human chatter or cute AI personality.
 - Current landing headline: **“Improve your sales by improving how you sell.”**
-- Current supporting proposition: the business already has a sales system; SAGE helps it understand what is working, what is missing, and where improvement matters.
+- Current supporting proposition: every actively selling business already has a sales system; SAGE evaluates whether its critical parts are deliberately established, connected, supported by evidence, and being executed consistently, then identifies where improvement matters.
 - Public-goal treatment is locked to:
   - **Help us reach our goal of 1,000.**
   - **Get your FREE sales improvement report.**
