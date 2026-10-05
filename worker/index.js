@@ -12,11 +12,19 @@ const ALLOWED_EVENTS = new Set([
 
 const ALLOWED_STAGES = new Set([
   "",
+  // Legacy stage ids are retained for historical events already stored in D1.
   "business",
   "begin",
   "move",
   "buyer",
   "improve",
+  // Current Cross-Through review stage ids.
+  "foundation",
+  "awareness",
+  "alignment",
+  "resolution",
+  "decision",
+  "process",
   "execution"
 ]);
 
