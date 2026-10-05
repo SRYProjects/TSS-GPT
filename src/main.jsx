@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import SageV2 from "./SageV2";
 import "./styles.css";
+import "./sageV2.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <SageV2 />
   </React.StrictMode>
 );
