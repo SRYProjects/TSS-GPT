@@ -97,17 +97,42 @@ Completed:
 - recent commits reviewed;
 - legacy conflicts against the new governing specification identified.
 
-### Automated build
-A GitHub Actions validation workflow has been added and triggered for the migration branch / draft PR.
+### Automated validation
+GitHub Actions validation is green on the migration branch / draft PR.
 
-Validation command:
+Validation steps:
 - `npm install`
+- `node src/sageV2Test.js`
 - `npm run build`
 
-**Status at time of this checkpoint:** running / awaiting final result.
+Confirmed on source commit `972c4f1f`:
+- diagnostic invariant tests passed;
+- Vite production build passed;
+- PR validation passed.
+
+The invariant suite currently verifies:
+- Foundation questions remain state-free;
+- explicit lack of tracking maps to NO VERIFICATION;
+- partial capability maps to NO;
+- distinct-sales-line trigger behavior;
+- skipped Process Deep Dive remains neutral;
+- opened-but-blank process objectives map to UNKNOWN;
+- unreached milestones remain neutral;
+- supported Awareness answers can produce a clear milestone.
 
 ### Browser / production
 Not yet performed for V2. Production remains on the old main-branch application.
+
+## Static semantic audit
+
+The active V2 entry path was checked after implementation:
+
+- no legacy Incomplete / Disconnected / Unverified / Performance Problem / Execution Exposure / Solid taxonomy remains in active V2 source;
+- no B2B-only framing remains in active V2 source;
+- no Step X of Y, completion percentage, or percentage text remains in active V2 source;
+- V2 does not import the legacy diagnostic engine/rules;
+- the landing page does not expose the raw Cross-Through action names before explaining the underlying ideas;
+- `src/main.jsx` points to `SageV2`.
 
 ## Known risks / items to verify
 
