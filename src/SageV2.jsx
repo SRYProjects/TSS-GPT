@@ -695,9 +695,11 @@ function ReviewHeader({ onHome, onPlan }) {
         </span>
       </button>
 
-      <button type="button" className="sage-secondary" onClick={onPlan}>
-        See your plan
-      </button>
+      {onPlan && (
+        <button type="button" className="sage-secondary" onClick={onPlan}>
+          See your plan
+        </button>
+      )}
     </header>
   );
 }
@@ -1030,6 +1032,7 @@ function HypothesisBuilder({ finding, hypothesis, setHypothesis }) {
 
 function SupportOffer({ plan, selectedPriority }) {
   const [prepared, setPrepared] = useState("");
+  const [copyStatus, setCopyStatus] = useState("");
 
   function prepare(action) {
     const priority = selectedPriority?.title || plan.needsAttention[0]?.title || "";
@@ -1042,9 +1045,27 @@ function SupportOffer({ plan, selectedPriority }) {
       .join("\n");
 
     setPrepared(message);
+    setCopyStatus("");
+  }
 
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(message).catch(() => {});
+  async function copyRequest() {
+    try {
+      await navigator.clipboard.writeText(prepared);
+      setCopyStatus("Copied.");
+    } catch {
+      setCopyStatus("Select and copy the request below.");
+    }
+  }
+
+  async function shareRequest() {
+    if (!navigator.share) return;
+    try {
+      await navigator.share({
+        title: "SAGE Sales System Review",
+        text: prepared
+      });
+    } catch {
+      // A cancelled share should not interrupt the report.
     }
   }
 
@@ -1080,12 +1101,19 @@ function SupportOffer({ plan, selectedPriority }) {
 
       {prepared && (
         <div className="sage-prepared-request">
-          <strong>Request prepared and copied</strong>
+          <strong>Request prepared</strong>
           <pre>{prepared}</pre>
-          <p>
-            The contact destination is intentionally not hard-coded until the
-            production support route is finalized.
-          </p>
+          <div className="sage-support-actions">
+            <button type="button" className="sage-secondary" onClick={copyRequest}>
+              Copy request
+            </button>
+            {navigator.share && (
+              <button type="button" className="sage-secondary" onClick={shareRequest}>
+                Share request
+              </button>
+            )}
+          </div>
+          {copyStatus && <p>{copyStatus}</p>}
         </div>
       )}
     </section>
@@ -1147,7 +1175,7 @@ function Report({
 
   return (
     <div className="sage-shell sage-report-shell">
-      <ReviewHeader onHome={onHome} onPlan={() => {}} />
+      <ReviewHeader onHome={onHome} onPlan={null} />
 
       <main className="sage-report">
         <section className="sage-priority-first" id="priority">
