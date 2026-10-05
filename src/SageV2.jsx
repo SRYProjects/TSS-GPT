@@ -84,16 +84,9 @@ function milestoneLabel(status) {
 }
 
 function sectionStageId(sectionId) {
-  const map = {
-    foundation: "business",
-    awareness: "begin",
-    alignment: "buyer",
-    resolution: "buyer",
-    decision: "buyer",
-    process: "move",
-    execution: "execution"
-  };
-  return map[sectionId] || "";
+  return SECTIONS.some((section) => section.id === sectionId)
+    ? sectionId
+    : "";
 }
 
 function toggleMulti(current, option) {
