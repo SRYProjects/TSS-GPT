@@ -3,7 +3,7 @@ import {
   QUESTION_BY_ID,
   coreQuestions,
   shouldShowDistinctLines
-} from "./sageV2Config";
+} from "./sageV2Config.js";
 
 const {
   NO,
