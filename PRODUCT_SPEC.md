@@ -1,346 +1,257 @@
 # SAGE — PRODUCT SPEC
 
-**Status:** Canonical product specification for V1  
+**Status:** Canonical V1 product specification  
 **Repository:** `SRYProjects/TSS-GPT`  
 **Product:** SAGE — Sales System Guide  
 **Methodology:** Cross-Through (CT)
 
-This file records authoritative product decisions. The live repository is the implementation source of truth. Old proposals are not authoritative unless they are preserved here as current decisions.
-
-## 1. Product purpose
-
-SAGE helps an established B2B business **see, understand, and improve how it sells**.
-
-The free V1 diagnostic makes the company's existing sales system visible and identifies, from the evidence supplied, what appears established, incomplete, disconnected, unverified, unknown, performance-related, or exposed to execution problems. It then identifies the few findings that deserve attention first and gives a supported direction for improvement.
-
-SAGE must provide enough value that the owner can either:
-1. use the Cross-Through guide and diagnostic findings to improve the system internally; or
-2. engage professional help for deeper investigation, design, implementation, testing, and management.
-
-SAGE must not manufacture weakness, urgency, or a need for consulting.
-
-## 2. Target user
-
-V1 is for **established B2B product/service businesses with an existing sales operation**.
-
-The design should work across professional services, manufacturers, distributors/intermediaries, SaaS/software, contractors, and other B2B models.
-
-V1 is not a startup/new-business guide and is not designed around consumer/household selling.
-
-## 3. Four distinct layers — do not conflate them
-
-### Cross-Through methodology
-Cross-Through is the underlying sales methodology. It is broader than the app. It provides the discipline for understanding, defining, connecting, testing, and improving how a business sells.
-
-Core methodology constraints:
-- Every actively selling business already has a sales system, whether deliberate or habitual.
-- There is no universal sales process; the business must determine what works for its offer, buyers, conditions, and operational strategy.
-- Everything relied upon to create or advance an opportunity should have a defined target outcome/objective.
-- Sales require conversion/advancement at each meaningful step.
-- Presence, Presentation, and Confirmation are foundational actions, not mandatory sequential stages.
-- Cross-Through points are Awareness, Alignment, Resolution, and Decision.
-- Their fixed buyer-interest relationships are Awareness → Engagement, Alignment → Favor, Resolution → Perception of Value, Decision → Perception of Benefit.
-- Foundational actions do not map one-to-one to Cross-Through points.
-- Suspected drivers/barriers or causes remain hypotheses until supported by evidence.
-- System design problems must be distinguished from execution problems.
-- Important changes should be deliberately tested against evidence.
-
-### SAGE diagnostic engine
-The engine is the deterministic V1 implementation that interprets answers using Cross-Through diagnostic rules. It is not the Cross-Through methodology itself and does not attempt to encode the entire methodology.
-
-### Diagnostic output
-The output is a **Sales System Diagnostic**: a structured, evidence-bounded view of the current sales system, supported strengths, attention findings, priorities, and a Cross-Through build path. It is not a score, grade, benchmark, or complete consulting deliverable.
-
-### Consulting/commercial offer
-Professional services are a separate optional next step. They may investigate findings more deeply and design, implement, test, establish evidence/controls, and manage continuing improvement. The diagnostic must not pretend to have completed that work.
-
-## 4. Core V1 user experience
-
-1. Landing page explains that improving sales starts with improving how the business sells.
-2. Short introduction explains what SAGE will examine and that no CRM, reports, or spreadsheets are required.
-3. User moves through six progress sections:
-   - Your Business
-   - How Sales Begin
-   - How Sales Move
-   - How Buyers Progress
-   - Improvement
-   - Execution
-4. Questions adapt to prior answers.
-5. Claimed strengths receive limited verification where needed.
-6. An answer that already establishes a gap should not trigger unnecessary probing.
-7. Ambiguity receives only enough follow-up to classify the condition responsibly.
-8. SAGE cross-checks answers for meaningful contradictions.
-9. Completion screen leads to the diagnostic.
-10. User receives the five-part diagnostic report.
-
-### Locked journey-design rules after end-to-end user testing
-- Preserve the **full approved diagnostic question bank**. Do not delete valuable diagnostic content merely to shorten the journey.
-- Do **not** restore the original questionnaire as one mandatory sequence. The original forced sequence was too burdensome.
-- Divide the experience into a **Core Review + optional Deep Dives**:
-  - the Core Review collects only the evidence needed for a legitimate first diagnostic;
-  - the current Core Review is **8 focused screens**;
-  - verification that is not necessary to support an initial finding moves behind that finding or into optional depth;
-  - Deep Dives preserve additional verification, cause/evidence, buyer-progression, process-variation, testing, and execution questions that can materially make a finding more specific or better supported.
-- Deep Dives are voluntary. At selected section checkpoints, users may **Continue** or **Go deeper in this area**. The interface must explain the value of the additional effort.
-- Skipping a Deep Dive is never evidence of weakness. SAGE must not convert “not investigated” into a deficiency. Where appropriate, the report should state that additional evidence could sharpen that area.
-- The first report must remain genuinely useful from Core Review answers alone.
-- From the report, users should be able to return to relevant optional depth, provide more evidence, and regenerate a richer diagnostic without losing existing answers.
-- Continue using the six sections. Show **Section N of 6** plus an honest Core Review completion percentage. Optional Deep Dives do not make the user's required progress move backward.
-- At major section transitions, provide **real diagnostic value**, not merely progress acknowledgment. As soon as the available answers support a responsible finding, show the user the finding, the evidence supporting it, and why it matters. These progressive insights should make SAGE earn the next question rather than withholding value until the final report.
-- Optional Deep Dives must be visually unmistakable at eligible checkpoints, with an explicit choice between continuing the Core Review and going deeper. Deeper verification should normally follow an initial finding rather than precede it when the verification is not required to make that finding responsibly.
-- The report must also surface a conspicuous, centralized opportunity to add evidence by area; do not rely only on small links inside individual cards.
-- Wherever SAGE declares a diagnostic condition such as **Solid, Incomplete, Disconnected, Unverified, Unknown, Performance Problem, or Execution Exposure**, pair the text with a consistent visual status indicator (colored accent line and dot). Color is supplemental to the written label, never a score.
-- Adaptive questioning remains governed by stop / verify / clarify. Verification that is not essential to the first responsible finding belongs in optional depth.
-- Step-objective verification samples only a few representative important process steps rather than requiring mapping of every selected step.
-- The experience should make the exchange explicit: more evidence can produce a more specific and better-supported report, but the user controls how deep to go.
-
-The first production version (22 core screens plus follow-ups) and the later 18-screen version were both judged too overwhelming. The solution is progressive disclosure and user control—not discarding the diagnostic intelligence.
-
-## 5. Current V1 diagnostic scope
-
-Across the Core Review and optional Deep Dives, the preserved diagnostic question bank can examine:
-- what part of the sales operation is being assessed;
-- primary B2B buyer type;
-- meaningful opportunity sources and which contribute most;
-- intended results of important source activities;
-- evidence of source effectiveness;
-- actual sales-process path and meaningful variations;
-- intended results of important process steps;
-- evidence of successful advancement;
-- what buyers need to understand;
-- evidence of buyer preference;
-- evidence of buyer-perceived value;
-- the buyer's meaningful reason to proceed;
-- how remaining buying issues are surfaced/resolved;
-- evidence of willingness to proceed;
-- where promising opportunities stall;
-- confidence in suspected causes;
-- how weak results are investigated;
-- how sales changes are tested;
-- execution consistency and exposures;
-- optional additional context.
-
-The questionnaire is adaptive rather than a fixed 13-question assessment.
-
-## 6. Diagnostic behavior
-
-### Required classifications
-Attention findings use:
-- **Incomplete** — a necessary element is not deliberately defined/established.
-- **Disconnected** — activities exist but do not clearly connect required results to advancement.
-- **Unverified** — the business believes something works or causes a result without adequate evidence.
-- **Unknown** — management cannot currently determine what is happening or why.
-- **Performance Problem** — evidence establishes that an intended result is not being achieved.
-- **Execution Exposure** — the system may be viable, but inconsistency, imbalance, persistence, skill, visibility, or support threatens performance.
-
-Supported practices may be classified **Solid** only when the answers provide enough verification. Do not manufacture positive findings.
-
-### Cross-answer rules
-SAGE must distinguish claims from evidence. Examples:
-- a “clear process” with undefined outcomes or subjective advancement evidence is not fully operationally defined;
-- defined source objectives without source-result evidence remain unverified;
-- a developed value explanation without verification of buyer-perceived value remains unverified;
-- a defined process with inconsistent execution suggests an execution exposure;
-- an undefined system plus inconsistent execution means execution cannot yet be cleanly isolated;
-- claimed systematic testing with missing test elements is not a complete test discipline.
-
-### Priority behavior
-- No user-facing score, grade, rating, benchmark, or overall verdict.
-- Internal priorities/weights may be used only to select the most useful findings.
-- Target approximately 3–5 highest-priority findings when supported.
-- Priorities should represent materially different diagnostic domains where appropriate.
-- Do not claim a cause beyond the available evidence.
-
-## 7. Required diagnostic output
-
-The report has five numbered sections:
-
-1. **Your Current Sales System** — reconstruct important opportunity sources, major sales path(s), advancement context, and reported breakdown points without inventing missing information.
-2. **Highest-Priority Findings** — normally 3–5; each should explain what was found, support, why it matters, direction, and evidence of improvement where available.
-3. **What Needs Attention** — all supported attention findings using the diagnostic classifications.
-4. **What Appears Solid** — only supported strengths.
-5. **Your Cross-Through Build Path** — only next actions supported by the findings, with relevant Cross-Through guide topics.
-
-The report must begin with the user's reconstructed current sales system before interpreting gaps, priorities, strengths, or recommended actions. The at-a-glance diagnostic map may follow that reconstruction as an interpretive visual.
-
-Presentation rules:
-- The report headline is **Your Sales System Diagnostic** with the plain-language explanation **Here’s how your sales system currently works—and where improvement matters most.**
-- **Sales System at a Glance** remains a concise diagnostic-condition summary, not a place for long substantiation.
-- Highest-priority findings should be grouped by the kind of work they imply when supported: structural conditions to **Establish first**, followed by conditions to **Verify / improve next**. This grouping is sequencing guidance, not a severity score.
-- **What SAGE Found** is the evidence layer. Detailed findings use progressive disclosure/accordions so the report remains scannable while preserving the full evidence, significance, direction, and evidence-of-improvement content.
-- **What Appears Solid** is deliberately compact and should not visually compete with priority work.
-- **Your Cross-Through Build Path** is the strongest closing section. Each action should state the action, why it matters, what better looks like when evidence is available, and the relevant Cross-Through guide topic.
-- Keep the report in the established dark visual system; do not introduce high-contrast white cards as the primary presentation surface.
-
-The diagnostic provides direction, not a substitute for building and managing the sales system.
-
-## 8. Explicit V1 exclusions
-
-V1 does **not**:
-- score, grade, rank, or benchmark the company;
-- force a weakness when evidence supports a strong system;
-- require CRM access, report uploads, spreadsheets, or heavy data entry;
-- require user accounts or a backend database;
-- use an AI/LLM API to generate findings;
-- prescribe one universal sales funnel/process;
-- expose Cross-Through terminology as vocabulary the user must learn to complete the diagnostic;
-- fully determine ideal positioning, exact process design, precise messaging, detailed selling strategies, training requirements, compensation/organization design, technology configuration, complete management controls, or the exact solution to every weakness;
-- turn proprietary strategies such as Gestalt Effect, Stage & Position, Peripheral Selling, or Creating Intrigue into questionnaire sections.
-
-## 9. UX and design decisions
-
-- Professional B2B SaaS feel; serious but engaging.
-- The experience should feel like SAGE is progressively learning how the company sells, not administering a dull survey.
-- Dark navy/charcoal visual foundation with restrained teal accents.
-- Strong typography, clear hierarchy, visible progress, concise explanatory copy.
-- Progress must communicate both the current section and overall completion percentage.
-- Related verification should use progressive reveal within the current screen where practical, rather than repeatedly sending the user to another page.
-- Section-transition feedback should provide a small payoff during the journey without pretending that the final diagnostic has already been completed.
-- The final diagnostic experience should be conclusion-first and visually dramatic: lead with a **Sales System at a Glance** visual and the 3–5 priority findings before detailed substantiation.
-- The at-a-glance visual communicates diagnostic conditions by area (for example Incomplete, Unverified, Unknown, Execution Exposure, or supported/established where evidence warrants). It must not become a numeric score, grade, benchmark, traffic-light game, or disguised rating.
-- Where skipped optional depth could materially sharpen an area, the report may offer **Go deeper in this area** and return the user to the relevant optional questions.
-- The client-facing print/PDF version requires a dedicated document layout; it must not rely on simply printing the web-card presentation.
-- Use ordinary business language in the interface. Cross-Through terminology belongs primarily in analysis/report guidance, not as required user vocabulary.
-- Avoid framing the product as teaching an established seller to “understand how you sell.” That language can imply incompetence. SAGE assumes an existing sales system and evaluates how deliberately it is defined, how complete and connected it is, what evidence supports it, and where improvement deserves attention.
-- Do not hide the existence of the methodology. Before the review begins, explain the diagnostic lens in plain language: sales improvement requires changing how the business sells; SAGE examines what the business actually does against the conditions required for opportunities and buyers to progress, then identifies what appears established, uncertain, or in need of work.
-- Provide an optional **Cross-Through explainer** from the review introduction for users who want to understand the methodology. It must never block the review. The explainer may introduce Presence, Presentation, Confirmation, the four buyer Cross-Through relationships, evidence vs. assumption, and system-vs.-execution discipline without turning the diagnostic into methodology training.
-- SAGE should be used lightly as the product/guide identity; no fake-human chatter or cute AI personality.
-- Current landing headline: **“Improve your sales by improving how you sell.”**
-- Current supporting proposition: every actively selling business already has a sales system; SAGE evaluates whether its critical parts are deliberately established, connected, supported by evidence, and being executed consistently, then identifies where improvement matters.
-- Public-goal treatment is locked to:
-  - **Help us reach our goal of 1,000.**
-  - **Get your FREE sales improvement report.**
-  - **Be one of the first 1,000 companies to improve their sales with SAGE.**
-  - Show the truthful live completion count inside the progress ring and the truthful remaining count as **X to go!**
-- Current light product label: **Sales System Guide**.
-- Landing-page structure is a stacked sequence of full-width landscape sections:
-  1. **Hero** — primary value proposition + CTA + realistic SAGE diagnostic/product preview.
-  2. **Public Goal** — separate full-width 1,000-company mission band with live progress ring and remaining count.
-  3. **Why SAGE** — three benefits: see the current sales system, find where attention matters most, know what to work on next.
-  4. **How It Works** — answer a short review, see the diagnostic, go deeper where needed.
-- The hero visual should preview the actual product payoff rather than use an abstract sales-system diagram. It may show concise diagnostic-condition cards, a priority finding, and build-path actions. Do not introduce a score/grade or fake product capability.
-- Every screen/question transition must position the new screen at the top of the viewport; users must never inherit the prior page's scroll position.
-- Core-review language must remain understandable to an established business whose sales activity is informal or undocumented. Do not assume the user already thinks in formal “sales process steps.” Clarify the circumstance and distinguish the result of an individual sales activity from the final sale.
-
-## 10. Data and persistence
-
-Current V1 is client-side:
-- answers are stored in browser `localStorage` under `sage-diagnostic-answers`;
-- there is no server-side user record, database, authentication, CRM connection, or uploaded sales data;
-- starting a new review clears the stored diagnostic answers;
-- the diagnostic is generated in the browser from the current answers.
-
-This is the current V1 implementation decision, not a commitment to future persistence architecture.
-
-## 11. Technical architecture
-
-Current stack:
-- React 19
-- Vite 7
-- Cloudflare Vite plugin
-- Cloudflare Workers static SPA deployment
-- GitHub repository `SRYProjects/TSS-GPT`
-
-Separation of concerns is intentional:
-- `src/diagnosticConfig.js` — questions, stages, answer options, adaptive follow-ups, guide-topic mappings.
-- `src/diagnosticRules.js` — direct findings and cross-answer diagnostic rules.
-- `src/diagnosticEngine.js` — strengths, deduplication/supersession, corroboration, prioritization, current-system reconstruction, build-path assembly, report object.
-- `src/App.jsx` — user journey and presentation logic.
-- `src/styles.css` — visual system.
-- `src/diagnosticTest.js` — manual diagnostic fixture; not imported in production.
-
-Keep business/domain logic separate from UI code where practical.
-
-## 12. AI behavior and boundaries
-
-V1 is **deterministic and rules-based**. There is no production AI/LLM dependency.
-
-Therefore:
-- SAGE must not imply that an AI model independently investigated the business.
-- Findings must be traceable to user answers and explicit diagnostic rules.
-- Uncertainty must remain uncertainty.
-- Hypotheses must not be presented as established causes.
-- Future AI assistance may be considered, but its role, provider, cost, privacy model, and architecture are not locked V1 decisions.
-
-## 13. Commercial and future direction
-
-Locked direction:
-- The free diagnostic should deliver genuine standalone value.
-- Users may then use the Cross-Through guide to work internally or seek professional help.
-- Paid work may include deeper investigation, system design, implementation, testing, evidence/controls, and continuing management.
-- Longer-term product direction may include a recurring AI-enabled sales-performance system.
-
-Not locked:
-- pricing;
-- checkout/billing implementation;
-- packaging of paid services;
-- exact future AI architecture.
-
-## 14. Growth, sharing, and privacy-first usage analytics
-
-Locked direction:
-- SAGE should be designed to spread because the free diagnostic can provide standalone value to B2B businesses.
-- The landing page should show a truthful live completion count and a public goal of reaching **1,000 companies**.
-- Never seed, inflate, or imply a number of businesses/users that the system cannot verify.
-- Use **Sales System Reviews completed**, not “sales plans created.”
-- Provide **Share SAGE** on the landing page and again after the diagnostic has delivered value.
-- Sharing language should create intrigue and invite a fresh perspective; it must not imply that another business owner does not understand selling or is doing something wrong.
-- Sharing must be explicit rather than silently copying a link. When the user chooses **Share SAGE**, show the SAGE URL and clear sharing choices such as Copy link, Email, LinkedIn, X, and the native device share sheet where supported.
-- Preserve infrastructure for future aggregate-insight publishing and tracked professional/partner distribution without exposing diagnostic answers.
-
-### Privacy model
-
-The user's diagnostic answers remain in the browser under the existing local-persistence model.
-
-The shared backend may receive only anonymous product-usage events and minimal non-content metadata needed to operate the counter and understand the funnel. It must not receive:
-- diagnostic answer text or selections;
-- company or contact names;
-- email addresses;
-- CRM/customer data;
-- raw IP addresses;
-- precise location.
-
-Allowed anonymous telemetry includes:
-- random anonymous session/review identifiers;
-- event type;
-- section/stage identifier and ordinal;
-- coarse country/region derived at the Cloudflare edge;
-- coarse device class;
-- referring hostname;
-- explicitly sanitized campaign/source tag;
-- share channel;
-- timestamp.
-
-The anonymous event structure should support future aggregate sales-system research only if a later product decision explicitly authorizes additional non-sensitive categorical collection. Do not silently begin sending diagnostic answers.
-
-### Admin analytics
-
-- Provide an **Admin** link in the site footer.
-- Admin analytics must be access-controlled and must never expose diagnostic answers.
-- Useful V1 measures include landing sessions, review starts, review completion, report views, Deep Dive usage, shares, section funnel progression, coarse geography, device mix, referring hosts, and tracked source tags.
-- Admin authentication secrets must be stored as Cloudflare Worker secrets, never committed to GitHub or shipped to the browser.
-
-## 15. Superseded/rejected directions
-
-Do not revive these without an explicit product decision:
-- the original fixed 13-question assessment;
-- a user-facing score;
-- positioning SAGE as an “opportunity finder”;
-- broad B2C/consumer targeting for V1;
-- forcing Presence → Presentation → Confirmation into a universal sequence;
-- forcing foundational actions into one-to-one Cross-Through-point mappings;
-- making Cross-Through jargon a prerequisite for using the app;
-- making proprietary sales strategies separate diagnostic sections;
-- requiring CRM/document uploads or a heavy data-intake process;
-- using AI/API/database infrastructure merely because it may be useful later.
-
-## 16. Unresolved items
-
-These are not locked and must not be guessed:
-- how the Cross-Through guide will be delivered/accessed from the app;
-- final consistency of user-facing naming between “Free Sales System Review,” “Sales System Diagnostic,” and the formal Cross-Through diagnostic name;
-- paid-service packaging, pricing, billing, and conversion mechanics;
-- whether/when AI is introduced after deterministic V1;
-- whether future versions require accounts, server persistence, or saved diagnostic history.
-
-Update this file only when a genuine product decision changes.
+The authoritative build direction is the October 2026 **Cross-Through System — Build Instructions: Comprehensive Specification** supplied by the owner. Where older product decisions conflict with that specification, the October 2026 specification governs. The Cross-Through methodology itself must not be reinterpreted or expanded by the app.
+
+## 1. Purpose
+
+SAGE is a free, self-guided diagnostic for **established business owners**. It is not limited to B2B.
+
+SAGE evaluates whether the sales operation is deliberately defined, connected, evidenced, and consistently executed, then identifies where attention matters most.
+
+The free product must stand on its own. Professional consulting, training, evaluation, implementation, and support are optional next steps and must never be manufactured through pressure or invented weakness.
+
+## 2. Cross-Through architecture
+
+The three foundational actions are fixed and must not be renamed:
+
+- **Create Presence**
+- **Present the Offer and Value**
+- **Confirm the Sale**
+
+The four Cross-Through relationships are fixed and must not be renamed, reordered, merged, or expanded:
+
+- **Awareness → Engagement**
+- **Alignment → Favor**
+- **Resolution → Perception of Value**
+- **Decision → Perception of Benefit**
+
+The interface may explain these ideas in plain language, but it must not create substitute methodology.
+
+## 3. Diagnostic answer states
+
+Exactly four interpretive states exist for questions about an activity, capability, result, or verification:
+
+- **NO** — the activity or capability is not currently established.
+- **UNKNOWN** — the user does not know.
+- **NO VERIFICATION** — the activity occurs, but its result cannot reliably be established.
+- **ESTABLISHED** — the activity is performed and its result can be verified.
+
+Purely descriptive Foundation questions carry no diagnostic state.
+
+No other diagnostic taxonomy may be introduced.
+
+## 4. Absolute product prohibitions
+
+V1 must not:
+
+- score, grade, rank, benchmark, or assign a numeric maturity value;
+- show a completion percentage;
+- show global **Step X of Y** progress;
+- use ordinal good-to-bad maturity ladders except the Guide-specified capability/execution Yes / Partial / No / I don't know structure;
+- reintroduce the legacy Solid / Incomplete / Disconnected / Unverified / Performance Problem / Execution Exposure taxonomy;
+- use red/green judgment coloring;
+- use failure language or generic advice disconnected from the user's answers;
+- assume B2B-specific buyer types as the product frame;
+- turn Cross-Through terminology into vocabulary the user must learn before answering.
+
+## 5. Interaction rules
+
+- Teach before asking: one short plain-language framing line before a new idea.
+- Every question includes a concrete example.
+- Multi-select is the default when more than one condition can genuinely apply.
+- Selecting an option never auto-advances.
+- Continue is always explicit.
+- **Something else** and **I'm not sure / Not sure** are distinct choices wherever relevant.
+- Tone is direct, plain, and confident; no trivial gamification or fake-human chatter.
+- Deep Dives are optional and carry the exact permission copy:  
+  **“This is optional. You can see your plan at any time; unanswered depth is not treated as a weakness.”**
+- Skipped optional depth is never converted into a weakness.
+
+## 6. V1 journey
+
+The journey is:
+
+1. Landing — orientation only; no diagnostic data.
+2. Foundation — Core only.
+3. Awareness → Engagement — Core + optional Deep Dive.
+4. Alignment → Favor — Core + optional Deep Dive.
+5. Resolution → Perception of Value — Core + optional Deep Dive.
+6. Decision → Perception of Benefit — Core + optional Deep Dive.
+7. Sales Process — Core + optional Deep Dive.
+8. Capability & Execution — Core + optional Deep Dive.
+9. Plan / Report.
+
+Progress uses a milestone path. Each reached milestone may be shown only as:
+
+- **not yet reached**
+- **clear**
+- **worth testing**
+
+No fraction, percentage, score, or global step count is permitted.
+
+At the close of each Core section, show one supported observation immediately when the user's own answers establish one. Never manufacture an observation.
+
+## 7. Foundation
+
+Foundation collects only the context needed by later sections:
+
+- what the company sells;
+- who normally buys;
+- one-line reason someone should consider the company.
+
+These answers are descriptive and never flagged.
+
+## 8. Sales lines
+
+Opportunity-source selections live inside Awareness.
+
+When the user's selected routes indicate multiple meaningfully different groups, reveal the sales-line question inline immediately after discovery. Do not move it to a later screen.
+
+For each selected distinct line, allow:
+
+- a measurable objective;
+- **Yes, and I track it**;
+- **I do this but don't track it**;
+- **Not sure**.
+
+The objective text is optional. A selected line must have a tracking choice before the section can continue.
+
+Implementation clarification: the specification's user-facing instruction explicitly says it is acceptable to pick no distinct lines. V1 therefore allows Continue with zero distinct lines selected; once a line is selected, its tracking choice becomes required.
+
+## 9. Sales Process
+
+Core identifies the meaningful steps that actually occur.
+
+The starter list adapts to product/subscription vs. service/project context and allows custom steps.
+
+Deep Dive asks what each selected step must produce for the opportunity to continue. If the user opens this Deep Dive and leaves a step objective blank, that step is **UNKNOWN**. Skipping the Deep Dive entirely is neutral.
+
+## 10. Capability & Execution
+
+Core asks:
+
+- whether the business has what the important sales activities require;
+- whether the work is actually executed consistently.
+
+This is the one area where the Guide's explicit Yes / Partial / No / I don't know structure is permitted.
+
+Optional breakdown may examine exactly six support fields for user-named activities:
+
+1. Skill/capability
+2. Information
+3. Data
+4. Technology
+5. People
+6. Operational support
+
+Do not add or remove support fields.
+
+## 11. Report
+
+The report is assembled only from the user's answers.
+
+It must:
+
+- open with **one priority direction** chosen by the user from supported flagged findings, never a computed “best” score;
+- show the completed milestone map;
+- state that identifying a condition is not the same as proving it caused a result;
+- return something useful for every answered diagnostic question;
+- show working/established answers with a concise direction for further testing;
+- show unestablished, unknown, or unverified answers with:
+  - what is not confirmed;
+  - the answer evidence;
+  - why it matters;
+  - a concrete next step framed as something to establish or test, not a guaranteed fix;
+- group findings by section;
+- provide a save/star control on each finding;
+- compile saved findings into **Your selected next steps**;
+- summarize **What's working** and **What's not yet confirmed**;
+- provide a hypothesis builder for the chosen priority:
+  - what will change;
+  - what result is expected;
+  - how and when it will be checked;
+- prefill the hypothesis builder with an editable suggestion grounded in the chosen finding;
+- explicitly advise testing one meaningful change at a time.
+
+No report language may claim a cause that the answers have not established.
+
+## 12. Commercial path
+
+Contextual support prompts may appear beside real gaps, and one comprehensive support offer may appear at the end.
+
+Supported offer labels include:
+
+- Get Support
+- Request an Evaluation
+- Share My Plan for Feedback
+- Work With Us
+
+The free report must be useful before these offers appear.
+
+**Open implementation item:** the production destination/contact route for these CTAs is not yet documented. Do not invent an email address or endpoint. The migration branch prepares/copies the request text until a real route is confirmed.
+
+## 13. Technical architecture
+
+Current V1 stack:
+
+- React 19 + Vite;
+- Cloudflare Worker deployment;
+- Cloudflare D1 for anonymous aggregate product telemetry/admin reporting;
+- browser localStorage for diagnostic answers and progress;
+- no account required for the diagnostic;
+- no LLM required to classify answers or build findings.
+
+Architecture boundaries:
+
+- diagnostic configuration is separate from engine logic;
+- engine logic is separate from UI;
+- diagnostic answers must not silently be sent to telemetry;
+- existing aggregate analytics/admin infrastructure is preserved unless separately changed.
+
+Current implementation files for the October 2026 migration:
+
+- `src/sageV2Config.js` — authoritative V1 questions and CT structure;
+- `src/sageV2Engine.js` — four-state classification and report assembly;
+- `src/SageV2.jsx` — review/report user experience;
+- `src/sageV2.css` — V2 presentation;
+- `src/main.jsx` — branch entry point;
+- `worker/index.js` — telemetry API, including legacy + current stage IDs.
+
+Legacy `diagnosticConfig.js`, `diagnosticRules.js`, `diagnosticEngine.js`, `diagnosticExperience.js`, and the prior `App.jsx` remain in the repository during migration for rollback/reference only and are not authoritative once V2 is validated and merged.
+
+## 14. Design direction
+
+- Professional, serious, modern sales-system product.
+- Dark navy/charcoal foundation with restrained cyan/blue and gold accents.
+- No red/green judgment treatment.
+- Readable typography; important content must not look like fine print.
+- The review should feel light even when the reasoning underneath is rigorous.
+- The report should be scannable first, detailed second.
+- Mobile must preserve readability and obvious multi-select behavior.
+
+## 15. Implementation interpretation rules
+
+When source instructions appear internally inconsistent:
+
+1. do not invent methodology;
+2. preserve the explicit user-facing promise where possible;
+3. choose the behavior that avoids trapping or misleading the user;
+4. record the implementation clarification here or in `PROJECT_STATE.md`;
+5. escalate only if the unresolved point materially changes methodology or commercial intent.
+
+Current clarification: an option containing both uncertainty wording and an explicit **“we don't really track this”** statement maps to **NO VERIFICATION**, because the more specific verification condition controls.
+
+## 16. Authority
+
+For future work:
+
+1. Read this file.
+2. Read `PROJECT_STATE.md`.
+3. Inspect the live repository and recent commits.
+4. Treat code as implementation truth, but do not preserve code behavior that conflicts with this product spec.
+5. Never revive superseded legacy taxonomy, percentage progress, B2B-only framing, or global step counts.
