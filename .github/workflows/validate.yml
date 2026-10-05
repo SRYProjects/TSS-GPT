@@ -19,5 +19,7 @@ jobs:
           node-version: 20
       - name: Install dependencies
         run: npm install
+      - name: Diagnostic invariants
+        run: node src/sageV2Test.js
       - name: Build
         run: npm run build
