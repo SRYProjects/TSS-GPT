@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import AdminDashboard from "./AdminDashboard";
 import {
-  getPublicStats,
   resetReviewId,
   trackEvent
 } from "./telemetry";
@@ -623,11 +622,8 @@ function SectionObservation({ observation }) {
 }
 
 function Landing({ onStart }) {
-  const [stats, setStats] = useState(null);
-
   useEffect(() => {
     trackEvent("landing_view");
-    getPublicStats().then(setStats);
   }, []);
 
   return (
@@ -658,27 +654,23 @@ function Landing({ onStart }) {
           <button type="button" className="sage-primary sage-start" onClick={onStart}>
             Start
           </button>
-          {stats?.completedReviews > 0 && (
-            <div className="sage-proof">
-              {stats.completedReviews.toLocaleString()} reviews completed
-            </div>
-          )}
+
         </div>
 
         <div className="sage-hero-visual" aria-hidden="true">
           <div className="sage-flow-line">
-            <span>Create Presence</span>
+            <span>How opportunities begin</span>
             <i>→</i>
-            <span>Present the Offer and Value</span>
+            <span>How buyers move forward</span>
             <i>→</i>
-            <span>Confirm the Sale</span>
+            <span>How sales become decisions</span>
           </div>
           <div className="sage-flow-grid">
             {[
-              ["Awareness", "Engagement"],
-              ["Alignment", "Favor"],
-              ["Resolution", "Perception of Value"],
-              ["Decision", "Perception of Benefit"]
+              ["Attention", "Do buyers actually engage?"],
+              ["Preference", "Why do they favor you?"],
+              ["Value", "How do you know it's worth it to them?"],
+              ["Decision", "What proves they are ready to act?"]
             ].map(([point, result]) => (
               <div key={point}>
                 <small>{point}</small>
@@ -1162,7 +1154,7 @@ function Report({
           <div className="sage-eyebrow">ONE PRIORITY DIRECTION</div>
           <h1>Your Sales System Review</h1>
           <p>
-            Choose one unsupported or unverified condition to work on first. SAGE
+            Choose one condition that is not established, is unknown, or is not verified to work on first. SAGE
             organizes the evidence; you choose the priority.
           </p>
 
