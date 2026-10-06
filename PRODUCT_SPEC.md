@@ -9,7 +9,7 @@ This file records authoritative product decisions. The live repository is the im
 
 ## 1. Product purpose
 
-SAGE helps an established B2B business **see, understand, and improve how it sells**.
+SAGE helps an established B2B business **evaluate and improve the sales system it already has**.
 
 The free V1 diagnostic makes the company's existing sales system visible and identifies, from the evidence supplied, what appears established, incomplete, disconnected, unverified, unknown, performance-related, or exposed to execution problems. It then identifies the few findings that deserve attention first and gives a supported direction for improvement.
 
@@ -71,7 +71,7 @@ Professional services are a separate optional next step. They may investigate fi
 7. Ambiguity receives only enough follow-up to classify the condition responsibly.
 8. SAGE cross-checks answers for meaningful contradictions.
 9. Completion screen leads to the diagnostic.
-10. User receives the five-part diagnostic report.
+10. User receives an executive diagnostic overview followed by the full evidence-backed diagnostic report.
 
 ### Locked journey-design rules after end-to-end user testing
 - Preserve the **full approved diagnostic question bank**. Do not delete valuable diagnostic content merely to shorten the journey.
@@ -85,7 +85,7 @@ Professional services are a separate optional next step. They may investigate fi
 - Skipping a Deep Dive is never evidence of weakness. SAGE must not convert “not investigated” into a deficiency. Where appropriate, the report should state that additional evidence could sharpen that area.
 - The first report must remain genuinely useful from Core Review answers alone.
 - From the report, users should be able to return to relevant optional depth, provide more evidence, and regenerate a richer diagnostic without losing existing answers.
-- Continue using the six sections. Show **Section N of 6** plus an honest Core Review completion percentage. Optional Deep Dives do not make the user's required progress move backward.
+- Continue using the six diagnostic areas, but make the finite mandatory effort explicit as **Step X of 8 · Section Name** plus an honest Core Review completion percentage. Optional Deep Dives do not make the user's required progress move backward.
 - At major section transitions, provide **real diagnostic value**, not merely progress acknowledgment. As soon as the available answers support a responsible finding, show the user the finding, the evidence supporting it, and why it matters. These progressive insights should make SAGE earn the next question rather than withholding value until the final report.
 - Optional Deep Dives must be visually unmistakable at eligible checkpoints, with an explicit choice between continuing the Core Review and going deeper. Deeper verification should normally follow an initial finding rather than precede it when the verification is not required to make that finding responsibly.
 - The report must also surface a conspicuous, centralized opportunity to add evidence by area; do not rely only on small links inside individual cards.
@@ -153,7 +153,13 @@ SAGE must distinguish claims from evidence. Examples:
 
 ## 7. Required diagnostic output
 
-The report has five numbered sections:
+The report opens with an **Executive Overview** that gives the user an immediate, navigable summary of:
+- **Your Sales System** — the system SAGE reconstructed;
+- **What Appears Established** — practices supported strongly enough by evidence;
+- **Where Improvement Matters** — supported attention findings;
+- **Where to Start** — the highest-priority supported direction.
+
+The detailed report then contains five evidence-backed sections:
 
 1. **Your Current Sales System** — reconstruct important opportunity sources, major sales path(s), advancement context, and reported breakdown points without inventing missing information.
 2. **Highest-Priority Findings** — normally 3–5; each should explain what was found, support, why it matters, direction, and evidence of improvement where available.
@@ -161,10 +167,10 @@ The report has five numbered sections:
 4. **What Appears Solid** — only supported strengths.
 5. **Your Cross-Through Build Path** — only next actions supported by the findings, with relevant Cross-Through guide topics.
 
-The report must begin with the user's reconstructed current sales system before interpreting gaps, priorities, strengths, or recommended actions. The at-a-glance diagnostic map may follow that reconstruction as an interpretive visual.
+The Executive Overview is a navigation and synthesis layer, not a substitute for evidence. The detailed report must still present the reconstructed current system before the interpretive detail sections. The at-a-glance diagnostic map may follow that reconstruction as an interpretive visual.
 
 Presentation rules:
-- The report headline is **Your Sales System Diagnostic** with the plain-language explanation **Here’s how your sales system currently works—and where improvement matters most.**
+- The report headline is **Your Sales System Diagnostic**. Its supporting language should reinforce that SAGE is evaluating the sales system already in place: what appears established, incomplete, disconnected, unverified, unknown, performance-related, or exposed to execution problems—and where improvement matters most.
 - **Sales System at a Glance** remains a concise diagnostic-condition summary, not a place for long substantiation.
 - Highest-priority findings should be grouped by the kind of work they imply when supported: structural conditions to **Establish first**, followed by conditions to **Verify / improve next**. This grouping is sequencing guidance, not a severity score.
 - **What SAGE Found** is the evidence layer. Detailed findings use progressive disclosure/accordions so the report remains scannable while preserving the full evidence, significance, direction, and evidence-of-improvement content.
@@ -193,11 +199,11 @@ V1 does **not**:
 - The experience should feel like SAGE is progressively learning how the company sells, not administering a dull survey.
 - Dark navy/charcoal visual foundation with restrained teal accents.
 - Strong typography, clear hierarchy, visible progress, concise explanatory copy.
-- Progress must communicate both the current section and overall completion percentage.
+- Progress must communicate the finite mandatory effort (**Step X of 8**), the current diagnostic area, and overall completion percentage.
 - Related verification should use progressive reveal within the current screen where practical, rather than repeatedly sending the user to another page.
 - Section-transition feedback should provide a small payoff during the journey without pretending that the final diagnostic has already been completed.
-- The final diagnostic experience should be conclusion-first and visually dramatic: lead with a **Sales System at a Glance** visual and the 3–5 priority findings before detailed substantiation.
-- The at-a-glance visual communicates diagnostic conditions by area (for example Incomplete, Unverified, Unknown, Execution Exposure, or supported/established where evidence warrants). It must not become a numeric score, grade, benchmark, traffic-light game, or disguised rating.
+- The final diagnostic experience should be conclusion-first and visually dramatic: lead with the **Executive Overview**, then the reconstructed current system and **Sales System at a Glance**, followed by priority findings before detailed substantiation.
+- The at-a-glance visual communicates diagnostic conditions by area (for example Incomplete, Unverified, Unknown, Execution Exposure, or supported/established where evidence warrants). It must not become a numeric score, grade, benchmark, traffic-light game, or disguised rating.\n- The web report uses persistent desktop navigation and a compact small-screen equivalent so users can move directly among Overview, Your Current System, Priority Findings, What Needs Attention, What Appears Solid, and Your Build Path.
 - Where skipped optional depth could materially sharpen an area, the report may offer **Go deeper in this area** and return the user to the relevant optional questions.
 - The client-facing print/PDF version requires a dedicated document layout; it must not rely on simply printing the web-card presentation.
 - Use ordinary business language in the interface. Cross-Through terminology belongs primarily in analysis/report guidance, not as required user vocabulary.
