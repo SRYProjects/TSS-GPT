@@ -1,6 +1,6 @@
 # SAGE — PROJECT STATE
 
-**Last updated:** 2026-09-30  
+**Last updated:** 2026-10-06  
 **Repository:** `SRYProjects/TSS-GPT`  
 **Default branch:** `main`  
 **Deployment:** Cloudflare Worker `tss-gpt`  
@@ -51,12 +51,12 @@ SAGE has moved from prototype/testing into the live adaptive V1 interface.
 - Optional section-level **Deep Dives** that preserve the original diagnostic question bank and supporting verification without forcing every user through it.
 - Users can return from the report to unanswered Deep Dives and regenerate the diagnostic with added evidence.
 - Section checkpoints now deliver progressive diagnostic value: when the evidence supports a finding, SAGE shows the finding and why it matters before asking the user to continue or go deeper.
-- Report now leads with a non-scored **Sales System at a Glance** visual and highest-priority findings before supporting detail.
+- Report now leads with a navigable **Executive Overview**, followed by the reconstructed current system, non-scored **Sales System at a Glance**, highest-priority findings, and supporting detail.
 - Adaptive-answer sanitization prevents hidden stale follow-up answers from affecting the diagnostic after a branching answer changes.
 - Eligible SAGE Update checkpoints now present the optional Deep Dive as an explicit next-step choice.
 - The report now includes a centralized **Want a sharper diagnosis?** panel for adding evidence by area, in addition to area-level deep-dive controls.
 - Diagnostic condition cards now use a consistent colored top accent and dot alongside the written status label so Solid / Incomplete / Unverified / Unknown / other conditions are immediately scannable.
-- Landing page growth layer is implemented: public 10,000-review mission, live completed-review counter when backend analytics are available, and Share SAGE.
+- Landing page growth layer is implemented: public 1,000-company mission, live completed-review counter, and Share SAGE.
 - Report includes a second Share SAGE invitation after diagnostic value has been delivered.
 - Privacy-first telemetry client and Worker API are implemented for anonymous funnel events only; diagnostic answers remain browser-local.
 - Footer includes Admin access; the admin dashboard is implemented for anonymous growth/funnel/location/device/referral/share metrics.
@@ -89,12 +89,9 @@ Live adaptive UI:
 - The current browser printout is not client-ready and needs dedicated document design/formatting.
 
 ### Not yet tested/confirmed
-- D1 analytics database creation/binding and production migration;
-- `ADMIN_TOKEN` Worker secret configuration;
-- live completed-review counter and anonymous event ingestion after D1 is bound;
-- Admin dashboard authentication and metrics after the secret is configured;
+- controlled end-to-end verification of anonymous event ingestion, funnel metrics, and privacy boundaries in the already-active D1/Admin backend;
 - Share SAGE native-share and copy fallback across desktop/mobile;
-- the new 12-screen Core Review end-to-end in production;
+- the new 8-screen Core Review end-to-end in production;
 - section checkpoint → Continue behavior across all six sections;
 - each optional Deep Dive and early return to the Core Review;
 - report → Deep Dive → regenerated report behavior;
@@ -338,6 +335,19 @@ Implementation commits:
 Testing status:
 - Repository implementation was inspected after the changes.
 - Browser/production regression remains required for desktop sticky navigation, small-screen horizontal navigation, overview-card scrolling, the 8-step progress display, and report print behavior.
+
+## 2026-10-06 canonical-spec reconciliation
+
+- Re-read the repository before continuing the documented regression step.
+- Confirmed there have been no implementation commits after the executive-report redesign.
+- Corrected stale canonical-spec language left over from the earlier journey/report architecture:
+  - product purpose now describes evaluating and improving the sales system the business already has;
+  - progress is explicitly **Step X of 8 · Section Name** plus percentage;
+  - the report architecture now formally begins with the **Executive Overview**;
+  - persistent report navigation is documented;
+  - outdated “Sales System at a Glance first” and “five-part report only” language was reconciled with the implemented experience.
+- Commit: `a7282cb0` — **Align canonical spec with eight-step SAGE experience**.
+- No user-facing product behavior changed in this reconciliation.
 
 ## 2026-10-02 current checkpoint
 
